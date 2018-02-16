@@ -28,10 +28,6 @@
     </dependency>
     <dependency>
       <groupId>at-commander</groupId>
-      <artifactId>at-commander-module</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>at-commander</groupId>
       <artifactId>at-commander-module-v250</artifactId>
     </dependency>
     <dependency>

@@ -8,20 +8,16 @@
   <artifactId>at-commander-module-basic</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+  <name>AT Commander - Module - Basic</name>
+  <description>Basic AT commander</description>
+
   <parent>
     <groupId>at-commander</groupId>
     <artifactId>at-commander-module</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <name>AT Commander - Module - Basic</name>
-  <description>Basic AT commander</description>
-
   <dependencies>
-    <dependency>
-      <groupId>at-commander</groupId>
-      <artifactId>at-commander-module</artifactId>
-    </dependency>
     <dependency>
       <groupId>at-commander</groupId>
       <artifactId>at-commander-api</artifactId>
