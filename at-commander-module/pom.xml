@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>at-commander</groupId>
+  <artifactId>at-commander-module</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>AT Commander - Module</name>
+  <description>The abstract module</description>
+
+  <parent>
+    <groupId>at-commander</groupId>
+    <artifactId>at-commander</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <modules>
+    <module>at-commander-module-basic</module>
+    <module>at-commander-module-v250</module>
+    <module>at-commander-module-3gpp</module>
+    <module>at-commander-module-telit</module>
+    <module>at-commander-module-neul</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>at-commander</groupId>
+      <artifactId>at-commander-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>at-commander</groupId>
+      <artifactId>at-commander-common</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>net.freeutils</groupId>
+      <artifactId>jcharset</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.marineapi</groupId>
+      <artifactId>marineapi</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+    </dependency>
+
+  </dependencies>
+
+
+</project>

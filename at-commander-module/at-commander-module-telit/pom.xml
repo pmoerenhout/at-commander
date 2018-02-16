@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>at-commander</groupId>
+  <artifactId>at-commander-module-telit</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>AT Commander - Module - Telit</name>
+  <description>The Telit module</description>
+
+  <parent>
+    <groupId>at-commander</groupId>
+    <artifactId>at-commander</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>at-commander</groupId>
+      <artifactId>at-commander-module-3gpp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>at-commander</groupId>
+      <artifactId>at-commander-module-basic</artifactId>
+      <type>test-jar</type>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.marineapi</groupId>
+      <artifactId>marineapi</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

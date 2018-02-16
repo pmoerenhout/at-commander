@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>at-commander</groupId>
+  <artifactId>at-commander-module-neul</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <parent>
+    <groupId>at-commander</groupId>
+    <artifactId>at-commander-module</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <name>AT Commander - Module - Neul</name>
+  <description>The basic HiSilicon Neul module for NB-IoT</description>
+
+  <dependencies>
+      <dependency>
+        <groupId>at-commander</groupId>
+        <artifactId>at-commander-module-v250</artifactId>
+      </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+    </dependency>
+
+  </dependencies>
+
+
+</project>

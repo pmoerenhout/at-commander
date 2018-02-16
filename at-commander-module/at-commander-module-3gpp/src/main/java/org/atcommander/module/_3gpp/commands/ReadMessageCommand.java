@@ -1,0 +1,33 @@
+package org.atcommander.module._3gpp.commands;
+
+import org.atcommander.AtCommander;
+import org.atcommander.Command;
+import org.atcommander.api.SerialException;
+import org.atcommander.basic.commands.BaseCommand;
+import org.atcommander.basic.commands.BaseResponse;
+import org.atcommander.basic.exceptions.ResponseException;
+import org.atcommander.basic.exceptions.TimeoutException;
+
+public class ReadMessageCommand extends BaseCommand implements Command<BaseResponse> {
+
+  private static final String COMMAND_MESSAGE_READ = "+CMGR";
+  private int index;
+
+  public ReadMessageCommand(final AtCommander atCommander, final int index) {
+    super(COMMAND_MESSAGE_READ, atCommander);
+    this.index = index;
+  }
+
+  public ReadMessageResponse set() throws SerialException, TimeoutException, ResponseException {
+    available.acquireUninterruptibly();
+    try {
+      final StringBuilder sb = new StringBuilder(AT);
+      sb.append(COMMAND_MESSAGE_READ);
+      sb.append(EQUAL);
+      sb.append(Integer.toString(index));
+      return new ReadMessageResponse(super.execute(sb.toString()));
+    } finally {
+      available.release();
+    }
+  }
+}
