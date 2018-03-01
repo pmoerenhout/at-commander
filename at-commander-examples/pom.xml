@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>at-commander</groupId>
+  <groupId>com.github.pmoerenhout</groupId>
   <artifactId>at-commander-examples</artifactId>
   <version>1.0-SNAPSHOT</version>
 
@@ -12,34 +12,34 @@
   <description>The Application Programming Interface</description>
 
   <parent>
-    <groupId>at-commander</groupId>
+    <groupId>com.github.pmoerenhout</groupId>
     <artifactId>at-commander</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
   <dependencies>
     <dependency>
-      <groupId>at-commander</groupId>
+      <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>at-commander</groupId>
+      <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-jssc</artifactId>
     </dependency>
     <dependency>
-      <groupId>at-commander</groupId>
+      <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-module-v250</artifactId>
     </dependency>
     <dependency>
-      <groupId>at-commander</groupId>
+      <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-module-3gpp</artifactId>
     </dependency>
     <dependency>
-      <groupId>at-commander</groupId>
+      <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-module-telit</artifactId>
     </dependency>
     <dependency>
-      <groupId>at-commander</groupId>
+      <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-module-neul</artifactId>
     </dependency>
 

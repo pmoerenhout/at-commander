@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>at-commander</groupId>
+  <groupId>com.github.pmoerenhout</groupId>
   <artifactId>at-commander</artifactId>
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
@@ -93,59 +93,59 @@
     <dependencies>
       <!-- Internal module dependencies -->
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-common</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-examples</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-jssc</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-module</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-module-basic</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-module-v250</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-module-3gpp</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-module-telit</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-module-neul</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <!-- Test JAR dependencies -->
       <dependency>
-        <groupId>at-commander</groupId>
+        <groupId>com.github.pmoerenhout</groupId>
         <artifactId>at-commander-module-basic</artifactId>
         <type>test-jar</type>
         <version>${project.version}</version>

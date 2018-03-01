@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>at-commander</groupId>
+  <groupId>com.github.pmoerenhout</groupId>
   <artifactId>at-commander-module-basic</artifactId>
   <version>1.0-SNAPSHOT</version>
 
@@ -12,18 +12,18 @@
   <description>Basic AT commander</description>
 
   <parent>
-    <groupId>at-commander</groupId>
+    <groupId>com.github.pmoerenhout</groupId>
     <artifactId>at-commander-module</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
   <dependencies>
     <dependency>
-      <groupId>at-commander</groupId>
+      <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>at-commander</groupId>
+      <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-common</artifactId>
     </dependency>
 
