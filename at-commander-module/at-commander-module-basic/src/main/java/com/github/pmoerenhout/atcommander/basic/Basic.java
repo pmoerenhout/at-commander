@@ -1,6 +1,9 @@
 package com.github.pmoerenhout.atcommander.basic;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.InitException;
@@ -12,8 +15,6 @@ import com.github.pmoerenhout.atcommander.basic.commands.SimpleCommand;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Basic {
 

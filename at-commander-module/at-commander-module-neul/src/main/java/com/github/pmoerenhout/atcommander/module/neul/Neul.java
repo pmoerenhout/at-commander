@@ -3,6 +3,9 @@ package com.github.pmoerenhout.atcommander.module.neul;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.api.InitException;
 import com.github.pmoerenhout.atcommander.api.SerialException;
@@ -11,13 +14,15 @@ import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
 import com.github.pmoerenhout.atcommander.basic.Basic;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
+import com.github.pmoerenhout.atcommander.module.neul.commands.ManufacturerIdentificationCommand;
+import com.github.pmoerenhout.atcommander.module.neul.commands.ManufacturerIdentificationResponse;
 import com.github.pmoerenhout.atcommander.module.neul.commands.NeulConfigCommand;
 import com.github.pmoerenhout.atcommander.module.neul.commands.NeulConfigResponse;
 import com.github.pmoerenhout.atcommander.module.neul.commands.NeulRebootCommand;
+import com.github.pmoerenhout.atcommander.module.neul.commands.RevisionIdentificationCommand;
+import com.github.pmoerenhout.atcommander.module.neul.commands.RevisionIdentificationResponse;
 import com.github.pmoerenhout.atcommander.module.neul.commands.SignalQualityCommand;
 import com.github.pmoerenhout.atcommander.module.neul.commands.SignalQualityResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Neul extends Basic {
 
@@ -75,4 +80,15 @@ public class Neul extends Basic {
     return command.set();
   }
 
+  public RevisionIdentificationResponse getRevisionIdentification() throws SerialException, TimeoutException, ResponseException, InterruptedException {
+    Thread.sleep(50);
+    final RevisionIdentificationCommand command = new RevisionIdentificationCommand(atCommander);
+    return command.set();
+  }
+
+  public ManufacturerIdentificationResponse getManufacturerIdentification() throws SerialException, TimeoutException, ResponseException, InterruptedException {
+    Thread.sleep(50);
+    final ManufacturerIdentificationCommand command = new ManufacturerIdentificationCommand(atCommander);
+    return command.set();
+  }
 }

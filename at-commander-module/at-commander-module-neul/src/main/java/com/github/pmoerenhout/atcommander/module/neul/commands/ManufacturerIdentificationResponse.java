@@ -8,15 +8,14 @@ import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
-public class SignalQualityResponse extends BaseResponse implements Response {
+public class ManufacturerIdentificationResponse extends BaseResponse implements Response {
 
-  private static final Pattern PATTERN = Pattern.compile("^\\+CSQ: ?(\\d*),(\\d*)$");
+  private static final Pattern PATTERN = Pattern.compile("^(.*)$");
 
-  private int rssi;
-  private int ber;
+  private String manufacturer;
 
-  public SignalQualityResponse(final AtResponse s) {
-    parse(s);
+  public ManufacturerIdentificationResponse(final AtResponse s) {
+    this.parse(s);
   }
 
   public void parse(final AtResponse response) {
@@ -25,21 +24,15 @@ public class SignalQualityResponse extends BaseResponse implements Response {
       final String line = informationalText.get(0);
       final Matcher m = PATTERN.matcher(line);
       if (m.find()) {
-        rssi = Integer.parseInt(m.group(1));
-        ber = Integer.parseInt(m.group(2));
+        manufacturer = m.group(1);
         return;
       }
       throw createParseException(line);
     }
-    throw createParseException(response);
   }
 
-  public int getRssi() {
-    return rssi;
-  }
-
-  public int getBer() {
-    return ber;
+  public String getManufacturer() {
+    return manufacturer;
   }
 
 }

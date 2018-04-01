@@ -2,12 +2,13 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 import com.github.pmoerenhout.atcommander.module._3gpp.RegistrationState;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
-import org.junit.Test;
 
 public class NetworkRegistrationResponseTest extends BaseCommandTest {
 
@@ -91,7 +92,8 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_creg_2_1_with_lac_and_with_cellid_and_act() throws Exception {
     final AtResponse response = createOkAtResponse("+CREG: 2,1,\"00DE\",\"2D33F2C\",2");
 
-    final com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse networkRegistrationResponse = new com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse(response);
+    final com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse networkRegistrationResponse = new com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse(
+        response);
 
     assertEquals(new Integer(2), networkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, networkRegistrationResponse.getRegistrationState());

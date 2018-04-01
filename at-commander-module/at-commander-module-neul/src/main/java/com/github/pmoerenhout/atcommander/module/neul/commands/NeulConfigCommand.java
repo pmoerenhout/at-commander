@@ -28,13 +28,18 @@ public class NeulConfigCommand extends BaseCommand implements Command<BaseRespon
 
   public EmptyResponse set() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
+    // From 06.57 use double qoutes
     try {
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_NEUL_CONFIG);
       sb.append(EQUAL);
+      sb.append(DOUBLE_QUOTE);
       sb.append(setting);
+      sb.append(DOUBLE_QUOTE);
       sb.append(COMMA);
+      sb.append(DOUBLE_QUOTE);
       sb.append(value);
+      sb.append(DOUBLE_QUOTE);
       return new EmptyResponse(super.execute(sb.toString()));
     } finally {
       available.release();

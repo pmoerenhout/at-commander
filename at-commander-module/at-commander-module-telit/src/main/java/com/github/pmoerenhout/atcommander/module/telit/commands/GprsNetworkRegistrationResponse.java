@@ -14,7 +14,7 @@ public class GprsNetworkRegistrationResponse extends com.github.pmoerenhout.atco
   public static final Pattern UNSOLICITED_PATTERN_1 = Pattern.compile("^\\+CGREG: (\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\",(\\d),\"(.*)\"$");
   // HE910
   // +CGREG: 2,5,"0CBC","D1A7",0,"01"
-  private static final Pattern UNSOLICITED_PATTERN_2 = Pattern.compile("^\\+CGREG: (\\d),(\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\",(\\d),\"(.*)\"$");
+  public static final Pattern UNSOLICITED_PATTERN_2 = Pattern.compile("^\\+CGREG: (\\d),(\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\",(\\d),\"(.*)\"$");
 
   private Integer rac;
 

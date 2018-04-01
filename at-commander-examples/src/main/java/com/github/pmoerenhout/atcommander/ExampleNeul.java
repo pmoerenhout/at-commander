@@ -3,11 +3,15 @@ package com.github.pmoerenhout.atcommander;
 import static jssc.SerialPort.FLOWCONTROL_XONXOFF_IN;
 import static jssc.SerialPort.FLOWCONTROL_XONXOFF_OUT;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.pmoerenhout.atcommander.api.SerialException;
+import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
+import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.jssc.JsscSerial;
 import com.github.pmoerenhout.atcommander.module.neul.Neul;
 import com.github.pmoerenhout.atcommander.module.neul.commands.SignalQualityResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ExampleNeul {
 
@@ -16,7 +20,8 @@ public class ExampleNeul {
   public static void main(String[] arg) {
     LOG.info("Test modem which only understand AT");
 
-    final Neul modem = new Neul(new JsscSerial("/dev/tty.usbserial-A1056QHL", 9600, FLOWCONTROL_XONXOFF_IN | FLOWCONTROL_XONXOFF_OUT, new UnsolicitedCallback()));
+    final Neul modem = new Neul(
+        new JsscSerial("/dev/tty.usbserial-A1056QHL", 9600, FLOWCONTROL_XONXOFF_IN | FLOWCONTROL_XONXOFF_OUT, new UnsolicitedCallback()));
 
     try {
       modem.init();
@@ -25,10 +30,17 @@ public class ExampleNeul {
       // modem.getSimpleCommand("AT").set();
       modem.getAttention();
       // Send AT+NRB
-      // modem.reboot();
-      //Thread.sleep(10000);
+      if (false) {
+        modem.reboot();
+        Thread.sleep(10000);
+      }
       modem.getAttention();
       modem.getAttention();
+
+      LOG.info("Manufacturer: {}", getManufacturer(modem));
+      LOG.info("Module revision: {}", getRevisionIdentification(modem));
+      Thread.sleep(1000);
+
       modem.getConfig().getItems().forEach(l -> LOG.info("Configuration: {} is {}", l.getLeft(), l.getRight()));
       final SignalQualityResponse signalQualityResponse = modem.getSignalQuality();
       LOG.info("Received signal strength indicator is {} and bit error rate is {}", signalQualityResponse.getRssi(), signalQualityResponse.getBer());
@@ -44,6 +56,13 @@ public class ExampleNeul {
       LOG.error("The modem had an error", e);
     }
 
+  }
+
+  private static String getManufacturer(final Neul modem) throws TimeoutException, ResponseException, SerialException, InterruptedException{
+    return modem.getManufacturerIdentification().getManufacturer();
+  }
+  private static String getRevisionIdentification(final Neul modem) throws TimeoutException, ResponseException, SerialException, InterruptedException{
+    return modem.getRevisionIdentification().getRevision();
   }
 
 }

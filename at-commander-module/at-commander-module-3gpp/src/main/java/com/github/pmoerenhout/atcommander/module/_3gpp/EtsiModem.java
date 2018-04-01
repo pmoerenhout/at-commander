@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
@@ -13,6 +16,7 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularRingResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DefinePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DeleteMessageCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockCommand;
@@ -84,8 +88,6 @@ import com.github.pmoerenhout.atcommander.module.v250.enums.OperatorSelectionMod
 import com.github.pmoerenhout.atcommander.module.v250.enums.PdpType;
 import com.github.pmoerenhout.atcommander.module.v250.enums.PinStatus;
 import com.github.pmoerenhout.atcommander.module.v250.enums.WirelessNetwork;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EtsiModem extends V250 {
 
@@ -105,7 +107,8 @@ public class EtsiModem extends V250 {
       new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN5, GprsNetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN6, GprsNetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(GprsEventReportingResponse.UNSOLICITED_PATTERN, GprsEventReportingResponse.class),
-      new UnsolicitedPatternClass(ServiceReportingControlResponse.UNSOLICITED_PATTERN, ServiceReportingControlResponse.class)
+      new UnsolicitedPatternClass(ServiceReportingControlResponse.UNSOLICITED_PATTERN, ServiceReportingControlResponse.class),
+      new UnsolicitedPatternClass(CellularRingResponse.UNSOLICITED_PATTERN, CellularRingResponse.class)
   ));
   private static final Logger LOG = LoggerFactory.getLogger(EtsiModem.class);
   protected MessageMode messageMode;

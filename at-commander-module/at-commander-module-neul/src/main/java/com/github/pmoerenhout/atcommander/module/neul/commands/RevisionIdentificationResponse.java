@@ -8,25 +8,24 @@ import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
-public class SignalQualityResponse extends BaseResponse implements Response {
+public class RevisionIdentificationResponse extends BaseResponse implements Response {
 
-  private static final Pattern PATTERN = Pattern.compile("^\\+CSQ: ?(\\d*),(\\d*)$");
+  private static final Pattern PATTERN = Pattern.compile("^(.*)$");
 
-  private int rssi;
-  private int ber;
+  private String revision;
 
-  public SignalQualityResponse(final AtResponse s) {
-    parse(s);
+  public RevisionIdentificationResponse(final AtResponse s) {
+    this.parse(s);
   }
 
+  @Override
   public void parse(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);
       final Matcher m = PATTERN.matcher(line);
       if (m.find()) {
-        rssi = Integer.parseInt(m.group(1));
-        ber = Integer.parseInt(m.group(2));
+        revision = m.group(1);
         return;
       }
       throw createParseException(line);
@@ -34,12 +33,8 @@ public class SignalQualityResponse extends BaseResponse implements Response {
     throw createParseException(response);
   }
 
-  public int getRssi() {
-    return rssi;
-  }
-
-  public int getBer() {
-    return ber;
+  public String getRevision() {
+    return revision;
   }
 
 }

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.InitException;
 import com.github.pmoerenhout.atcommander.api.SerialException;
@@ -135,13 +138,12 @@ import com.github.pmoerenhout.atcommander.module.telit.types.SocketStatus;
 import com.github.pmoerenhout.atcommander.module.telit.types.SocketType;
 import com.github.pmoerenhout.atcommander.module.v250.commands.AnyResponse;
 import com.github.pmoerenhout.atcommander.module.v250.commands.ConnectionFromResponse;
+import com.github.pmoerenhout.atcommander.module.v250.commands.HangupCommand;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 import com.github.pmoerenhout.atcommander.module.v250.enums.Authentication;
 import com.github.pmoerenhout.atcommander.module.v250.enums.DataMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.UmtsBand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TelitModem extends EtsiModem {
 
@@ -150,6 +152,7 @@ public class TelitModem extends EtsiModem {
   private static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
       new UnsolicitedPatternClass(NetworkRegistrationResponse.UNSOLICITED_PATTERN, NetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN_1, GprsNetworkRegistrationResponse.class),
+      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN_2, GprsNetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(QuerySimStatusResponse.UNSOLICITED_PATTERN, QuerySimStatusResponse.class),
       new UnsolicitedPatternClass(IndicatorEventResponse.UNSOLICITED_PATTERN, IndicatorEventResponse.class),
       new UnsolicitedPatternClass(SocketRingResponse.UNSOLICITED_PATTERN, SocketRingResponse.class),
@@ -166,6 +169,7 @@ public class TelitModem extends EtsiModem {
       new UnsolicitedPatternClass(DialingResponse.UNSOLICITED_PATTERN, DialingResponse.class),
       new UnsolicitedPatternClass(RingingResponse.UNSOLICITED_PATTERN, RingingResponse.class),
       new UnsolicitedPatternClass(DisconnectedResponse.UNSOLICITED_PATTERN, DisconnectedResponse.class)
+      // new UnsolicitedPatternClass(ReleasedResponse.UNSOLICITED_PATTERN, ReleasedResponse.class)
   ));
 
   private static final Pattern REVISION_PATTERN = Pattern.compile("(\\d*).(\\d*).(\\d*)(-.*|)$");
@@ -193,6 +197,17 @@ public class TelitModem extends EtsiModem {
       return new Firmware(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)));
     }
     throw new ParseException("Could not parse Telit revision identification: " + revision);
+  }
+
+  @Override
+  public void hangup(final long timeout) throws SerialException, TimeoutException {
+    try {
+      final HangupCommand command = new HangupCommand(atCommander);
+      command.setTimeout(timeout);
+      command.set();
+    } catch (final ResponseException e) {
+      LOG.warn("Could not hangup: {}", e.getMessage());
+    }
   }
 
   public Integer getExtendedNumericErrorReportForNetworkReject() throws SerialException, TimeoutException, ResponseException {

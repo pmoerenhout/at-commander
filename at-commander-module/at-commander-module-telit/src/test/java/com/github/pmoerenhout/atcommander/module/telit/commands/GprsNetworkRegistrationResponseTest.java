@@ -3,10 +3,11 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.junit.Test;
+
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
 import com.github.pmoerenhout.atcommander.module._3gpp.RegistrationState;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
-import org.junit.Test;
 
 
 public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
@@ -83,4 +84,5 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
     assertEquals(AccessTechnology.GSM, gprsNetworkRegistrationResponse.getAccessTechnology());
     assertEquals(new Integer(0x01), gprsNetworkRegistrationResponse.getRac());
   }
+
 }
