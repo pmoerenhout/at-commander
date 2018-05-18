@@ -115,10 +115,8 @@ public class EtsiModem extends V250 {
   protected String characterSet;
 
   public EtsiModem(final SerialInterface serial) {
-    // final String portName, final int portDataRate, final List<UnsolicitedPatternClass> unsolicitedPatterns,
-    // final UnsolicitedResponseCallback event
-    //super(serial, portName, portDataRate, ListUtils.union(UNSOLICITED_PATTERN_CLASS_LIST, unsolicitedPatterns), event);
     super(serial);
+    atCommander.addFinalResponseFactory(new FinalFactory3gpp());
     UNSOLICITED_PATTERN_CLASS_LIST.forEach(u -> serial.addUnsolicited(u));
   }
 
