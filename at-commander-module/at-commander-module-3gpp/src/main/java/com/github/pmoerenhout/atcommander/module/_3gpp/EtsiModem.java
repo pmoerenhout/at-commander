@@ -308,17 +308,17 @@ public class EtsiModem extends V250 {
     }
   }
 
-  public void setServiceForMoSmsMessages(final int service) throws SerialException, TimeoutException, ResponseException {
-    // 0=Packet Domain 1=circuit switched 2=Packet Domain preferred 3=circuit switched preferred
-    final SelectServiceForMoSmsMessagesCommand command = new SelectServiceForMoSmsMessagesCommand(atCommander, service);
-    command.set();
-  }
-
   public int getServiceForMoSmsMessages() throws SerialException, TimeoutException, ResponseException {
     // 0=Packet Domain 1=circuit switched 2=Packet Domain preferred 3=circuit switched preferred
     final SelectServiceForMoSmsMessagesCommand command = new SelectServiceForMoSmsMessagesCommand(atCommander);
     final SelectServiceForMoSmsMessagesResponse response = command.read();
     return response.getService();
+  }
+
+  public void setServiceForMoSmsMessages(final int service) throws SerialException, TimeoutException, ResponseException {
+    // 0=Packet Domain 1=circuit switched 2=Packet Domain preferred 3=circuit switched preferred
+    final SelectServiceForMoSmsMessagesCommand command = new SelectServiceForMoSmsMessagesCommand(atCommander, service);
+    command.set();
   }
 
   public List<Integer> getServicesForMoSmsMessages() throws SerialException, TimeoutException, ResponseException {
@@ -357,6 +357,20 @@ public class EtsiModem extends V250 {
     deleteMessage(1, 4);
   }
 
+  public SendMessageResponse sendPdu(final int lengthTpLayer, final String pdu)
+      throws SerialException, TimeoutException, ResponseException {
+    if (!MessageMode.PDU.equals(this.messageMode)) {
+      throw new IllegalStateException("The modem must be put in PDU message mode first");
+    }
+    final SendMessageCommand command = new SendMessageCommand(atCommander, messageMode);
+    command.setLength(lengthTpLayer);
+    command.setPdu(pdu);
+    LOG.info("LENGTH:{}, PDU[{}]:{}", lengthTpLayer, pdu.length(), pdu);
+    final SendMessageResponse response = command.set();
+    LOG.info("The SMS was send: reference {}", response.getReference());
+    return response;
+  }
+
   public SendMessageResponse sendSmsAsPdu(final String destination, final String text)
       throws SerialException, TimeoutException, ResponseException {
     if (!MessageMode.PDU.equals(this.messageMode)) {
@@ -371,6 +385,7 @@ public class EtsiModem extends V250 {
     final SendMessageCommand command = new SendMessageCommand(atCommander, messageMode);
     command.setPdu(pdu.create());
     command.setLength(pdu.getMessageLength());
+    LOG.info("PDU[{}]:{} LENGTH:{}", command.getPdu().length(), command.getPdu(), command.getLength());
     final SendMessageResponse response = command.set();
     LOG.info("The SMS was send to {}: reference {}", destination, response.getReference());
     return response;
