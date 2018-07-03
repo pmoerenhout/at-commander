@@ -1,6 +1,6 @@
 package com.github.pmoerenhout.atcommander;
 
-public class OkFinalResponse extends FinalResponse2 {
+public class OkFinalResponse extends AbstractFinalResponse {
 
   public OkFinalResponse(final String line) {
     super(line);

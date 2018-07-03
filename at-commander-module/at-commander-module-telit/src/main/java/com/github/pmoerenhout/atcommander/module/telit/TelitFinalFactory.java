@@ -1,20 +1,16 @@
 package com.github.pmoerenhout.atcommander.module.telit;
 
 import org.apache.commons.lang3.StringUtils;
-import com.github.pmoerenhout.atcommander.FinalResponse2;
+
+import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 import com.github.pmoerenhout.atcommander.FinalResponseFactory;
 
 public class TelitFinalFactory implements FinalResponseFactory {
 
-  // ETSI TS 300 916
-  private static final String STRING_MORE_DATA = "> ";
   private static final String STRING_RELEASED = "RELEASED";
 
-  public FinalResponse2 generate(final String line) {
-    if (StringUtils.equals(STRING_MORE_DATA, line)){
-      return new MoreDataFinalResponse(line);
-    }
-    if (StringUtils.equals(STRING_RELEASED, line)){
+  public AbstractFinalResponse generate(final String line) {
+    if (StringUtils.equals(STRING_RELEASED, line)) {
       return new ReleasedFinalResponse(line);
     }
     return null;

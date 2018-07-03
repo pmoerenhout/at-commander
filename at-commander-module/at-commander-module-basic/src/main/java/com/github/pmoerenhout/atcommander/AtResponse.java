@@ -8,7 +8,7 @@ public class AtResponse {
   private List<String> informationalText;
   private String finalResult;
   private FinalResponseCode finalResponseCode;
-  private FinalResponse2 finalResponse2;
+  private AbstractFinalResponse abstractFinalResponse;
 
   public AtResponse(final List<FinalResponseFactory> finalFactories, final List<String> lines) {
     final int size = lines.size();
@@ -16,9 +16,9 @@ public class AtResponse {
     // Last line contains the final status
     this.finalResult = lines.get(size - 1);
     for (final FinalResponseFactory finalResponseFactory : finalFactories) {
-      final FinalResponse2 fi = finalResponseFactory.generate(finalResult);
+      final AbstractFinalResponse fi = finalResponseFactory.generate(finalResult);
       if (fi != null){
-        this.finalResponse2 = fi;
+        this.abstractFinalResponse = fi;
         return;
       }
     }
@@ -47,8 +47,8 @@ public class AtResponse {
     return finalResponseCode;
   }
 
-  public FinalResponse2 getFinalResponse2() {
-    return finalResponse2;
+  public AbstractFinalResponse getAbstractFinalResponse() {
+    return abstractFinalResponse;
   }
 
 }

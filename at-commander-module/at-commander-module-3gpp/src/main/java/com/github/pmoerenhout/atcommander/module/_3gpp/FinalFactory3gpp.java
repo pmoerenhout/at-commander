@@ -3,20 +3,25 @@ package com.github.pmoerenhout.atcommander.module._3gpp;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.pmoerenhout.atcommander.FinalResponse2;
+import org.apache.commons.lang3.StringUtils;
+
+import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 import com.github.pmoerenhout.atcommander.FinalResponseFactory;
 
 public class FinalFactory3gpp implements FinalResponseFactory {
 
   // ETSI TS 300 916
-
+  // ETSI TS 300 916
+  private static final String STRING_MORE_DATA = "> ";
   private static final Pattern PATTERN_CME_ERROR = Pattern.compile("^\\+CME ERROR: (.*)$");
   private static final Pattern PATTERN_CMS_ERROR = Pattern.compile("^\\+CMS ERROR: (.*)$");
 
   // CMS ERROR: This is NOT a command, it is the error response to +Cxxx 3GPP TS 27.005 commands.
 
-  public FinalResponse2 generate(final String line) {
-
+  public AbstractFinalResponse generate(final String line) {
+    if (StringUtils.equals(STRING_MORE_DATA, line)){
+      return new MoreDataFinalResponse(line);
+    }
     final Matcher matcherCme = PATTERN_CME_ERROR.matcher(line);
     if (matcherCme.find()) {
       final String text = matcherCme.group(1);

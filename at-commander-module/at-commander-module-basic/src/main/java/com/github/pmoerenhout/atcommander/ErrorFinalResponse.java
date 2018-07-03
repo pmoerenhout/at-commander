@@ -3,7 +3,7 @@ package com.github.pmoerenhout.atcommander;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ErrorException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 
-public class ErrorFinalResponse extends FinalResponse2 {
+public class ErrorFinalResponse extends AbstractFinalResponse {
 
   public ErrorFinalResponse(final String line) {
     super(line);

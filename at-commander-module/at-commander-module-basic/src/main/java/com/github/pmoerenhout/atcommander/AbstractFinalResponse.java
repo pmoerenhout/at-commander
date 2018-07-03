@@ -2,11 +2,11 @@ package com.github.pmoerenhout.atcommander;
 
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 
-public abstract class FinalResponse2 {
+public abstract class AbstractFinalResponse {
 
   protected String line;
 
-  public FinalResponse2(final String line) {
+  public AbstractFinalResponse(final String line) {
     this.line = line;
   }
 

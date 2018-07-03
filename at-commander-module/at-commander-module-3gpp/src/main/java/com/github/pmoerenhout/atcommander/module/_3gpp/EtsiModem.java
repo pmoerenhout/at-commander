@@ -54,6 +54,7 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.RevisionIdentifi
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.RevisionIdentificationResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectBearerServiceTypeCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectServiceForMoSmsMessagesCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectServiceForMoSmsMessagesResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectTECharacterSetCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectTECharacterSetResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SendListMessagesCommand;
@@ -144,22 +145,21 @@ public class EtsiModem extends V250 {
     return response.getProductSerialNumber();
   }
 
-  public List<String> testSelectTECharacterSet() throws SerialException, TimeoutException, ResponseException {
+  public List<String> getTeCharacterSets() throws SerialException, TimeoutException, ResponseException {
     final SelectTECharacterSetCommand command = new SelectTECharacterSetCommand(atCommander);
     final SelectTECharacterSetResponse response = command.test();
     final List<String> characterSets = response.getCharacterSets();
-    LOG.debug("TE character sets: {}", characterSets);
     return characterSets;
   }
 
-  public String getSelectTECharacterSet() throws SerialException, TimeoutException, ResponseException {
+  public String getTeCharacterSet() throws SerialException, TimeoutException, ResponseException {
     final SelectTECharacterSetCommand command = new SelectTECharacterSetCommand(atCommander);
     final SelectTECharacterSetResponse response = command.read();
     this.characterSet = response.getCharacterSet();
     return this.characterSet;
   }
 
-  public void setSelectTECharacterSet(final String characterSet) throws SerialException, TimeoutException, ResponseException {
+  public void setTeCharacterSet(final String characterSet) throws SerialException, TimeoutException, ResponseException {
     final SelectTECharacterSetCommand command = new SelectTECharacterSetCommand(atCommander, characterSet);
     command.set();
     this.characterSet = characterSet;
@@ -308,11 +308,26 @@ public class EtsiModem extends V250 {
     }
   }
 
-  public void setSelectServiceForMoSmsMessages(final int service) throws SerialException, TimeoutException, ResponseException {
+  public void setServiceForMoSmsMessages(final int service) throws SerialException, TimeoutException, ResponseException {
     // 0=Packet Domain 1=circuit switched 2=Packet Domain preferred 3=circuit switched preferred
     final SelectServiceForMoSmsMessagesCommand command = new SelectServiceForMoSmsMessagesCommand(atCommander, service);
     command.set();
   }
+
+  public int getServiceForMoSmsMessages() throws SerialException, TimeoutException, ResponseException {
+    // 0=Packet Domain 1=circuit switched 2=Packet Domain preferred 3=circuit switched preferred
+    final SelectServiceForMoSmsMessagesCommand command = new SelectServiceForMoSmsMessagesCommand(atCommander);
+    final SelectServiceForMoSmsMessagesResponse response = command.read();
+    return response.getService();
+  }
+
+  public List<Integer> getServicesForMoSmsMessages() throws SerialException, TimeoutException, ResponseException {
+    // 0=Packet Domain 1=circuit switched 2=Packet Domain preferred 3=circuit switched preferred
+    final SelectServiceForMoSmsMessagesCommand command = new SelectServiceForMoSmsMessagesCommand(atCommander);
+    final SelectServiceForMoSmsMessagesResponse response = command.test();
+    return response.getServices();
+  }
+
 
   public void setMoreMessageToSend(final int mode) throws SerialException, TimeoutException, ResponseException {
     final MoreMessagesToSendCommand command = new MoreMessagesToSendCommand(atCommander, mode);

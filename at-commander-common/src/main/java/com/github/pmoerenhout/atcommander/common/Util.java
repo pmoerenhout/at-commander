@@ -3,8 +3,10 @@ package com.github.pmoerenhout.atcommander.common;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StrTokenizer;
 
 public class Util {
@@ -138,5 +140,20 @@ public class Util {
     return str;
   }
 
+  public static List<Integer> toIntegerValues(final String text) {
+    // value 1-3, 6
+    final List<Integer> values = new ArrayList<>();
+    final String[] splitted = StringUtils.split(text, ',');
+    for (final String item : splitted) {
+      if (item.contains("-")) {
+        final int min = Integer.parseInt(StringUtils.substringBefore(item, "-"));
+        final int max = Integer.parseInt(StringUtils.substringAfter(item, "-"));
+        IntStream.rangeClosed(min, max).forEach(i -> values.add(i));
+      } else {
+        values.add(Integer.valueOf(item));
+      }
+    }
+    return values;
+  }
 
 }

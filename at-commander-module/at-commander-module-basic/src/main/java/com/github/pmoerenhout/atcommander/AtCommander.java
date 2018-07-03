@@ -9,13 +9,14 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.SolicitedResponseCallback;
 import com.github.pmoerenhout.atcommander.basic.BasicFinalFactory;
 import com.github.pmoerenhout.atcommander.common.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AtCommander implements SolicitedResponseCallback {
 
@@ -32,7 +33,7 @@ public class AtCommander implements SolicitedResponseCallback {
 
   public AtCommander(final SerialInterface serial) {
     this.serial = serial;
-    LOG.debug("AtCommander for serialId:{}", serial.getId());
+    LOG.debug("AtCommander for serial:{}", serial.getId());
     finalResponseFactories.add(new BasicFinalFactory());
   }
 

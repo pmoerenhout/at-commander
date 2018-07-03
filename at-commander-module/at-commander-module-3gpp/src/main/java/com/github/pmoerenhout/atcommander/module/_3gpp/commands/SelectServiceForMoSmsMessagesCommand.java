@@ -15,6 +15,10 @@ public class SelectServiceForMoSmsMessagesCommand extends BaseCommand implements
 
   private int service;
 
+  public SelectServiceForMoSmsMessagesCommand(final AtCommander atCommander) {
+    super(COMMAND_CGSMS, atCommander);
+  }
+
   public SelectServiceForMoSmsMessagesCommand(final AtCommander atCommander, final int service) {
     super(COMMAND_CGSMS, atCommander);
     this.service = service;
@@ -38,6 +42,19 @@ public class SelectServiceForMoSmsMessagesCommand extends BaseCommand implements
     try {
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_CGSMS);
+      sb.append(QUERY);
+      return new SelectServiceForMoSmsMessagesResponse(super.execute(sb.toString()));
+    } finally {
+      available.release();
+    }
+  }
+
+  public SelectServiceForMoSmsMessagesResponse test() throws SerialException, TimeoutException, ResponseException {
+    available.acquireUninterruptibly();
+    try {
+      final StringBuilder sb = new StringBuilder(AT);
+      sb.append(COMMAND_CGSMS);
+      sb.append(EQUAL);
       sb.append(QUERY);
       return new SelectServiceForMoSmsMessagesResponse(super.execute(sb.toString()));
     } finally {

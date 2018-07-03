@@ -1,9 +1,9 @@
 package com.github.pmoerenhout.atcommander.module._3gpp;
 
-import com.github.pmoerenhout.atcommander.FinalResponse2;
+import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.exceptions.CmeErrorException;
 
-public class CmeErrorFinalResponse extends FinalResponse2 {
+public class CmeErrorFinalResponse extends AbstractFinalResponse {
 
   private String error;
 

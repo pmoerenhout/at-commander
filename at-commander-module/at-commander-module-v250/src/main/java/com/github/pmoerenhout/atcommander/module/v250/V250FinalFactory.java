@@ -4,7 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import com.github.pmoerenhout.atcommander.FinalResponse2;
+
+import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 import com.github.pmoerenhout.atcommander.FinalResponseFactory;
 import com.github.pmoerenhout.atcommander.module.v250.types.DialStatus;
 
@@ -18,7 +19,7 @@ public class V250FinalFactory implements FinalResponseFactory {
   private static final String STRING_NO_ANSWER = "NO ANSWER";
   private static final String STRING_NO_DIALTONE = "NO DIALTONE";
 
-  public FinalResponse2 generate(final String line) {
+  public AbstractFinalResponse generate(final String line) {
     if (StringUtils.equals(STRING_NO_CARRIER, line)) {
       return new DialFinalResponse(line, DialStatus.NO_CARRIER);
     }

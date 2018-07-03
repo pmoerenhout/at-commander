@@ -1,6 +1,6 @@
 package com.github.pmoerenhout.atcommander.module.v250;
 
-import com.github.pmoerenhout.atcommander.FinalResponse2;
+import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ErrorException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.module.v250.exceptions.BusyException;
@@ -9,7 +9,7 @@ import com.github.pmoerenhout.atcommander.module.v250.exceptions.NoCarrierExcept
 import com.github.pmoerenhout.atcommander.module.v250.exceptions.NoDialToneException;
 import com.github.pmoerenhout.atcommander.module.v250.types.DialStatus;
 
-public class DialFinalResponse extends FinalResponse2 {
+public class DialFinalResponse extends AbstractFinalResponse {
 
   protected DialStatus status;
   protected String text;

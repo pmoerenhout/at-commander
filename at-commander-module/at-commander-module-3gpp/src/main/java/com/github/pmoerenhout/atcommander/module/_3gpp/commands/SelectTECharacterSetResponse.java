@@ -50,7 +50,7 @@ public class SelectTECharacterSetResponse extends BaseResponse implements Respon
 
   public String getCharacterSet() {
     if (characterSets.size() != 1) {
-      throw new IllegalStateException("Expecting only one CharacterSet");
+      throw new IllegalStateException("Expecting only one character set");
     }
     return characterSets.get(0);
   }

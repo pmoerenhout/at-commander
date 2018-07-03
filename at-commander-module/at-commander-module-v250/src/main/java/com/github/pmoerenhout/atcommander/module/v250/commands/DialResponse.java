@@ -12,14 +12,14 @@ public class DialResponse extends BaseResponse {
   private String text;
 
   public DialResponse(final AtResponse response) throws ResponseException {
-    if (response.getFinalResponse2() instanceof DialFinalResponse) {
-      final DialFinalResponse dialFinalResponse = ((DialFinalResponse) response.getFinalResponse2());
+    if (response.getAbstractFinalResponse() instanceof DialFinalResponse) {
+      final DialFinalResponse dialFinalResponse = ((DialFinalResponse) response.getAbstractFinalResponse());
       status = dialFinalResponse.getStatus();
       text = dialFinalResponse.getText();
     }
-    response.getFinalResponse2().throwIfNeccessary();
+    response.getAbstractFinalResponse().throwIfNeccessary();
     // parse(response);
-//    switch (response.getFinalResponse2()){
+//    switch (response.getAbstractFinalResponse()){
 //      case :
 //        status = DialStatus.NO_CARRIER;
 //        break;

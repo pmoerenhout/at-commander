@@ -1,8 +1,8 @@
 package com.github.pmoerenhout.atcommander.module.telit;
 
-import com.github.pmoerenhout.atcommander.FinalResponse2;
+import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 
-public class ReleasedFinalResponse extends FinalResponse2 {
+public class ReleasedFinalResponse extends AbstractFinalResponse {
 
   public ReleasedFinalResponse(final String line) {
     super(line);

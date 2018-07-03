@@ -3,9 +3,10 @@ package com.github.pmoerenhout.atcommander.basic.commands;
 import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang3.ArrayUtils;
+
+import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.FinalResponse2;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
@@ -109,8 +110,8 @@ public class BaseCommand {
 //      }
 //    }
 
-    final FinalResponse2 finalResponse2 = response.getFinalResponse2();
-    finalResponse2.throwIfNeccessary();
+    final AbstractFinalResponse abstractFinalResponse = response.getAbstractFinalResponse();
+    abstractFinalResponse.throwIfNeccessary();
     return response;
 
 //    final FinalResponseCode finalResponseCode = response.getFinalResponseCode();
