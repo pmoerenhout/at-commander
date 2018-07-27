@@ -16,10 +16,10 @@ public class GprsResponse extends BaseResponse implements Response {
   private String ipAddress;
 
   public GprsResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 0) {
       // no response in case of deactivation

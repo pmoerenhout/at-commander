@@ -14,6 +14,9 @@ import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdentificationPresentationCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdentificationPresentationResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdentificationPresentationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularRingResponse;
@@ -33,12 +36,15 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.ImsiResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ListMessagesResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageFormatCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageFormatResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageTerminatingIndicationResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageTerminatingResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MobileEquipmentErrorCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ModelIdentificationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ModelIdentificationResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MoreMessagesToSendCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.NewMessageIndicationsCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.OperatorSelectionCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.OperatorSelectionResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.OperatorSelectionTestResponse;
@@ -101,6 +107,7 @@ public class EtsiModem extends V250 {
   public static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
       new UnsolicitedPatternClass(NetworkRegistrationResponse.UNSOLICITED_PATTERN1, NetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(NetworkRegistrationResponse.UNSOLICITED_PATTERN2, NetworkRegistrationResponse.class),
+      new UnsolicitedPatternClass(NetworkRegistrationResponse.UNSOLICITED_PATTERN3, NetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN1, GprsNetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN2, GprsNetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN3, GprsNetworkRegistrationResponse.class),
@@ -109,7 +116,10 @@ public class EtsiModem extends V250 {
       new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN6, GprsNetworkRegistrationResponse.class),
       new UnsolicitedPatternClass(GprsEventReportingResponse.UNSOLICITED_PATTERN, GprsEventReportingResponse.class),
       new UnsolicitedPatternClass(ServiceReportingControlResponse.UNSOLICITED_PATTERN, ServiceReportingControlResponse.class),
-      new UnsolicitedPatternClass(CellularRingResponse.UNSOLICITED_PATTERN, CellularRingResponse.class)
+      new UnsolicitedPatternClass(CellularRingResponse.UNSOLICITED_PATTERN, CellularRingResponse.class),
+      new UnsolicitedPatternClass(MessageTerminatingResponse.UNSOLICITED_PATTERN, MessageTerminatingResponse.class, 1),
+      new UnsolicitedPatternClass(MessageTerminatingIndicationResponse.UNSOLICITED_PATTERN, MessageTerminatingIndicationResponse.class),
+      new UnsolicitedPatternClass(CallingLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN, CallingLineIdentificationPresentationUnsolicited.class)
   ));
   private static final Logger LOG = LoggerFactory.getLogger(EtsiModem.class);
   protected MessageMode messageMode;
@@ -235,14 +245,18 @@ public class EtsiModem extends V250 {
   }
 
   public NetworkRegistrationResponse getNetworkRegistration() throws SerialException, TimeoutException, ResponseException {
-    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(
-        atCommander);
+    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander);
     return command.read();
   }
 
   public void setNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
     final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander, mode);
     command.set();
+  }
+
+  public NetworkRegistrationResponse getNetworkRegistrations() throws SerialException, TimeoutException, ResponseException {
+    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander);
+    return command.test();
   }
 
   public void setOperatorSelection(final OperatorSelectionMode mode, final String mccMnc) throws SerialException, TimeoutException, ResponseException {
@@ -355,6 +369,27 @@ public class EtsiModem extends V250 {
 
   public void deleteAllMessages() throws SerialException, TimeoutException, ResponseException {
     deleteMessage(1, 4);
+  }
+
+  public void setNewMessageIndications(final int mode) throws SerialException, TimeoutException, ResponseException {
+    final NewMessageIndicationsCommand newMessageIndicationsCommand = new NewMessageIndicationsCommand(atCommander, mode);
+    newMessageIndicationsCommand.set();
+  }
+
+  public void setNewMessageIndications(final int mode, final int mt) throws SerialException, TimeoutException, ResponseException {
+    final NewMessageIndicationsCommand newMessageIndicationsCommand = new NewMessageIndicationsCommand(atCommander, mode, mt);
+    newMessageIndicationsCommand.set();
+  }
+
+  public void setNewMessageIndications(final int mode, final int mt, final int bm) throws SerialException, TimeoutException, ResponseException {
+    final NewMessageIndicationsCommand newMessageIndicationsCommand = new NewMessageIndicationsCommand(atCommander, mode, mt, bm);
+    newMessageIndicationsCommand.set();
+  }
+
+  public void setNewMessageIndications(final int mode, final int mt, final int bm, final int ds, final int bfr)
+      throws SerialException, TimeoutException, ResponseException {
+    final NewMessageIndicationsCommand newMessageIndicationsCommand = new NewMessageIndicationsCommand(atCommander, mode, mt, bm, ds, bfr);
+    newMessageIndicationsCommand.set();
   }
 
   public SendMessageResponse sendPdu(final int lengthTpLayer, final String pdu)
@@ -508,6 +543,16 @@ public class EtsiModem extends V250 {
     final PinCommand command = new PinCommand(atCommander);
     final PinResponse response = command.read();
     return response.getStatus();
+  }
+
+  public void setCallingLineIdentificationPresentation(final boolean callingLineIndication) throws SerialException, TimeoutException, ResponseException {
+    final CallingLineIdentificationPresentationCommand command = new CallingLineIdentificationPresentationCommand(atCommander, callingLineIndication);
+    command.set();
+  }
+
+  public CallingLineIdentificationPresentationResponse getCallingLineIdentificationPresentation() throws SerialException, TimeoutException, ResponseException {
+    final CallingLineIdentificationPresentationCommand command = new CallingLineIdentificationPresentationCommand(atCommander);
+    return command.read();
   }
 
   public void getGprsNetworkRegistration() throws SerialException, TimeoutException, ResponseException {

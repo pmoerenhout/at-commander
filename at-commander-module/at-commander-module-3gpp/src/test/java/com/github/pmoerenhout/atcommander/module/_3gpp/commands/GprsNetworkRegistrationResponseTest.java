@@ -3,10 +3,13 @@ package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.Collections;
+
+import org.junit.Test;
+
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
 import com.github.pmoerenhout.atcommander.module._3gpp.RegistrationState;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
-import org.junit.Test;
 
 
 public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
@@ -17,7 +20,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_unsolicited_1() {
     final String line = "+CGREG: 1";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, gprsNetworkRegistrationResponse.getRegistrationState());
   }
@@ -26,7 +30,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_unsolicited_2() {
     final String line = "+CGREG: 2";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertNull(gprsNetworkRegistrationResponse.getMode());
     assertEquals(RegistrationState.SEARCHING, gprsNetworkRegistrationResponse.getRegistrationState());
@@ -38,7 +43,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_2_5() {
     final String line = "+CGREG: 2,5";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(new Integer(2), gprsNetworkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_ROAMING, gprsNetworkRegistrationResponse.getRegistrationState());
@@ -50,7 +56,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_unsolicited_5_with_lac_and_cellid() {
     final String line = "+CGREG: 5,\"9B7D\",\"09CD\"";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertNull(gprsNetworkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_ROAMING, gprsNetworkRegistrationResponse.getRegistrationState());
@@ -62,7 +69,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_2_5_with_lac_and_cellid() {
     final String line = "+CGREG: 2,5,\"ABCD\",\"123A\"";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(new Integer(2), gprsNetworkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_ROAMING, gprsNetworkRegistrationResponse.getRegistrationState());
@@ -75,7 +83,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_2_1_with_lac_and_cellid_and_act() {
     final String line = "+CGREG: 2,1,\"00DE\",\"2D3C1C6\",2";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(new Integer(2), gprsNetworkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, gprsNetworkRegistrationResponse.getRegistrationState());
@@ -88,7 +97,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test2GWithLacAndCi() {
     final String line = "+CGREG: 1,\"00DE\",\"C1AD\"";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(null, gprsNetworkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, gprsNetworkRegistrationResponse.getRegistrationState());
@@ -101,7 +111,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_solicited_2G_withLacAndCiAndAct() {
     final String line = "+CGREG: 2,1,\"00DE\",\"FD4F\",0";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(new Integer(2), gprsNetworkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, gprsNetworkRegistrationResponse.getRegistrationState());
@@ -114,7 +125,8 @@ public class GprsNetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_solicited_3G_withLacAndCiAndAct() {
     final String line = "+CGREG: 2,5,\"0CBC\",\"D1A7\",0";
 
-    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse(line);
+    final GprsNetworkRegistrationResponse gprsNetworkRegistrationResponse = new GprsNetworkRegistrationResponse();
+    gprsNetworkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(new Integer(2), gprsNetworkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_ROAMING, gprsNetworkRegistrationResponse.getRegistrationState());

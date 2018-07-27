@@ -1,5 +1,6 @@
 package com.github.pmoerenhout.atcommander.module.telit.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,11 +19,14 @@ public class GprsNetworkRegistrationResponse extends com.github.pmoerenhout.atco
 
   private Integer rac;
 
-  public GprsNetworkRegistrationResponse(final String line) {
-    parse(line);
+  public GprsNetworkRegistrationResponse() {
   }
 
-  public void parse(final String line) {
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
+  }
+
+  protected void parse(final String line) {
     final Matcher m4 = UNSOLICITED_PATTERN_1.matcher(line);
     if (m4.find()) {
       registrationState = RegistrationState.fromString(m4.group(1));

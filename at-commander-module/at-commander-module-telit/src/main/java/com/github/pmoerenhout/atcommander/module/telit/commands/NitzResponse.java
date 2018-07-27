@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
+import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
@@ -31,15 +30,18 @@ public class NitzResponse extends BaseResponse implements Response, UnsolicitedR
   private int timezone;
   private int dst;
 
-  public NitzResponse(final String s) {
-    parse(s);
+  public NitzResponse() {
   }
 
   public NitzResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final String response) {
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
+  }
+
+  private void parse(final String response) {
     final Matcher m = PATTERN.matcher(response);
     if (m.find()) {
       year = Integer.parseInt(m.group(1));
@@ -52,10 +54,10 @@ public class NitzResponse extends BaseResponse implements Response, UnsolicitedR
       dst = Integer.parseInt(m.group(8));
       return;
     }
-    throw new ParseException("Could not parse response: " + response);
+    throw createParseException(response);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);

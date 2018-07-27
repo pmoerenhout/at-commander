@@ -16,10 +16,10 @@ public class EasyGprsActivationResponse extends BaseResponse implements Response
   private String ipAddress;
 
   public EasyGprsActivationResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 0) {
       // deactivation is without response

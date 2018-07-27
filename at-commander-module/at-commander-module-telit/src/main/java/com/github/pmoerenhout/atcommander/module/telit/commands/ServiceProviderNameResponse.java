@@ -16,10 +16,10 @@ public class ServiceProviderNameResponse extends BaseResponse implements Respons
   private String serviceProviderName;
 
   public ServiceProviderNameResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 0) {
       // null response in case of no SPN

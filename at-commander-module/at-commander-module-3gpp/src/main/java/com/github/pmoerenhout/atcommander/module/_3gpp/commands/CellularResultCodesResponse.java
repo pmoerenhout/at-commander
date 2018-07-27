@@ -19,10 +19,10 @@ public class CellularResultCodesResponse extends BaseResponse implements Respons
   private List<String> modes;
 
   public CellularResultCodesResponse(final AtResponse s) {
-    this.parse(s);
+    this.parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     modes = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {

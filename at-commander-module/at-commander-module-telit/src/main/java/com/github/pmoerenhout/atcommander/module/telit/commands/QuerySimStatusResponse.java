@@ -18,24 +18,27 @@ public class QuerySimStatusResponse extends BaseResponse implements Response, Un
   private SimStatus status;
   private Integer mode;
 
-  public QuerySimStatusResponse(final String s) {
-    parse(s);
+  public QuerySimStatusResponse() {
   }
 
   public QuerySimStatusResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final String line) {
-    final Matcher m = UNSOLICITED_PATTERN.matcher(line);
-    if (m.find()) {
-      status = SimStatus.fromInt(Integer.parseInt(m.group(1)));
-      return;
+  public void parseUnsolicited(final List<String> lines) {
+    if (lines.size() == 1) {
+      final String line = lines.get(0);
+      final Matcher m = UNSOLICITED_PATTERN.matcher(line);
+      if (m.find()) {
+        status = SimStatus.fromInt(Integer.parseInt(m.group(1)));
+        return;
+      }
+      throw createParseException(line);
     }
-    throw createParseException(line);
+    throw createParseException(lines);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);

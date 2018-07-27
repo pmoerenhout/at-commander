@@ -1,5 +1,6 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,14 +29,14 @@ public class GprsNetworkRegistrationResponse extends BaseResponse implements Uns
   protected Integer cellId;
   protected AccessTechnology accessTechnology;
 
-  protected GprsNetworkRegistrationResponse() {
+  public GprsNetworkRegistrationResponse() {
   }
 
-  public GprsNetworkRegistrationResponse(final String line) {
-    parse(line);
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
   }
 
-  public void parse(final String line) {
+  protected void parse(final String line) {
     final Matcher m1 = UNSOLICITED_PATTERN1.matcher(line);
     if (m1.find()) {
       registrationState = RegistrationState.fromString(m1.group(1));
@@ -82,7 +83,7 @@ public class GprsNetworkRegistrationResponse extends BaseResponse implements Uns
     throw createParseException(line);
   }
 
-//  public void parse(final AtResponse response) {
+//  public void parseSolicited(final AtResponse response) {
 //    final List<String> informationalText = response.getInformationalText();
 //    if (informationalText.size() == 1) {
 //      final String line = informationalText.get(0);

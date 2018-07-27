@@ -1,12 +1,14 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 
-public class GprsEventReportingResponse implements UnsolicitedResponse {
+public class GprsEventReportingResponse extends BaseResponse implements UnsolicitedResponse {
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+CGEV: (.*)$");
 
@@ -24,6 +26,13 @@ public class GprsEventReportingResponse implements UnsolicitedResponse {
   private String event;
   private String address;
   private Integer cid;
+
+  public GprsEventReportingResponse() {
+  }
+
+  public void parseUnsolicited (final List<String> lines) {
+    parse(lines.get(0));
+  }
 
   public GprsEventReportingResponse(final String line) {
     parse(line);

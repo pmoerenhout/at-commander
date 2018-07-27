@@ -18,10 +18,10 @@ public class NeulConfigResponse extends BaseResponse implements Response {
   private List<Pair> items = new ArrayList<>();
 
   public NeulConfigResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     for (String line: informationalText) {
       final Matcher m = PATTERN.matcher(line);

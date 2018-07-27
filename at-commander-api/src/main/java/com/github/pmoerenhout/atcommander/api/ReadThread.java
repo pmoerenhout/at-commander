@@ -9,6 +9,8 @@ import java.nio.channels.Pipe;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.spi.SelectorProvider;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,6 +30,9 @@ public class ReadThread {
 
   private ReadThreadTask task;
   private Thread thread;
+
+  private int fetchAdditionalLines = 0;
+  private List<String> additionalLines = new ArrayList<>();
 
   public ReadThread(final List<UnsolicitedPatternClass> unsolicitedPatterns,
                     final UnsolicitedResponseCallback unsolicitedResponseCallback,
@@ -59,14 +64,16 @@ public class ReadThread {
     solicitedResponseCallback.solicited(line);
   }
 
-  private void publishUnsolicitedEvent(final String line) {
+  private void publishUnsolicitedEvent(final List<String> lines) {
     try {
+      final String firstLine = lines.get(0);
       for (final UnsolicitedPatternClass unsolicitedPatternClass : unsolicitedPatterns) {
-        final Matcher m = unsolicitedPatternClass.getPattern().matcher(line);
+        final Matcher m = unsolicitedPatternClass.getPattern().matcher(firstLine);
         if (m.find()) {
           final Class<?> myClass = unsolicitedPatternClass.getClazz();
-          final Constructor<?> constructor = myClass.getConstructor(String.class);
-          final UnsolicitedResponse unsolicitedResponse = (UnsolicitedResponse) constructor.newInstance(new Object[]{ line });
+          final Constructor<?> constructor = myClass.getConstructor();
+          final UnsolicitedResponse unsolicitedResponse = (UnsolicitedResponse) constructor.newInstance(new Object[]{});
+          unsolicitedResponse.parseUnsolicited(lines);
           doUnsolicited(unsolicitedResponse);
         }
       }
@@ -126,7 +133,7 @@ public class ReadThread {
               it.remove();
               if (key2.isReadable()) {
                 final int bytesRead = sourceChannel.read(dst);
-                // LOG.debug("read {} bytes from sourceChannel", bytesRead);
+                // LOG.info("read {} bytes from sourceChannel", bytesRead);
                 dst.flip();
                 // LOG.debug("position {} limit {}", dst.position(), dst.limit());
                 for (int i = dst.position(); i < dst.limit(); i++) {
@@ -176,11 +183,27 @@ public class ReadThread {
         final byte[] lineArray = new byte[lineBuffer.limit()];
         lineBuffer.get(lineArray);
         final String line = new String(lineArray);
-        if (isUnsolicited(line)) {
+        LOG.debug("Received line: '{}'", Util.onlyPrintable(line.getBytes()));
+        if (fetchAdditionalLines-- > 0) {
+          additionalLines.add(line);
+          if (fetchAdditionalLines == 0) {
+            // Multi line unsolicited
+            LOG.debug("Publish {} unsolicited lines: '{}'", additionalLines.size(), additionalLines);
+            publishUnsolicitedEvent(additionalLines);
+            additionalLines.clear();
+          }
+        } else if (isUnsolicited(line)) {
           if (LOG.isTraceEnabled()) {
             LOG.trace("Received unsolicited line: '{}'", Util.onlyPrintable(line.getBytes()));
           }
-          publishUnsolicitedEvent(line);
+          final int numberOfAdditionalLines = getNumberOfAdditionalLines(line);
+          LOG.info("Received unsolicited line: '{}' with {} additional lines", Util.onlyPrintable(line.getBytes()), numberOfAdditionalLines);
+          if (numberOfAdditionalLines > 0) {
+            fetchAdditionalLines = numberOfAdditionalLines;
+            additionalLines.add(line);
+          } else {
+            publishUnsolicitedEvent(Collections.singletonList(line));
+          }
         } else {
           if (LOG.isTraceEnabled()) {
             LOG.trace("Received informational line: '{}'", Util.onlyPrintable(line.getBytes()));
@@ -198,6 +221,15 @@ public class ReadThread {
         }
       }
       return false;
+    }
+
+    private int getNumberOfAdditionalLines(final String line) {
+      for (final UnsolicitedPatternClass pattern : unsolicitedPatterns) {
+        if (pattern.getPattern().matcher(line).matches()) {
+          return pattern.getNumberOfAdditionalLines();
+        }
+      }
+      throw new IllegalStateException("Couldnot determine number of lines for " + line);
     }
 
     public String getLine() {

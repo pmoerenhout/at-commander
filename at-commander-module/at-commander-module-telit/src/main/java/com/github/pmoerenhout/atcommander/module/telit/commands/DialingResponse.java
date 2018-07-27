@@ -1,5 +1,6 @@
 package com.github.pmoerenhout.atcommander.module.telit.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,8 +11,11 @@ public class DialingResponse extends BaseResponse implements UnsolicitedResponse
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^DIALING$");
 
-  public DialingResponse(final String s) {
-    parse(s);
+  public DialingResponse() {
+  }
+
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
   }
 
   public void parse(final String line) {

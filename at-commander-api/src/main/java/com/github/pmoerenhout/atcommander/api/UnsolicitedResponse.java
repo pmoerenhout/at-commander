@@ -1,7 +1,9 @@
 package com.github.pmoerenhout.atcommander.api;
 
+import java.util.List;
+
 public interface UnsolicitedResponse {
 
-  void parse(String s);
+  void parseUnsolicited(List<String> lines);
 
 }

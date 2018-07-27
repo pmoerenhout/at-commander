@@ -36,7 +36,7 @@ public class JsscSerialPortReader implements SerialPortEventListener {
           if (LOG.isTraceEnabled()) {
             LOG.trace("Serial received {} bytes: '{}'", b.length, Util.onlyPrintable(b));
           }
-          LOG.debug("Serial received {} bytes: '{}'", b.length, Util.onlyPrintable(b));
+          LOG.info("Serial received {} bytes: '{}'", b.length, Util.onlyPrintable(b));
           final ByteBuffer buf = ByteBuffer.wrap(b);
           while (buf.hasRemaining()) {
             final int bytesWritten = sinkChannel.write(buf);

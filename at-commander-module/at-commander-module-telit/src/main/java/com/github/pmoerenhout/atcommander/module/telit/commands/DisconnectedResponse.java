@@ -1,5 +1,6 @@
 package com.github.pmoerenhout.atcommander.module.telit.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,11 +11,18 @@ public class DisconnectedResponse extends BaseResponse implements UnsolicitedRes
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^DISCONNECTED");
 
-  public DisconnectedResponse(final String s) {
-    parse(s);
+  public DisconnectedResponse() {
   }
 
-  public void parse(final String line) {
+  public void parseUnsolicited(final List<String> lines) {
+    if (lines.size() == 1) {
+      parse(lines.get(0));
+      return;
+    }
+    throw createParseException(lines);
+  }
+
+  private void parse(final String line) {
     final Matcher m = UNSOLICITED_PATTERN.matcher(line);
     if (m.find()) {
       return;

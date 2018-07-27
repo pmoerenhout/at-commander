@@ -1,37 +1,40 @@
 package com.github.pmoerenhout.atcommander.module.telit.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import com.github.pmoerenhout.atcommander.common.Util;
 
 public class NoCarrierResponse extends BaseResponse implements UnsolicitedResponse {
 
-  public static final Pattern UNSOLICITED_PATTERN1 = Pattern.compile("^NO CARRIER:([1-6])$");
-  public static final Pattern UNSOLICITED_PATTERN2 = Pattern.compile("^NO CARRIER:([1-6]),(\\d*)$");
+  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^NO CARRIER:(.*)$");
 
   private Integer socketId;
   private Integer cause;
 
-  public NoCarrierResponse(final String line) {
-    parse(line);
+  public NoCarrierResponse() {
+  }
+
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
   }
 
   public void parse(final String line) {
-    final Matcher m2 = UNSOLICITED_PATTERN1.matcher(line);
-    if (m2.find()) {
-      socketId = Integer.parseInt(m2.group(1));
+    final Matcher m = UNSOLICITED_PATTERN.matcher(line);
+    if (m.find()) {
+      final String[] tokens = Util.tokenize(m.group(1));
+      socketId = Integer.parseInt(tokens[0]);
+      if (tokens.length == 2) {
+        cause = Integer.parseInt(tokens[1]);
+      }
+      if (tokens.length > 2) {
+        throw createParseException(line);
+      }
       return;
     }
-
-    final Matcher m3 = UNSOLICITED_PATTERN2.matcher(line);
-    if (m3.find()) {
-      socketId = Integer.parseInt(m3.group(1));
-      cause = Integer.parseInt(m3.group(2));
-      return;
-    }
-
     throw createParseException(line);
   }
 

@@ -15,11 +15,14 @@ public class SignalQualityResponse extends BaseResponse implements Response {
   private int rssi;
   private int ber;
 
-  public SignalQualityResponse(final AtResponse s) {
-    parse(s);
+  public SignalQualityResponse() {
   }
 
-  public void parse(final AtResponse response) {
+  public SignalQualityResponse(final AtResponse s) {
+    parseSolicited(s);
+  }
+
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);

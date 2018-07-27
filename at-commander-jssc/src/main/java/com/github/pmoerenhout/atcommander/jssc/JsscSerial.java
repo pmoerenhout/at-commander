@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.pmoerenhout.atcommander.api.ReadThread;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
@@ -18,9 +21,6 @@ import com.github.pmoerenhout.atcommander.api.State;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponseCallback;
 import com.github.pmoerenhout.atcommander.common.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
@@ -162,7 +162,7 @@ public class JsscSerial implements SerialInterface {
       // LOG.debug("read {} bytes from source channel", bytesRead);
       final byte[] data = new byte[bytesRead];
       System.arraycopy(dst.array(), 0, data, 0, bytesRead);
-      LOG.debug("read {} bytes [{}]", data.length, Util.onlyPrintable(data));
+      LOG.info("read {} bytes [{}]", data.length, Util.onlyPrintable(data));
       return data;
     } catch (final IOException e) {
       LOG.error("Could not read serial bytes", e);

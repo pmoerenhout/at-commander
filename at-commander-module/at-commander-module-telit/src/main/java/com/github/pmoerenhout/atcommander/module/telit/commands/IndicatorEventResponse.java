@@ -1,5 +1,6 @@
 package com.github.pmoerenhout.atcommander.module.telit.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,11 +15,14 @@ public class IndicatorEventResponse extends BaseResponse implements UnsolicitedR
   private String indicator;
   private int status;
 
-  public IndicatorEventResponse(final String s) {
-    this.parse(s);
+  public IndicatorEventResponse() {
   }
 
-  public void parse(final String line) {
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
+  }
+
+  private void parse(final String line) {
     final Matcher m = UNSOLICITED_PATTERN.matcher(line);
     if (m.find()) {
       indicator = m.group(1);

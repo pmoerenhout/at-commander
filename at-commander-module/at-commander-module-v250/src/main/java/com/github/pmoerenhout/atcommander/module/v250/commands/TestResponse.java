@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
-import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
 public class TestResponse extends BaseResponse implements Response {
 
@@ -18,10 +18,10 @@ public class TestResponse extends BaseResponse implements Response {
   private final List<String> values = new ArrayList<>();
 
   public TestResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String r = StringUtils.substringBetween(informationalText.get(0), "(", ")");

@@ -17,10 +17,10 @@ public class FacilityLockResponse extends BaseResponse implements Response {
   private FacilityStatus[] facilityStatuses;
 
   public FacilityLockResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final ArrayList<FacilityStatus> arrayList = new ArrayList<>();
     for (final String line : response.getInformationalText()) {
       final Matcher m1 = PATTERN1.matcher(line);

@@ -5,8 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
 public class ExtendedNumericErrorReportForNetworkRejectResponse extends BaseResponse implements Response {
 
@@ -16,10 +16,10 @@ public class ExtendedNumericErrorReportForNetworkRejectResponse extends BaseResp
   private int code;
 
   public ExtendedNumericErrorReportForNetworkRejectResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);

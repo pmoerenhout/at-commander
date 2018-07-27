@@ -15,10 +15,10 @@ public class CapabilitiesListResponse extends BaseResponse implements Response {
   private List<String> capabilities;
 
   public CapabilitiesListResponse(final AtResponse s) {
-    this.parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     informationalText.forEach(line -> {
       final Matcher m = PATTERN.matcher(line);

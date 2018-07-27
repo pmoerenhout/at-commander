@@ -33,7 +33,6 @@ public class AtCommander implements SolicitedResponseCallback {
 
   public AtCommander(final SerialInterface serial) {
     this.serial = serial;
-    LOG.debug("AtCommander for serial:{}", serial.getId());
     finalResponseFactories.add(new BasicFinalFactory());
   }
 

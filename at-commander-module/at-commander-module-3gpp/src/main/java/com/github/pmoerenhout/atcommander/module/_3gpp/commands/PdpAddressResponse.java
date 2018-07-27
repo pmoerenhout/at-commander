@@ -17,10 +17,10 @@ public class PdpAddressResponse extends BaseResponse implements Response {
   private PdpAddress[] pdpAddresses;
 
   public PdpAddressResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final ArrayList<PdpAddress> arrayList = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     for (final String line : informationalText) {

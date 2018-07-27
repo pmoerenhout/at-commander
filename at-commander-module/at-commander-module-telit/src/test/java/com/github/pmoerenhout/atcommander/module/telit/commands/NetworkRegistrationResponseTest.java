@@ -2,6 +2,8 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
+
 import org.junit.Test;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
@@ -16,8 +18,9 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_creg_unsolicited_1() throws Exception {
     final String line = "+CREG: 1";
 
-    final com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse networkRegistrationResponse = new com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse(
-        line);
+    final com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse networkRegistrationResponse =
+        new com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse();
+    networkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, networkRegistrationResponse.getRegistrationState());
   }
@@ -27,7 +30,8 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
     final String line = "+CREG: 2";
 
     final com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse networkRegistrationResponse =
-        new com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse(line);
+        new com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse();
+    networkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.SEARCHING, networkRegistrationResponse.getRegistrationState());
   }
@@ -48,7 +52,8 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
     final String line = "+CREG: 5,\"9BCD\",\"09AB\"";
 
     final com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse networkRegistrationResponse =
-        new com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse(line);
+        new com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse();
+    networkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.REGISTERED_ROAMING, networkRegistrationResponse.getRegistrationState());
     assertEquals(new Integer(0x9bcd), networkRegistrationResponse.getLac());
@@ -72,8 +77,9 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_creg_with_lac_and_cellid_and_act() throws Exception {
     final String line = "+CREG: 1,\"00DE\",\"2D3C1B3\",2";
 
-    final com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse networkRegistrationResponse = new com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse(
-        line);
+    final com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse networkRegistrationResponse =
+        new com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse();
+    networkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, networkRegistrationResponse.getRegistrationState());
     assertEquals(new Integer(0x00de), networkRegistrationResponse.getLac());
@@ -85,7 +91,8 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
   public void test_creg_2_1_with_lac_and_with_cellid_and_act_not_parse_as_unsolicited() throws Exception {
     final String line = "+CREG: 2,1,\"00DE\",\"2D33F2C\",2";
 
-    new com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse(line);
+    com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse networkRegistrationResponse = new com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse();
+    networkRegistrationResponse.parseUnsolicited(Collections.singletonList(line));
   }
 
   @Test

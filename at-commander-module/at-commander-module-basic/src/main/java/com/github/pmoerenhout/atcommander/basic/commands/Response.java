@@ -5,6 +5,6 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 
 public interface Response {
 
-  void parse(AtResponse atResponse) throws ResponseException;
+  void parseSolicited(AtResponse atResponse) throws ResponseException;
 
 }

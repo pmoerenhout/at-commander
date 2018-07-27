@@ -18,10 +18,10 @@ public class PingResponse extends BaseResponse implements Response {
   private Ping[] pings;
 
   public PingResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<Ping> arrayList = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     for (final String line : informationalText) {

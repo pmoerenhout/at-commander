@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.InitException;
 import com.github.pmoerenhout.atcommander.api.SerialException;
@@ -37,8 +40,6 @@ import com.github.pmoerenhout.atcommander.module.v250.commands.SoftResetCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.StoreCurrentConfigurationCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.VerboseCommand;
 import com.github.pmoerenhout.atcommander.module.v250.exceptions.UnknownResponseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class V250 extends Basic {
 
@@ -59,20 +60,8 @@ public class V250 extends Basic {
   public void init() throws InitException, SerialException, TimeoutException, ResponseException {
     super.init();
     atCommander.addFinalResponseFactory(new V250FinalFactory());
-    LOG.info("Disable echo");
+    LOG.info("Disable local echo");
     setEcho(false);
-//
-//    try {
-//      atCommander = new AtCommander(serial);
-//      serial.setSolicitedResponseCallback(atCommander);
-//      atCommander.addFinalResponseFactory(new V250FinalFactory());
-//      atCommander.init();
-//      LOG.info("setEcho false");
-//      setEcho(false);
-//    } catch (final Exception e) {
-//      LOG.error("Error init device: {}", e.getMessage());
-//      throw new InitException(e);
-//    }
   }
 
   public void close() {
@@ -101,11 +90,10 @@ public class V250 extends Basic {
 
   public void setEcho(final boolean echo) throws SerialException, TimeoutException {
     try {
-      LOG.warn("setEcho: {}", echo);
       final SimpleCommand command = new SimpleCommand(atCommander, echo ? "ATE1" : "ATE0");
       command.set();
     } catch (final ResponseException e) {
-      LOG.warn("Echo exception: {}", e.getMessage());
+      LOG.warn("Could not set the echo to {}: {}", echo, e.getMessage());
     }
   }
 

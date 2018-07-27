@@ -5,25 +5,21 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.module.telit.types.SocketInformation;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
+import com.github.pmoerenhout.atcommander.module.telit.types.SocketInformation;
 
 public class SocketInformationResponse extends BaseResponse implements Response {
 
   final static Pattern pattern = Pattern.compile("^#SI: ([1-6]),(\\d*),(\\d*),(\\d*),(\\d*)$");
-  private static final Logger LOG = LoggerFactory.getLogger(SocketInformationResponse.class);
   private SocketInformation[] socketInformations;
 
   public SocketInformationResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final ArrayList<SocketInformation> arrayList = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     for (final String line : informationalText) {

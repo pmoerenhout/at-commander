@@ -1,11 +1,12 @@
 package com.github.pmoerenhout.atcommander.module.telit.commands;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
-import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import net.sf.marineapi.nmea.parser.SentenceFactory;
 import net.sf.marineapi.nmea.sentence.Sentence;
@@ -24,11 +25,18 @@ public class GpsNmunResponse extends BaseResponse implements UnsolicitedResponse
 
   private Sentence sentence;
 
+  public GpsNmunResponse() {
+  }
+
   public GpsNmunResponse(final String line) {
     parse(line);
   }
 
-  public void parse(final String line) {
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
+  }
+
+  private void parse(final String line) {
     final String nmea = line.substring(10);
     sentence = sentenceFactory.createParser(nmea);
     if (!sentence.isValid()) {

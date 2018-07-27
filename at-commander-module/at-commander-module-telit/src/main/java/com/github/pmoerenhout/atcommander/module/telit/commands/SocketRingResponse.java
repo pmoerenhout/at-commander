@@ -1,12 +1,14 @@
 package com.github.pmoerenhout.atcommander.module.telit.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 
-public class SocketRingResponse implements UnsolicitedResponse {
+public class SocketRingResponse extends BaseResponse implements UnsolicitedResponse {
 
   // SRING: 6
   // SRING: "195.8.209.155",7,6,69,0,2015-06-08T09:45:49.0512015-06-08T09:45:49.0532015-06-08T09:45:49.054
@@ -25,11 +27,14 @@ public class SocketRingResponse implements UnsolicitedResponse {
   private Integer dataLeft;
   private String data;
 
-  public SocketRingResponse(final String line) {
-    parse(line);
+  public SocketRingResponse() {
   }
 
-  public void parse(final String line) {
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
+  }
+
+  private void parse(final String line) {
     final Matcher m1 = PATTERN1.matcher(line);
     if (m1.find()) {
       socketId = Integer.parseInt(m1.group(1));

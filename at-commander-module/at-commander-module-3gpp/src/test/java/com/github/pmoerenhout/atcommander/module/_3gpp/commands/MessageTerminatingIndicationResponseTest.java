@@ -1,9 +1,11 @@
-package com.github.pmoerenhout.atcommander.module.telit.commands;
+package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import static org.junit.Assert.assertEquals;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageTerminatingIndicationResponse;
+
 import org.junit.Test;
 
 public class MessageTerminatingIndicationResponseTest extends BaseCommandTest {

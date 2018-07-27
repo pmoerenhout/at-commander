@@ -16,10 +16,10 @@ public class ExtendedNumericErrorReportResponse extends BaseResponse implements 
   private int code;
 
   public ExtendedNumericErrorReportResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);

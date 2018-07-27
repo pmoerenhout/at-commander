@@ -1,12 +1,13 @@
 package com.github.pmoerenhout.atcommander.module.telit.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
-import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
+import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
-public class HttpRingResponse implements UnsolicitedResponse {
+public class HttpRingResponse extends BaseResponse implements UnsolicitedResponse {
 
   // #HTTPRING: <prof_id>,<http_status_code>,<content_type>,<data_size>
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("#HTTPRING: ([0-2]),(\\d*),\"(.*)\",(\\d*)$");
@@ -16,12 +17,15 @@ public class HttpRingResponse implements UnsolicitedResponse {
   private String contentType;
   private int dataSize;
 
-  public HttpRingResponse(final String line) {
-    parse(line);
+  public HttpRingResponse() {
+
   }
 
-  @Override
-  public void parse(final String line) {
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
+  }
+
+  private void parse(final String line) {
     final Matcher m = UNSOLICITED_PATTERN.matcher(line);
     if (m.find()) {
       profileId = Integer.parseInt(m.group(1));
@@ -30,7 +34,7 @@ public class HttpRingResponse implements UnsolicitedResponse {
       dataSize = Integer.parseInt(m.group(4));
       return;
     }
-    throw new ParseException("Could not parse response: " + line);
+    throw createParseException(line);
   }
 
   public int getProfileId() {

@@ -12,10 +12,10 @@ public class EmptyResponse extends BaseResponse implements Response {
   private static final Logger LOG = LoggerFactory.getLogger(EmptyResponse.class);
 
   public EmptyResponse(final AtResponse s) {
-    this.parse(s);
+    this.parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() != 0) {
       for (final String line : informationalText) {

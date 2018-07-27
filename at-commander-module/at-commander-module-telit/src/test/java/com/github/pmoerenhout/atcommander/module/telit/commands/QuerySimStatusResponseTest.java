@@ -4,11 +4,14 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.Collections;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
 import com.github.pmoerenhout.atcommander.module._3gpp.SimStatus;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class QuerySimStatusResponseTest extends BaseCommandTest {
 
@@ -16,7 +19,8 @@ public class QuerySimStatusResponseTest extends BaseCommandTest {
   public void testQss1() {
     final String line = "#QSS: 1";
 
-    final QuerySimStatusResponse querySimStatusResponse = new QuerySimStatusResponse(line);
+    final QuerySimStatusResponse querySimStatusResponse = new QuerySimStatusResponse();
+    querySimStatusResponse.parseUnsolicited(Collections.singletonList(line));
 
     Assert.assertEquals(SimStatus.INSERTED, querySimStatusResponse.getStatus());
   }
@@ -25,7 +29,8 @@ public class QuerySimStatusResponseTest extends BaseCommandTest {
   public void testQssUnsolicited() {
     final String line = "#QSS: 2";
 
-    final QuerySimStatusResponse querySimStatusResponse = new QuerySimStatusResponse(line);
+    final QuerySimStatusResponse querySimStatusResponse = new QuerySimStatusResponse();
+    querySimStatusResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertNull(querySimStatusResponse.getMode());
     assertEquals(SimStatus.INSERTED_PIN_UNLOCKED, querySimStatusResponse.getStatus());

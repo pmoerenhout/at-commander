@@ -1,19 +1,23 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
-import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
+import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
-public class ServiceReportingControlResponse implements UnsolicitedResponse {
+public class ServiceReportingControlResponse extends BaseResponse implements UnsolicitedResponse {
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+CR: (.*)$");
 
   private String service;
 
-  public ServiceReportingControlResponse(final String s) {
-    parse(s);
+  public ServiceReportingControlResponse() {
+  }
+
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
   }
 
   public void parse(final String response) {
@@ -22,7 +26,7 @@ public class ServiceReportingControlResponse implements UnsolicitedResponse {
       service = m.group(1);
       return;
     }
-    throw new ParseException("Could not parse response: " + response);
+    throw createParseException(response);
   }
 
   public String getService() {

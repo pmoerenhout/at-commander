@@ -1,68 +1,50 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
-import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
-import com.github.pmoerenhout.atcommander.common.Splitter;
+import org.apache.commons.lang3.BooleanUtils;
 
-public class CallingLineIdentificationPresentationResponse implements UnsolicitedResponse {
+import com.github.pmoerenhout.atcommander.AtResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
-  // +CLIP: "+31348503413",145,"",128,"",0
+public class CallingLineIdentificationPresentationResponse extends BaseResponse implements Response {
 
-  // public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+CLIP: \"([+\\d]*)\",(\\d*)(,\"(.*)\",(\\d*))?");
-  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+CLIP: (.*)");
+  // +CLIP: 0,1
+  private static final Pattern PATTERN = Pattern.compile("^\\+CLIP: (\\d),(\\d)");
 
-  private String number;
-  private int type;
-  private String subAddress;
-  private Integer subAddressType;
-  private String alpha;
-  private Integer cliValidity;
+  private Boolean callingLineIndicationPresentation;
+  private Boolean callingLineIndicationPresentationProvisioned;
 
-  public CallingLineIdentificationPresentationResponse(final String s) {
-    parse(s);
+  public CallingLineIdentificationPresentationResponse() {
   }
 
-  public void parse(final String response) {
-    final Matcher m = UNSOLICITED_PATTERN.matcher(response);
-    if (m.find()) {
-      final Splitter splitter = new Splitter(m.group(1));
-      number = splitter.getString(0);
-      type = splitter.getInteger(1);
-      subAddress = splitter.getString(2);
-      subAddressType = splitter.getInteger(3);
-      alpha = splitter.getString(4);
-      cliValidity = splitter.getInteger(5);
-      return;
+  public CallingLineIdentificationPresentationResponse(final AtResponse s) {
+    parseSolicited(s);
+  }
+
+  public void parseSolicited(final AtResponse response) {
+    final List<String> informationalText = response.getInformationalText();
+    if (informationalText.size() == 1) {
+      final String line = informationalText.get(0);
+      final Matcher m = PATTERN.matcher(line);
+      if (m.find()) {
+        callingLineIndicationPresentation = BooleanUtils.toBooleanObject(Integer.parseInt(m.group(1)));
+        callingLineIndicationPresentationProvisioned = BooleanUtils.toBooleanObject(Integer.parseInt(m.group(2)));
+        return;
+      }
+      throw createParseException(line);
     }
-    throw new ParseException("Could not parse response: " + response);
+    throw createParseException(response);
   }
 
-
-
-  public String getNumber() {
-    return number;
+  public Boolean getCallingLineIndicationPresentation() {
+    return callingLineIndicationPresentation;
   }
 
-  public int getType() {
-    return type;
-  }
-
-  public String getSubAddress() {
-    return subAddress;
-  }
-
-  public Integer getSubAddressType() {
-    return subAddressType;
-  }
-
-  public String getAlpha() {
-    return alpha;
-  }
-
-  public Integer getCliValidity() {
-    return cliValidity;
+  public Boolean getCallingLineIndicationPresentationProvisioned() {
+    return callingLineIndicationPresentationProvisioned;
   }
 }

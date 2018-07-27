@@ -12,10 +12,10 @@ public class AnyResponse extends BaseResponse implements Response {
   private List<String> lines = new ArrayList<>();
 
   public AnyResponse(final AtResponse s) {
-    this.parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     for (final String line : response.getInformationalText()) {
       lines.add(line);
     }

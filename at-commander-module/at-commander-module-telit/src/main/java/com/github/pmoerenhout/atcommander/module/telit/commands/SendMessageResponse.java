@@ -15,10 +15,10 @@ public class SendMessageResponse extends BaseResponse implements Response {
   private int reference;
 
   public SendMessageResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);

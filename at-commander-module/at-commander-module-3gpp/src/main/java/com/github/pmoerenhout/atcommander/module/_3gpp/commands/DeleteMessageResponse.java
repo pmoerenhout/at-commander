@@ -17,10 +17,10 @@ public class DeleteMessageResponse extends BaseResponse implements Response {
   private PdpAddress[] pdpAddresses;
 
   public DeleteMessageResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     final ArrayList<PdpAddress> arrayList = new ArrayList<>();
     for (final String line : informationalText) {

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.pmoerenhout.atcommander.module.telit.types.SocketLastClosure;
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
+import com.github.pmoerenhout.atcommander.module.telit.types.SocketLastClosure;
 
 public class SocketLastClosureResponse extends BaseResponse implements Response {
 
@@ -16,10 +16,10 @@ public class SocketLastClosureResponse extends BaseResponse implements Response 
   private SocketLastClosure[] socketLastClosures;
 
   public SocketLastClosureResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final ArrayList<SocketLastClosure> arrayList = new ArrayList<>();
     for (final String line : response.getInformationalText()) {
       final Matcher m = pattern.matcher(line);

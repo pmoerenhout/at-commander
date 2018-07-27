@@ -18,10 +18,10 @@ public class SocketTypeResponse extends BaseResponse implements Response {
   private SocketType[] socketTypes;
 
   public SocketTypeResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final ArrayList<SocketType> arrayList = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     for (final String line : informationalText) {

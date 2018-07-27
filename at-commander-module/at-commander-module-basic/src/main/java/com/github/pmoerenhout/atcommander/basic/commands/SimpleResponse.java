@@ -10,10 +10,10 @@ public class SimpleResponse extends BaseResponse implements Response {
   private String value;
 
   public SimpleResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       value = informationalText.get(0);

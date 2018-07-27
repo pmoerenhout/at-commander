@@ -19,10 +19,10 @@ public class SelectServiceForMoSmsMessagesResponse extends BaseResponse implemen
   private List<Integer> services;
 
   public SelectServiceForMoSmsMessagesResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     services = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {

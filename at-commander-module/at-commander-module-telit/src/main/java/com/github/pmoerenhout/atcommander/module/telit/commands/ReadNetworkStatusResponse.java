@@ -6,12 +6,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.common.Util;
-import com.github.pmoerenhout.atcommander.module.telit.types.ActiveSet;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
+import com.github.pmoerenhout.atcommander.common.Util;
+import com.github.pmoerenhout.atcommander.module.telit.types.ActiveSet;
 
 public class ReadNetworkStatusResponse extends BaseResponse implements Response {
 
@@ -55,10 +56,10 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
   private List<ActiveSet> activeSets = new ArrayList<>();
 
   public ReadNetworkStatusResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       line = informationalText.get(0);

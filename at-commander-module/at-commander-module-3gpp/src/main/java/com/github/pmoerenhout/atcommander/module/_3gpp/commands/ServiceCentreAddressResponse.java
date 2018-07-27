@@ -17,10 +17,10 @@ public class ServiceCentreAddressResponse extends BaseResponse implements Respon
   private int type;
 
   public ServiceCentreAddressResponse(final AtResponse s) throws ParseException {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) throws ParseException {
+  public void parseSolicited(final AtResponse response) throws ParseException {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);

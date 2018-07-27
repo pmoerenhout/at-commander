@@ -17,10 +17,10 @@ public class GprsActStatusResponse extends BaseResponse implements Response {
   private GprsAct[] gprsActives;
 
   public GprsActStatusResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final ArrayList<GprsAct> arrayList = new ArrayList<>();
     for (final String line : response.getInformationalText()) {
       final Matcher m = PATTERN.matcher(line);

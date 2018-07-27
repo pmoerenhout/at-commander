@@ -96,6 +96,7 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderN
 import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderNameResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusResponse;
+import com.github.pmoerenhout.atcommander.module.telit.commands.SimToolkitNotificationResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsCommandsOperationModeCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketAcceptCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketConfigCommand;
@@ -164,12 +165,12 @@ public class TelitModem extends EtsiModem {
       new UnsolicitedPatternClass(HttpRingResponse.UNSOLICITED_PATTERN, HttpRingResponse.class),
       new UnsolicitedPatternClass(JammedStatusResponse.UNSOLICITED_PATTERN, JammedStatusResponse.class),
       new UnsolicitedPatternClass(CodecInformationlResponse.UNSOLICITED_PATTERN, CodecInformationlResponse.class),
-      new UnsolicitedPatternClass(NoCarrierResponse.UNSOLICITED_PATTERN1, NoCarrierResponse.class),
-      new UnsolicitedPatternClass(NoCarrierResponse.UNSOLICITED_PATTERN2, NoCarrierResponse.class),
+      new UnsolicitedPatternClass(NoCarrierResponse.UNSOLICITED_PATTERN, NoCarrierResponse.class),
       new UnsolicitedPatternClass(DialingResponse.UNSOLICITED_PATTERN, DialingResponse.class),
       new UnsolicitedPatternClass(RingingResponse.UNSOLICITED_PATTERN, RingingResponse.class),
-      new UnsolicitedPatternClass(DisconnectedResponse.UNSOLICITED_PATTERN, DisconnectedResponse.class)
+      new UnsolicitedPatternClass(DisconnectedResponse.UNSOLICITED_PATTERN, DisconnectedResponse.class),
       // new UnsolicitedPatternClass(ReleasedResponse.UNSOLICITED_PATTERN, ReleasedResponse.class)
+      new UnsolicitedPatternClass(SimToolkitNotificationResponse.UNSOLICITED_PATTERN, SimToolkitNotificationResponse.class)
   ));
 
   private static final Pattern REVISION_PATTERN = Pattern.compile("(\\d*).(\\d*).(\\d*)(-.*|)$");

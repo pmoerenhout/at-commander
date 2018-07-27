@@ -20,11 +20,10 @@ public class SelectTECharacterSetResponse extends BaseResponse implements Respon
   private List<String> characterSets;
 
   public SelectTECharacterSetResponse(final AtResponse s) {
-    this.parse(s);
+    parseSolicited(s);
   }
 
-  @Override
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     characterSets = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {

@@ -40,10 +40,10 @@ public class ReadMessageResponse extends BaseResponse implements Response {
   private List<ListMessage> listMessages;
 
   public ReadMessageResponse(final AtResponse s) {
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final ArrayList<ListMessage> arrayList = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     for (int i = 0; i < informationalText.size(); i += 2) {

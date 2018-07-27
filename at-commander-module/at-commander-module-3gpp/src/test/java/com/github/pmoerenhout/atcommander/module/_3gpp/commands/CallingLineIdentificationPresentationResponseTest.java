@@ -4,30 +4,30 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class CallingLineIdentificationPresentationResponseTest {
+import com.github.pmoerenhout.atcommander.AtResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+
+public class CallingLineIdentificationPresentationResponseTest extends BaseCommandTest {
 
   @Test
-  public void test_clip_unsolicited_2() throws Exception {
-    final String line = "+CLIP: \"+31348000000\",145";
+  public void test_clip_1() throws Exception {
+    final AtResponse atResponse = createOkAtResponse("+CLIP: 0,1");
 
-    final CallingLineIdentificationPresentationResponse clipResponse = new CallingLineIdentificationPresentationResponse(line);
+    final CallingLineIdentificationPresentationResponse response = new CallingLineIdentificationPresentationResponse();
+    response.parseSolicited(atResponse);
 
-    assertEquals("+31348000000", clipResponse.getNumber());
-    assertEquals(145, clipResponse.getType());
+    assertEquals(Boolean.FALSE, response.getCallingLineIndicationPresentation());
+    assertEquals(Boolean.TRUE, response.getCallingLineIndicationPresentationProvisioned());
   }
 
   @Test
-  public void test_clip_unsolicited_6() throws Exception {
-    final String line = "+CLIP: \"+31348503413\",145,\"\",128,\"\",0";
+  public void test_clip_2() throws Exception {
+    final AtResponse atResponse = createOkAtResponse("+CLIP: 1,0");
 
-    final CallingLineIdentificationPresentationResponse clipResponse = new CallingLineIdentificationPresentationResponse(line);
+    final CallingLineIdentificationPresentationResponse response = new CallingLineIdentificationPresentationResponse();
+    response.parseSolicited(atResponse);
 
-    assertEquals("+31348503413", clipResponse.getNumber());
-    assertEquals(145, clipResponse.getType());
-    assertEquals("", clipResponse.getSubAddress());
-    assertEquals(new Integer(128), clipResponse.getSubAddressType());
-    assertEquals("", clipResponse.getAlpha());
-    assertEquals(new Integer(0), clipResponse.getCliValidity());
+    assertEquals(Boolean.TRUE, response.getCallingLineIndicationPresentation());
+    assertEquals(Boolean.FALSE, response.getCallingLineIndicationPresentationProvisioned());
   }
-
 }

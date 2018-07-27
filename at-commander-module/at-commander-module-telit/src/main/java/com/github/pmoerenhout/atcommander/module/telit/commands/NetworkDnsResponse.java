@@ -18,10 +18,10 @@ public class NetworkDnsResponse extends BaseResponse implements Response {
   private NetworkDns[] networkDnses;
 
   public NetworkDnsResponse(final AtResponse s) {
-    this.parse(s);
+    this.parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final ArrayList<NetworkDns> arrayList = new ArrayList<>();
     final List<String> informationalText = response.getInformationalText();
     for (final String line : informationalText) {

@@ -11,7 +11,6 @@ import com.github.pmoerenhout.atcommander.FinalResponseFactory;
 public class FinalFactory3gpp implements FinalResponseFactory {
 
   // ETSI TS 300 916
-  // ETSI TS 300 916
   private static final String STRING_MORE_DATA = "> ";
   private static final Pattern PATTERN_CME_ERROR = Pattern.compile("^\\+CME ERROR: (.*)$");
   private static final Pattern PATTERN_CMS_ERROR = Pattern.compile("^\\+CMS ERROR: (.*)$");

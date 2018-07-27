@@ -19,15 +19,18 @@ public class NetworkRegistrationResponse extends com.github.pmoerenhout.atcomman
 
   private AccessTechnology accessTechnology;
 
-  public NetworkRegistrationResponse(final String line) {
-    parse(line);
+  public NetworkRegistrationResponse() {
   }
 
   public NetworkRegistrationResponse(final AtResponse response) {
-    parse(response);
+    parseSolicited(response);
   }
 
-  public void parse(final String line) {
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
+  }
+
+  protected void parse(final String line) {
     final Matcher m4 = UNSOLICITED_PATTERN.matcher(line);
     if (m4.find()) {
       registrationState = RegistrationState.fromString(m4.group(1));
@@ -39,7 +42,7 @@ public class NetworkRegistrationResponse extends com.github.pmoerenhout.atcomman
     super.parse(line);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);
@@ -52,7 +55,7 @@ public class NetworkRegistrationResponse extends com.github.pmoerenhout.atcomman
         accessTechnology = AccessTechnology.fromInt(Integer.parseInt(m5.group(5)));
         return;
       }
-      super.parse(response);
+      super.parseSolicited(response);
     } else {
       throw createParseException(response);
     }

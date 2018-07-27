@@ -6,10 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StrTokenizer;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
-import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
+import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
+import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
 public class ServInfoResponse extends BaseResponse implements Response {
 
@@ -44,10 +44,10 @@ public class ServInfoResponse extends BaseResponse implements Response {
 
   public ServInfoResponse(final AtResponse s, final AccessTechnology accessTechnology) {
     this.accessTechnology = accessTechnology;
-    parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     if (this.accessTechnology == null) {
       throw new IllegalArgumentException("No Access Technology given for " + line);
     }

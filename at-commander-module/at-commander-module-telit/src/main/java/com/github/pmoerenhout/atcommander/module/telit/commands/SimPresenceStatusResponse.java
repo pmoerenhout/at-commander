@@ -6,12 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.BooleanUtils;
-import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.module.telit.types.SimPresence;
+import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
+import com.github.pmoerenhout.atcommander.module.telit.types.SimPresence;
 
 public class SimPresenceStatusResponse extends BaseResponse implements Response, UnsolicitedResponse {
 
@@ -21,15 +21,18 @@ public class SimPresenceStatusResponse extends BaseResponse implements Response,
 
   private List<SimPresence> simPresences = new ArrayList<>();
 
-  public SimPresenceStatusResponse(final String s) {
-    this.parse(s);
+  public SimPresenceStatusResponse() {
   }
 
   public SimPresenceStatusResponse(final AtResponse s) {
-    this.parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final String response) {
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
+  }
+
+  private void parse(final String response) {
     final Matcher m1 = UNSOLICTED_PATTERN.matcher(response);
     if (m1.find()) {
       final boolean remote = BooleanUtils.toBoolean(Integer.parseInt(m1.group(1)));
@@ -40,7 +43,7 @@ public class SimPresenceStatusResponse extends BaseResponse implements Response,
     throw createParseException(response);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() > 0) {
       for (final String line : informationalText) {

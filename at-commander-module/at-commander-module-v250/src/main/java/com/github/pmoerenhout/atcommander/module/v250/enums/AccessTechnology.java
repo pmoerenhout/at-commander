@@ -11,7 +11,12 @@ public enum AccessTechnology {
   UTRAN_HSDPA(4),
   UTRAN_HSUPA(5),
   UTRAN_HSDPA_HSUPA(6),
-  E_UTRAN(7);
+  E_UTRAN(7),
+  EC_GSM_IOT(8),
+  E_UTRAN_NB_S1(9),
+  E_UTRA_5GCN(10),
+  NR_5GCN(11),
+  NR_EPS_CORE(12);
 
   private final int value;
 

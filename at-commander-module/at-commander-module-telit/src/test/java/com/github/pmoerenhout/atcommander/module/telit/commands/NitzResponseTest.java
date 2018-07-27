@@ -2,13 +2,16 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
+
 import org.junit.Test;
 
 public class NitzResponseTest {
 
   @Test
   public void testNitz() throws Exception {
-    final NitzResponse nitzResponse = new NitzResponse("#NITZ: 15/04/03,16:07:54+08,1");
+    final NitzResponse nitzResponse = new NitzResponse();
+    nitzResponse.parseUnsolicited(Collections.singletonList("#NITZ: 15/04/03,16:07:54+08,1"));
 
     assertEquals(15, nitzResponse.getYear());
     assertEquals(4, nitzResponse.getMonth());
@@ -23,7 +26,8 @@ public class NitzResponseTest {
 
   @Test
   public void testNitz2() throws Exception {
-    final NitzResponse nitzResponse = new NitzResponse("#NITZ: 99/12/31,16:07:54-08,0");
+    final NitzResponse nitzResponse = new NitzResponse();
+    nitzResponse.parseUnsolicited(Collections.singletonList("#NITZ: 99/12/31,16:07:54-08,0"));
 
     assertEquals(99, nitzResponse.getYear());
     assertEquals(12, nitzResponse.getMonth());

@@ -1,5 +1,6 @@
 package com.github.pmoerenhout.atcommander.module.v250.commands;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,10 @@ public class RingResponse extends BaseResponse implements UnsolicitedResponse {
 
   public RingResponse(final String line) {
     parse(line);
+  }
+
+  public void parseUnsolicited(final List<String> lines) {
+    parse(lines.get(0));
   }
 
   public void parse(final String line) {

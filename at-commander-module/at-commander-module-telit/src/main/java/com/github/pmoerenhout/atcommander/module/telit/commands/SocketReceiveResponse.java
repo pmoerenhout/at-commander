@@ -24,10 +24,10 @@ public class SocketReceiveResponse extends BaseResponse implements Response {
   private String data;
 
   public SocketReceiveResponse(final AtResponse s) {
-    this.parse(s);
+    parseSolicited(s);
   }
 
-  public void parse(final AtResponse response) {
+  public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 2) {
       final String line1 = informationalText.get(0);

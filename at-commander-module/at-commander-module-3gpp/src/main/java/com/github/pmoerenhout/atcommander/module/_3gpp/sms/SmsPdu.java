@@ -80,8 +80,7 @@ public class SmsPdu {
 
     /* Create UD */
     if (header.length != 0) {
-      ud = String.format("%02X", header.length)
-          + bytesToHexString(header);
+      ud = String.format("%02X", header.length) + bytesToHexString(header);
       l += header.length;
     } else {
       ud = "";

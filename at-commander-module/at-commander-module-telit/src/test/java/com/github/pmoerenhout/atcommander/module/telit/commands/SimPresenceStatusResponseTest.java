@@ -3,9 +3,12 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.Collections;
+
+import org.junit.Test;
+
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
-import org.junit.Test;
 
 public class SimPresenceStatusResponseTest extends BaseCommandTest {
 
@@ -13,7 +16,8 @@ public class SimPresenceStatusResponseTest extends BaseCommandTest {
   public void test_simpr_unsolicited() {
     final String line = "#SIMPR: 0,1";
 
-    final SimPresenceStatusResponse simPresenceStatusResponse = new SimPresenceStatusResponse(line);
+    final SimPresenceStatusResponse simPresenceStatusResponse = new SimPresenceStatusResponse();
+    simPresenceStatusResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertNull(simPresenceStatusResponse.getSimPresences().get(0).getMode());
     assertEquals(false, simPresenceStatusResponse.getSimPresences().get(0).isRemote());

@@ -4,8 +4,7 @@ import java.io.IOException;
 
 public class InitException extends IOException {
 
-
-  private static final long serialVersionUID = -1080223550663378266L;
+  private static final long serialVersionUID = -5721916940450131618L;
 
   /**
    * Default constructor.
