@@ -12,7 +12,7 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 
 public class MessageFormatCommand extends BaseCommand implements Command<EmptyResponse> {
 
-  static final String COMMAND_MGF = "+CMGF";
+  private static final String COMMAND_MGF = "+CMGF";
 
   private MessageMode mode;
 

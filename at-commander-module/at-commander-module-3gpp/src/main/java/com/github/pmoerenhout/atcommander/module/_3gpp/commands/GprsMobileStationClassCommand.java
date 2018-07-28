@@ -10,28 +10,39 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.module.v250.commands.TestResponse;
 
-public class GprsAttachCommand extends BaseCommand implements Command<BaseResponse> {
+public class GprsMobileStationClassCommand extends BaseCommand implements Command<BaseResponse> {
 
-  private static final String COMMAND_CGATT = "+CGATT";
+  public static final String CLASS_A = "A";
+  public static final String CLASS_B = "B";
+  public static final String CLASS_C = "C";
+  public static final String CLASS_C_GPRS = "CG";
+  public static final String CLASS_C_GSM = "CC";
 
-  private boolean attach;
+  private static final String COMMAND_CGCLASS = "+CGCLASS";
 
-  public GprsAttachCommand(final AtCommander atCommander) {
-    super(COMMAND_CGATT, atCommander);
+  private String clazz;
+
+  public GprsMobileStationClassCommand(final AtCommander atCommander) {
+    super(COMMAND_CGCLASS, atCommander);
   }
 
-  public GprsAttachCommand(final AtCommander atCommander, final boolean attach) {
-    super(COMMAND_CGATT, atCommander);
-    this.attach = attach;
+  public GprsMobileStationClassCommand(final AtCommander atCommander, final String clazz) {
+    super(COMMAND_CGCLASS, atCommander);
+    this.clazz = clazz;
+    if (isInvalidGprsMobileStationClass(clazz)) {
+      throw new IllegalArgumentException("Invalid GPRS Mobile Station Class: " + clazz);
+    }
   }
 
   public EmptyResponse set() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
       final StringBuilder sb = new StringBuilder(AT);
-      sb.append(COMMAND_CGATT);
+      sb.append(COMMAND_CGCLASS);
       sb.append(EQUAL);
-      sb.append(oneOrZero(attach));
+      sb.append(DOUBLE_QUOTE);
+      sb.append(clazz);
+      sb.append(DOUBLE_QUOTE);
 
       return new EmptyResponse(super.execute(sb.toString()));
     } finally {
@@ -39,13 +50,13 @@ public class GprsAttachCommand extends BaseCommand implements Command<BaseRespon
     }
   }
 
-  public GprsAttachResponse read() throws SerialException, TimeoutException, ResponseException {
+  public GprsMobileStationClassResponse read() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
       final StringBuilder sb = new StringBuilder(AT);
-      sb.append(COMMAND_CGATT);
+      sb.append(COMMAND_CGCLASS);
       sb.append(QUERY);
-      return new GprsAttachResponse(super.execute(sb.toString()));
+      return new GprsMobileStationClassResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }
@@ -55,12 +66,19 @@ public class GprsAttachCommand extends BaseCommand implements Command<BaseRespon
     available.acquireUninterruptibly();
     try {
       final StringBuilder sb = new StringBuilder(AT);
-      sb.append(COMMAND_CGATT);
+      sb.append(COMMAND_CGCLASS);
       sb.append(EQUAL);
       sb.append(QUERY);
       return new TestResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }
+  }
+
+  private boolean isInvalidGprsMobileStationClass(final String clazz) {
+    if (CLASS_A.equals(clazz) || CLASS_B.equals(clazz) || CLASS_C.equals(clazz) || CLASS_C_GPRS.equals(clazz) || CLASS_C_GSM.equals(clazz)) {
+      return false;
+    }
+    return true;
   }
 }

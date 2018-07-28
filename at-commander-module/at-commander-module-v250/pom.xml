@@ -22,6 +22,11 @@
       <groupId>com.github.pmoerenhout</groupId>
       <artifactId>at-commander-module-basic</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.github.pmoerenhout</groupId>
+      <artifactId>at-commander-module-basic</artifactId>
+      <type>test-jar</type>
+    </dependency>
   </dependencies>
 
 </project>

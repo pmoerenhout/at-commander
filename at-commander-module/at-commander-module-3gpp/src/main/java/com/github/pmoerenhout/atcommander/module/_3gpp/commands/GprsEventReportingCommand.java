@@ -9,33 +9,45 @@ import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 
-public class GprsClassCommand extends BaseCommand implements Command<BaseResponse> {
+public class GprsEventReportingCommand extends BaseCommand implements Command<BaseResponse> {
 
-  public static final String UMTS = "A";
-  public static final String GSM_GPRS = "B";
-  public static final String CLASS_C_GPRS = "CG";
-  public static final String CLASS_C_GSM = "CC";
+  private static final String COMMAND_CGEREP = "+CGEREP";
 
-  private static final String COMMAND_CGCLASS = "+CGCLASS";
+  private int mode;
+  private Integer bfr;
 
-  private String clazz;
+  public GprsEventReportingCommand(final AtCommander atCommander, final int mode) {
+    super(COMMAND_CGEREP, atCommander);
+    this.mode = mode;
+  }
 
-  public GprsClassCommand(final AtCommander atCommander, final String clazz) {
-    super(COMMAND_CGCLASS, atCommander);
-    this.clazz = clazz;
+  public GprsEventReportingCommand(final AtCommander atCommander, final int mode, final int bfr) {
+    this(atCommander, mode);
+    this.bfr = bfr;
   }
 
   public EmptyResponse set() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
       final StringBuilder sb = new StringBuilder(AT);
-      sb.append(COMMAND_CGCLASS);
+      sb.append(COMMAND_CGEREP);
       sb.append(EQUAL);
-      sb.append(clazz);
-
+      sb.append(String.valueOf(mode));
+      if (bfr != null){
+        sb.append(EQUAL);
+        sb.append(Integer.toString(bfr));
+      }
       return new EmptyResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }
+  }
+
+  public int getMode() {
+    return mode;
+  }
+
+  public Integer getBfr() {
+    return bfr;
   }
 }

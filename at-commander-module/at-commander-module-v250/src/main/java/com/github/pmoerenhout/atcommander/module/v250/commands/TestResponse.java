@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
+import com.github.pmoerenhout.atcommander.common.Util;
 
 public class TestResponse extends BaseResponse implements Response {
 
@@ -33,7 +34,7 @@ public class TestResponse extends BaseResponse implements Response {
           values.add(min);
           values.add(max);
         } else {
-          values.add(t);
+          values.add(Util.removeQuotes(t));
         }
       }
     } else {

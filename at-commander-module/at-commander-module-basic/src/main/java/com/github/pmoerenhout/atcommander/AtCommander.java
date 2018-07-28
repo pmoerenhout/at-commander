@@ -1,13 +1,11 @@
 package com.github.pmoerenhout.atcommander;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,7 @@ import com.github.pmoerenhout.atcommander.common.Util;
 public class AtCommander implements SolicitedResponseCallback {
 
   private static final Logger LOG = LoggerFactory.getLogger(AtCommander.class);
-  private static final byte[] NEWLINE = "\r".getBytes(StandardCharsets.US_ASCII);
+  // private static final byte[] NEWLINE = "\r".getBytes(StandardCharsets.US_ASCII);
 
   final List<String> lines = Collections.synchronizedList(new ArrayList<>());
   final List<FinalResponseFactory> finalResponseFactories = new ArrayList<>();
@@ -57,9 +55,9 @@ public class AtCommander implements SolicitedResponseCallback {
     serial.panic();
   }
 
-  public AtResponse send(final String command, final long timeout) throws SerialException {
-    return send(ArrayUtils.addAll(command.getBytes(), NEWLINE), timeout);
-  }
+//  public AtResponse send(final String command, final long timeout) throws SerialException {
+//    return send(ArrayUtils.addAll(command.getBytes(), NEWLINE), timeout);
+//  }
 
   public AtResponse send(final byte[] bytes, final long timeout) throws SerialException {
     lock.acquireUninterruptibly();

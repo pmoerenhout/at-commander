@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
+import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
@@ -20,6 +21,9 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdent
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularRingResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.ClockCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.ClockResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.ConnectedLineIdentificationPresentationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DefinePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DeleteMessageCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockCommand;
@@ -27,7 +31,8 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockResp
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsActivateCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsClassCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsMobileStationClassCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsMobileStationClassResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsEventReportingResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationResponse;
@@ -119,7 +124,8 @@ public class EtsiModem extends V250 {
       new UnsolicitedPatternClass(CellularRingResponse.UNSOLICITED_PATTERN, CellularRingResponse.class),
       new UnsolicitedPatternClass(MessageTerminatingResponse.UNSOLICITED_PATTERN, MessageTerminatingResponse.class, 1),
       new UnsolicitedPatternClass(MessageTerminatingIndicationResponse.UNSOLICITED_PATTERN, MessageTerminatingIndicationResponse.class),
-      new UnsolicitedPatternClass(CallingLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN, CallingLineIdentificationPresentationUnsolicited.class)
+      new UnsolicitedPatternClass(CallingLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN, CallingLineIdentificationPresentationUnsolicited.class),
+      new UnsolicitedPatternClass(ConnectedLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN, ConnectedLineIdentificationPresentationUnsolicited.class)
   ));
   private static final Logger LOG = LoggerFactory.getLogger(EtsiModem.class);
   protected MessageMode messageMode;
@@ -492,9 +498,20 @@ public class EtsiModem extends V250 {
     return null;
   }
 
-  public void setGprsClass(final String gprsClass) throws SerialException, TimeoutException, ResponseException {
-    final GprsClassCommand command = new GprsClassCommand(atCommander, gprsClass);
+  public void setGprsMobileStationClass(final String gprsMobileStationClass) throws SerialException, TimeoutException, ResponseException {
+    final GprsMobileStationClassCommand command = new GprsMobileStationClassCommand(atCommander, gprsMobileStationClass);
     command.set();
+  }
+
+  public GprsMobileStationClassResponse getGprsMobileStationClass() throws SerialException, TimeoutException, ResponseException {
+    final GprsMobileStationClassCommand command = new GprsMobileStationClassCommand(atCommander);
+    return command.read();
+  }
+
+  public List<String> testGprsMobileStationClass() throws SerialException, TimeoutException, ResponseException {
+    final GprsMobileStationClassCommand command = new GprsMobileStationClassCommand(atCommander);
+    final TestResponse response = command.test();
+    return response.getValues();
   }
 
   public GprsAttachResponse getGprsAttach() throws SerialException, TimeoutException, ResponseException {
@@ -545,14 +562,24 @@ public class EtsiModem extends V250 {
     return response.getStatus();
   }
 
+  public CallingLineIdentificationPresentationResponse getCallingLineIdentificationPresentation() throws SerialException, TimeoutException, ResponseException {
+    final CallingLineIdentificationPresentationCommand command = new CallingLineIdentificationPresentationCommand(atCommander);
+    return command.read();
+  }
+
   public void setCallingLineIdentificationPresentation(final boolean callingLineIndication) throws SerialException, TimeoutException, ResponseException {
     final CallingLineIdentificationPresentationCommand command = new CallingLineIdentificationPresentationCommand(atCommander, callingLineIndication);
     command.set();
   }
 
-  public CallingLineIdentificationPresentationResponse getCallingLineIdentificationPresentation() throws SerialException, TimeoutException, ResponseException {
-    final CallingLineIdentificationPresentationCommand command = new CallingLineIdentificationPresentationCommand(atCommander);
+  public ClockResponse getClock() throws SerialException, TimeoutException, ResponseException {
+    final ClockCommand command = new ClockCommand(atCommander);
     return command.read();
+  }
+
+  public EmptyResponse setClock(final String time) throws SerialException, TimeoutException, ResponseException {
+    final ClockCommand command = new ClockCommand(atCommander, time);
+    return command.set();
   }
 
   public void getGprsNetworkRegistration() throws SerialException, TimeoutException, ResponseException {

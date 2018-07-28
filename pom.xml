@@ -47,6 +47,7 @@
     <jssc.version>2.8.0</jssc.version>
     <junit.version>4.12</junit.version>
     <marineapi.version>0.10.0</marineapi.version>
+    <mockito.version>2.20.1</mockito.version>
     <slf4j.version>1.7.25</slf4j.version>
 
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -218,6 +219,12 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

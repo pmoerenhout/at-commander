@@ -8,57 +8,55 @@ import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
-import com.github.pmoerenhout.atcommander.module.v250.commands.TestResponse;
 
-public class GprsAttachCommand extends BaseCommand implements Command<BaseResponse> {
+public class ClockCommand extends BaseCommand implements Command<BaseResponse> {
 
-  private static final String COMMAND_CGATT = "+CGATT";
+  private static final String COMMAND_CLOCK = AT + "+CCLK";
 
-  private boolean attach;
+  // "yy/MM/dd,hh:mm:ss±zz"
+  private String time;
 
-  public GprsAttachCommand(final AtCommander atCommander) {
-    super(COMMAND_CGATT, atCommander);
+  public ClockCommand(final AtCommander atCommander) {
+    super(COMMAND_CLOCK, atCommander);
   }
 
-  public GprsAttachCommand(final AtCommander atCommander, final boolean attach) {
-    super(COMMAND_CGATT, atCommander);
-    this.attach = attach;
+  public ClockCommand(final AtCommander atCommander, final String time) {
+    super(COMMAND_CLOCK, atCommander);
+    this.time = time;
   }
 
   public EmptyResponse set() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
-      final StringBuilder sb = new StringBuilder(AT);
-      sb.append(COMMAND_CGATT);
+      final StringBuilder sb = new StringBuilder(COMMAND_CLOCK);
       sb.append(EQUAL);
-      sb.append(oneOrZero(attach));
-
+      sb.append(DOUBLE_QUOTE);
+      sb.append(time);
+      sb.append(DOUBLE_QUOTE);
       return new EmptyResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }
   }
 
-  public GprsAttachResponse read() throws SerialException, TimeoutException, ResponseException {
+  public ClockResponse read() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
-      final StringBuilder sb = new StringBuilder(AT);
-      sb.append(COMMAND_CGATT);
+      final StringBuilder sb = new StringBuilder(COMMAND_CLOCK);
       sb.append(QUERY);
-      return new GprsAttachResponse(super.execute(sb.toString()));
+      return new ClockResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }
   }
 
-  public TestResponse test() throws SerialException, TimeoutException, ResponseException {
+  public EmptyResponse test() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
-      final StringBuilder sb = new StringBuilder(AT);
-      sb.append(COMMAND_CGATT);
+      final StringBuilder sb = new StringBuilder(COMMAND_CLOCK);
       sb.append(EQUAL);
       sb.append(QUERY);
-      return new TestResponse(super.execute(sb.toString()));
+      return new EmptyResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }
