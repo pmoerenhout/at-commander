@@ -11,12 +11,11 @@ import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 
 public class EnterSmsBlockModeProtocolCommand extends BaseCommand implements Command<BaseResponse> {
 
-  static private final String COMMAND_ESP = "+CESP";
+  private static final String COMMAND_ESP = "+CESP";
 
   public EnterSmsBlockModeProtocolCommand(final AtCommander atCommander) {
     super(COMMAND_ESP, atCommander);
   }
-
 
   public EmptyResponse set() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();

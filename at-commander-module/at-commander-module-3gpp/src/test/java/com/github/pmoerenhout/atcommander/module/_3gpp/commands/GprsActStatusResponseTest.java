@@ -1,10 +1,13 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
-import org.junit.Test;
 
 public class GprsActStatusResponseTest extends BaseCommandTest {
 
@@ -15,7 +18,7 @@ public class GprsActStatusResponseTest extends BaseCommandTest {
     final GprsActStatusResponse gprsActStatusResponse = new GprsActStatusResponse(response);
 
     assertEquals(5, gprsActStatusResponse.getGprsActives()[0].getCid());
-    assertEquals(true, gprsActStatusResponse.getGprsActives()[0].isActive());
+    assertTrue(gprsActStatusResponse.getGprsActives()[0].isActive());
   }
 
   @Test
@@ -25,6 +28,6 @@ public class GprsActStatusResponseTest extends BaseCommandTest {
     final GprsActStatusResponse gprsActStatusResponse = new GprsActStatusResponse(response);
 
     assertEquals(4, gprsActStatusResponse.getGprsActives()[0].getCid());
-    assertEquals(false, gprsActStatusResponse.getGprsActives()[0].isActive());
+    assertFalse(gprsActStatusResponse.getGprsActives()[0].isActive());
   }
 }

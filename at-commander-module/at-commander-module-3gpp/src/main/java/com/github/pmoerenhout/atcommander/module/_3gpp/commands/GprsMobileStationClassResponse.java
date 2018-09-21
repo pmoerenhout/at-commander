@@ -14,6 +14,9 @@ public class GprsMobileStationClassResponse extends BaseResponse implements Resp
 
   private String clazz;
 
+  public GprsMobileStationClassResponse() {
+  }
+
   public GprsMobileStationClassResponse(final AtResponse s) {
     parseSolicited(s);
   }

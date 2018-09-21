@@ -18,6 +18,9 @@ public class CellularResultCodesResponse extends BaseResponse implements Respons
 
   private List<String> modes;
 
+  public CellularResultCodesResponse() {
+  }
+
   public CellularResultCodesResponse(final AtResponse s) {
     this.parseSolicited(s);
   }

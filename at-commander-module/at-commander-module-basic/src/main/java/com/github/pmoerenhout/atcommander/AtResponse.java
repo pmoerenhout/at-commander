@@ -7,7 +7,7 @@ public class AtResponse {
 
   private List<String> informationalText;
   private String finalResult;
-  private FinalResponseCode finalResponseCode;
+  // private FinalResponseCode finalResponseCode;
   private AbstractFinalResponse abstractFinalResponse;
 
   public AtResponse(final List<FinalResponseFactory> finalFactories, final List<String> lines) {
@@ -35,17 +35,17 @@ public class AtResponse {
     return informationalText;
   }
 
-  public boolean isOk() {
-    return FinalResponseCode.OK == finalResponseCode || FinalResponseCode.CONNECT == finalResponseCode || FinalResponseCode.CONNECTED == finalResponseCode;
-  }
+//  public boolean isOk() {
+//    return FinalResponseCode.OK == finalResponseCode || FinalResponseCode.CONNECT == finalResponseCode || FinalResponseCode.CONNECTED == finalResponseCode;
+//  }
 
   public String getStatus() {
     return finalResult;
   }
 
-  public FinalResponseCode getFinalResponseCode() {
-    return finalResponseCode;
-  }
+//  public FinalResponseCode getFinalResponseCode() {
+//    return finalResponseCode;
+//  }
 
   public AbstractFinalResponse getAbstractFinalResponse() {
     return abstractFinalResponse;

@@ -15,6 +15,9 @@ public class MessageFormatResponse extends BaseResponse implements Response {
 
   private int format;
 
+  public MessageFormatResponse() {
+  }
+
   public MessageFormatResponse(final AtResponse s) {
     parseSolicited(s);
   }

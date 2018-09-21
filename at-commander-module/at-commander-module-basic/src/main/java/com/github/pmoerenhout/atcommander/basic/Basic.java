@@ -33,8 +33,6 @@ public class Basic {
 
   public void init() throws InitException, SerialException, TimeoutException, ResponseException {
     try {
-//      atCommander = new AtCommander(serial);
-//      serial.setSolicitedResponseCallback(atCommander);
       atCommander.init();
     } catch (final Exception e) {
       LOG.error("Could not initialize basic modem", e);
@@ -53,13 +51,13 @@ public class Basic {
   }
 
   public void getAttention() throws SerialException, TimeoutException, ResponseException {
-    AttentionCommand command = new AttentionCommand(atCommander);
+    final AttentionCommand command = new AttentionCommand(atCommander);
     command.set();
   }
 
   public boolean isResponsive() throws SerialException {
     try {
-      final SimpleCommand command = new SimpleCommand(atCommander, "AT");
+      final AttentionCommand command = new AttentionCommand(atCommander);
       command.setTimeout(1000);
       command.set();
       return true;

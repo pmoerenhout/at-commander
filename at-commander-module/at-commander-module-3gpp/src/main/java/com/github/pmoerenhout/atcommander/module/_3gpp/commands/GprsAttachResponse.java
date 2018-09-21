@@ -14,6 +14,9 @@ public class GprsAttachResponse extends BaseResponse implements Response {
 
   private int value;
 
+  public GprsAttachResponse() {
+  }
+
   public GprsAttachResponse(final AtResponse s) {
     parseSolicited(s);
   }
@@ -24,7 +27,7 @@ public class GprsAttachResponse extends BaseResponse implements Response {
       final String line = informationalText.get(0);
       final Matcher m = PATTERN.matcher(line);
       if (m.find()) {
-        value = Integer.valueOf(m.group(1));
+        value = Integer.parseInt(m.group(1));
         return;
       }
       throw createParseException(line);

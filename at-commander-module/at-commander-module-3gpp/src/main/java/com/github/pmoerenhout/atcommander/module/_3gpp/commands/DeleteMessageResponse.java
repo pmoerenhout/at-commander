@@ -16,6 +16,9 @@ public class DeleteMessageResponse extends BaseResponse implements Response {
 
   private PdpAddress[] pdpAddresses;
 
+  public DeleteMessageResponse() {
+  }
+
   public DeleteMessageResponse(final AtResponse s) {
     parseSolicited(s);
   }

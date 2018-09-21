@@ -3,8 +3,8 @@ package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class ClockResponseTest extends BaseCommandTest {
     final ClockResponse clockResponse = new ClockResponse(response);
 
     assertEquals("18/07/28,22:27:00+08", clockResponse.getTime());
-    assertEquals(ZonedDateTime.of(2018, 7, 28, 22, 27, 0, 0, ZoneOffset.ofTotalSeconds(8 * 900)), clockResponse.getTemporal());
+    assertEquals(OffsetDateTime.of(2018, 7, 28, 22, 27, 0, 0, ZoneOffset.ofTotalSeconds(8 * 900)), clockResponse.getDateTime());
   }
 
   @Test
@@ -30,7 +30,7 @@ public class ClockResponseTest extends BaseCommandTest {
     final ClockResponse clockResponse = new ClockResponse(response);
 
     assertEquals("18/07/28,22:27:00-02", clockResponse.getTime());
-    assertEquals(ZonedDateTime.of(2018, 7, 28, 22, 27, 0, 0, ZoneOffset.ofTotalSeconds(-2 * 900)), clockResponse.getTemporal());
+    assertEquals(OffsetDateTime.of(2018, 7, 28, 22, 27, 0, 0, ZoneOffset.ofTotalSeconds(-2 * 900)), clockResponse.getDateTime());
   }
 
   @Test
@@ -40,7 +40,7 @@ public class ClockResponseTest extends BaseCommandTest {
     final ClockResponse clockResponse = new ClockResponse(response);
 
     assertEquals("18/07/28,22:27:00", clockResponse.getTime());
-    assertEquals(LocalDateTime.of(2018, 7, 28, 22, 27, 0, 0), clockResponse.getTemporal());
+    assertEquals(LocalDateTime.of(2018, 7, 28, 22, 27, 0, 0), clockResponse.getDateTime());
   }
 
 }

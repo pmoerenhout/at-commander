@@ -1,8 +1,8 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.util.List;
@@ -37,17 +37,18 @@ public class ClockResponse extends BaseResponse implements Response {
       }
       throw createParseException(line);
     }
+    throw createParseException(response);
   }
 
   public String getTime() {
     return time;
   }
 
-  public Temporal getTemporal() {
+  public Temporal getDateTime() {
     final LocalDateTime local = LocalDateTime.parse(time.substring(0, 17), DATE_TIME_FORMATTER);
     if (time.length() >= 20) {
       final int offsetSeconds = Integer.parseInt(time.substring(17, 20)) * 900;
-      return ZonedDateTime.of(local, ZoneOffset.ofTotalSeconds(offsetSeconds));
+      return OffsetDateTime.of(local, ZoneOffset.ofTotalSeconds(offsetSeconds));
     }
     return local;
   }

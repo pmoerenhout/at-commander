@@ -29,6 +29,7 @@ public class ManufacturerIdentificationResponse extends BaseResponse implements 
       }
       throw createParseException(line);
     }
+    throw createParseException(response);
   }
 
   public String getManufacturer() {

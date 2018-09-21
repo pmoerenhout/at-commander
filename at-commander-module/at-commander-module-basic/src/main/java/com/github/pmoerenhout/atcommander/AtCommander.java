@@ -77,8 +77,8 @@ public class AtCommander implements SolicitedResponseCallback {
       if (lines.size() == 0) {
         panic();
         LOG.warn("No lines received!");
-        final byte[] ttt = serial.read();
-        LOG.trace("Read after writing {}: {} ({})", Util.onlyPrintable(bytes), ttt.length, Util.onlyPrintable(ttt));
+        final byte[] bytesRead = serial.read();
+        LOG.trace("Read after writing {}: {} ({})", Util.onlyPrintable(bytes), Util.onlyPrintable(bytesRead), bytesRead.length);
         return null;
       }
       return new AtResponse(finalResponseFactories, lines);

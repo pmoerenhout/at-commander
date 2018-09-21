@@ -3,13 +3,14 @@ package com.github.pmoerenhout.atcommander;
 import static jssc.SerialPort.FLOWCONTROL_RTSCTS_IN;
 import static jssc.SerialPort.FLOWCONTROL_RTSCTS_OUT;
 
-import com.github.pmoerenhout.atcommander.jssc.JsscSerial;
-import com.github.pmoerenhout.atcommander.module.telit.TelitModem;
-import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.types.Band;
-import com.github.pmoerenhout.atcommander.module.v250.enums.WirelessNetwork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.github.pmoerenhout.atcommander.jssc.JsscSerial;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse;
+import com.github.pmoerenhout.atcommander.module.telit.TelitModem;
+import com.github.pmoerenhout.atcommander.module.telit.commands.types.Band;
+import com.github.pmoerenhout.atcommander.module.v250.enums.WirelessNetwork;
 
 public class ExampleTelit {
 
@@ -33,11 +34,11 @@ public class ExampleTelit {
       LOG.info("Band GSM:{} UMTS:{}", band.getGsmBand(), band.getUmtsBand());
       LOG.info("ICCID: {}", modem.getIntegratedCircuitCardIdentification());
       LOG.info("IMSI: {}", modem.getInternationalMobileSubscriberIdentity());
-      LOG.info("Service provider name: {}", modem.getServiceProviderName());
+      LOG.info("SPN (Service Provider Name): {}", modem.getServiceProviderName());
       modem.setNetworkRegistration(2);
       modem.setGprsNetworkRegistration(2);
       final NetworkRegistrationResponse networkRegistrationResponse = modem.getNetworkRegistration();
-      LOG.info("Network Registration: Mode:{} State:{} LAC:{} CID:{}",
+      LOG.info("Network Registration: mode:{} state:{} LAC:{} CID:{}",
           networkRegistrationResponse.getMode(),
           networkRegistrationResponse.getRegistrationState(),
           networkRegistrationResponse.getLac(),

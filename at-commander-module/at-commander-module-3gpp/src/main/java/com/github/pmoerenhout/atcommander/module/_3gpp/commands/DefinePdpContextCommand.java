@@ -6,9 +6,9 @@ import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommand;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
-import com.github.pmoerenhout.atcommander.module.v250.enums.PdpType;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
+import com.github.pmoerenhout.atcommander.module.v250.enums.PdpType;
 
 public class DefinePdpContextCommand extends BaseCommand implements Command<BaseResponse> {
 
@@ -63,11 +63,11 @@ public class DefinePdpContextCommand extends BaseCommand implements Command<Base
           if (dataCompression != null || headerCompression != null) {
             sb.append(COMMA);
             if (dataCompression != null) {
-              sb.append(dataCompression == Boolean.TRUE ? "1" : "0");
+              sb.append(oneOrZero(dataCompression == Boolean.TRUE));
             }
             if (headerCompression != null) {
               sb.append(COMMA);
-              sb.append(headerCompression == Boolean.TRUE ? "1" : "0");
+              sb.append(oneOrZero(headerCompression == Boolean.TRUE));
             }
           }
         }

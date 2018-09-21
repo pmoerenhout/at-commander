@@ -8,14 +8,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.InitException;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
 import com.github.pmoerenhout.atcommander.basic.Basic;
-import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
-import com.github.pmoerenhout.atcommander.basic.commands.SimpleCommand;
 import com.github.pmoerenhout.atcommander.basic.commands.SimpleResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
@@ -24,6 +21,7 @@ import com.github.pmoerenhout.atcommander.module.v250.commands.AnswerCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.AnyResponse;
 import com.github.pmoerenhout.atcommander.module.v250.commands.Circuit108Command;
 import com.github.pmoerenhout.atcommander.module.v250.commands.Circuit109Command;
+import com.github.pmoerenhout.atcommander.module.v250.commands.CommandEchoCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.DialCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.DialResponse;
 import com.github.pmoerenhout.atcommander.module.v250.commands.ExtendedResultCodesCommand;
@@ -31,7 +29,6 @@ import com.github.pmoerenhout.atcommander.module.v250.commands.FactoryConfigurat
 import com.github.pmoerenhout.atcommander.module.v250.commands.HangupCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.IdentificationInformationCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.QuietResultCodesCommand;
-import com.github.pmoerenhout.atcommander.module.v250.commands.RingResponse;
 import com.github.pmoerenhout.atcommander.module.v250.commands.SParameterCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.SelectModeCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.SerialNumberCommand;
@@ -40,6 +37,7 @@ import com.github.pmoerenhout.atcommander.module.v250.commands.SoftResetCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.StoreCurrentConfigurationCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.VerboseCommand;
 import com.github.pmoerenhout.atcommander.module.v250.exceptions.UnknownResponseException;
+import com.github.pmoerenhout.atcommander.module.v250.unsolicited.RingUnsolicited;
 
 public class V250 extends Basic {
 
@@ -49,7 +47,7 @@ public class V250 extends Basic {
 
   private static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
       // new UnsolicitedPatternClass(NoCarrierResponse.PATTERN, NoCarrierResponse.class),
-      new UnsolicitedPatternClass(RingResponse.PATTERN, RingResponse.class)
+      new UnsolicitedPatternClass(RingUnsolicited.PATTERN, RingUnsolicited.class)
   ));
 
   public V250(final SerialInterface serial) {
@@ -64,37 +62,9 @@ public class V250 extends Basic {
     setEcho(false);
   }
 
-  public void close() {
-    if (atCommander != null) {
-      atCommander.close();
-    }
-  }
-
-  public Command<BaseResponse> getSimpleCommand(final String command) {
-    return new SimpleCommand(atCommander, command);
-  }
-
-  public boolean isResponsive() throws SerialException {
-    try {
-      final SimpleCommand command = new SimpleCommand(atCommander, "AT");
-      command.setTimeout(10000);
-      command.set();
-      return true;
-    } catch (final TimeoutException e) {
-      LOG.warn("The AT interface is not responsive: {}", e.getMessage());
-    } catch (final ResponseException e) {
-      LOG.warn("Other error on AT interface: {}", e.getMessage());
-    }
-    return false;
-  }
-
-  public void setEcho(final boolean echo) throws SerialException, TimeoutException {
-    try {
-      final SimpleCommand command = new SimpleCommand(atCommander, echo ? "ATE1" : "ATE0");
-      command.set();
-    } catch (final ResponseException e) {
-      LOG.warn("Could not set the echo to {}: {}", echo, e.getMessage());
-    }
+  public void setEcho(final boolean echo) throws SerialException, TimeoutException, ResponseException {
+    final CommandEchoCommand command = new CommandEchoCommand(atCommander, echo);
+    command.set();
   }
 
   public String getSerialNumber() throws SerialException, TimeoutException, ResponseException {

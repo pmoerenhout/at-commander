@@ -27,7 +27,6 @@ public enum MessageStatus {
   public static MessageStatus fromString(final String response) {
     for (final MessageStatus s : MessageStatus.values()) {
       if (s.textValue().equals(response)) {
-        System.out.println("OK");
         return s;
       }
     }

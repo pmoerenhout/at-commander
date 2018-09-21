@@ -29,6 +29,7 @@ public class ProductSerialNumberIdentificationResponse extends BaseResponse impl
       }
       throw createParseException(line);
     }
+    throw createParseException(informationalText);
   }
 
   public String getProductSerialNumber() {

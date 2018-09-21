@@ -17,13 +17,13 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdentificationPresentationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdentificationPresentationResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdentificationPresentationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.CallingLineIdentificationPresentationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularRingResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.CellularRingUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ClockCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ClockResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.ConnectedLineIdentificationPresentationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.ConnectedLineIdentificationPresentationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DefinePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DeleteMessageCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockCommand;
@@ -31,18 +31,18 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockResp
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsActivateCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.GprsEventReportingUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsMobileStationClassCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsMobileStationClassResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsEventReportingResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationCommand;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.GprsNetworkRegistrationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ImsiCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ImsiResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ListMessagesResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageFormatCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageFormatResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageTerminatingIndicationResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageTerminatingResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTerminatingIndicationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTerminatingUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MobileEquipmentErrorCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ModelIdentificationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ModelIdentificationResponse;
@@ -74,7 +74,8 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.SendMessageRespo
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ServiceCentreAddressCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ServiceCentreAddressResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ServiceReportingControlCommand;
-import com.github.pmoerenhout.atcommander.module._3gpp.commands.ServiceReportingControlResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.NetworkRegistrationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.ServiceReportingControlUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SettingsDateFormatCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SignalQualityCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SignalQualityResponse;
@@ -110,22 +111,22 @@ public class EtsiModem extends V250 {
   // http://www.etsi.org/deliver/etsi_ts/127000_127099/127007/08.03.00_60/ts_127007v080300p.pdf
 
   public static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
-      new UnsolicitedPatternClass(NetworkRegistrationResponse.UNSOLICITED_PATTERN1, NetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(NetworkRegistrationResponse.UNSOLICITED_PATTERN2, NetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(NetworkRegistrationResponse.UNSOLICITED_PATTERN3, NetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN1, GprsNetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN2, GprsNetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN3, GprsNetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN4, GprsNetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN5, GprsNetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN6, GprsNetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsEventReportingResponse.UNSOLICITED_PATTERN, GprsEventReportingResponse.class),
-      new UnsolicitedPatternClass(ServiceReportingControlResponse.UNSOLICITED_PATTERN, ServiceReportingControlResponse.class),
-      new UnsolicitedPatternClass(CellularRingResponse.UNSOLICITED_PATTERN, CellularRingResponse.class),
-      new UnsolicitedPatternClass(MessageTerminatingResponse.UNSOLICITED_PATTERN, MessageTerminatingResponse.class, 1),
-      new UnsolicitedPatternClass(MessageTerminatingIndicationResponse.UNSOLICITED_PATTERN, MessageTerminatingIndicationResponse.class),
+      new UnsolicitedPatternClass(NetworkRegistrationUnsolicited.UNSOLICITED_PATTERN, NetworkRegistrationUnsolicited.class),
+      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN, GprsNetworkRegistrationUnsolicited.class),
+//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN1, GprsNetworkRegistrationUnsolicited.class),
+//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN2, GprsNetworkRegistrationUnsolicited.class),
+//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN3, GprsNetworkRegistrationUnsolicited.class),
+//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN4, GprsNetworkRegistrationUnsolicited.class),
+//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN5, GprsNetworkRegistrationUnsolicited.class),
+//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN6, GprsNetworkRegistrationUnsolicited.class),
+      new UnsolicitedPatternClass(GprsEventReportingUnsolicited.UNSOLICITED_PATTERN, GprsEventReportingUnsolicited.class),
+      new UnsolicitedPatternClass(ServiceReportingControlUnsolicited.UNSOLICITED_PATTERN, ServiceReportingControlUnsolicited.class),
+      new UnsolicitedPatternClass(CellularRingUnsolicited.UNSOLICITED_PATTERN, CellularRingUnsolicited.class),
+      new UnsolicitedPatternClass(MessageTerminatingUnsolicited.UNSOLICITED_PATTERN, MessageTerminatingUnsolicited.class, 1),
+      new UnsolicitedPatternClass(MessageTerminatingIndicationUnsolicited.UNSOLICITED_PATTERN, MessageTerminatingIndicationUnsolicited.class),
       new UnsolicitedPatternClass(CallingLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN, CallingLineIdentificationPresentationUnsolicited.class),
-      new UnsolicitedPatternClass(ConnectedLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN, ConnectedLineIdentificationPresentationUnsolicited.class)
+      new UnsolicitedPatternClass(ConnectedLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN,
+          ConnectedLineIdentificationPresentationUnsolicited.class)
   ));
   private static final Logger LOG = LoggerFactory.getLogger(EtsiModem.class);
   protected MessageMode messageMode;
@@ -354,9 +355,19 @@ public class EtsiModem extends V250 {
     command.set();
   }
 
+  public void setServiceCentreAddress(final String number) throws SerialException, TimeoutException, ResponseException {
+    final ServiceCentreAddressCommand command = new ServiceCentreAddressCommand(atCommander, number);
+    command.set();
+  }
+
+  public void setServiceCentreAddress(final String number, final int type) throws SerialException, TimeoutException, ResponseException {
+    final ServiceCentreAddressCommand command = new ServiceCentreAddressCommand(atCommander, number, type);
+    command.set();
+  }
+
   public ServiceCentreAddressResponse getServiceCentreAddress() throws SerialException, TimeoutException, ResponseException {
     final ServiceCentreAddressCommand command = new ServiceCentreAddressCommand(atCommander);
-    final ServiceCentreAddressResponse response = command.set();
+    final ServiceCentreAddressResponse response = command.read();
     LOG.info("SMSC address: {} type {}", response.getNumber(), response.getType());
     return response;
   }
@@ -498,14 +509,14 @@ public class EtsiModem extends V250 {
     return null;
   }
 
-  public void setGprsMobileStationClass(final String gprsMobileStationClass) throws SerialException, TimeoutException, ResponseException {
-    final GprsMobileStationClassCommand command = new GprsMobileStationClassCommand(atCommander, gprsMobileStationClass);
-    command.set();
-  }
-
   public GprsMobileStationClassResponse getGprsMobileStationClass() throws SerialException, TimeoutException, ResponseException {
     final GprsMobileStationClassCommand command = new GprsMobileStationClassCommand(atCommander);
     return command.read();
+  }
+
+  public void setGprsMobileStationClass(final String gprsMobileStationClass) throws SerialException, TimeoutException, ResponseException {
+    final GprsMobileStationClassCommand command = new GprsMobileStationClassCommand(atCommander, gprsMobileStationClass);
+    command.set();
   }
 
   public List<String> testGprsMobileStationClass() throws SerialException, TimeoutException, ResponseException {
@@ -586,4 +597,10 @@ public class EtsiModem extends V250 {
     final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander);
     command.read();
   }
+
+  public void setGprsNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
+    final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander, mode);
+    command.set();
+  }
+
 }

@@ -10,7 +10,7 @@ import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
 public class SignalQualityResponse extends BaseResponse implements Response {
 
-  private static final Pattern PATTERN = Pattern.compile("^\\+CSQ: ?(\\d*),(\\d*)$");
+  private static final Pattern PATTERN = Pattern.compile("^\\+CSQ: (\\d*),(\\d*)$");
 
   private int rssi;
   private int ber;

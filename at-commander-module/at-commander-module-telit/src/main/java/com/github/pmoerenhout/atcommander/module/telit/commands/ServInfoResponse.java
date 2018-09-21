@@ -57,7 +57,6 @@ public class ServInfoResponse extends BaseResponse implements Response {
       final String data = StringUtils.stripStart(line, SERVINFO);
       final StrTokenizer tokenizer = new StrTokenizer(data).setDelimiterChar(',').setQuoteChar('\"')
           .setIgnoreEmptyTokens(false).setEmptyTokenAsNull(true);
-
       final String[] tokenArray = tokenizer.getTokenArray();
       // LOG.debug("Data: {} Tokens: {} ACT:{}", data, tokenArray.length, accessTechnology);
       final int length = tokenArray.length;

@@ -2,41 +2,19 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collections;
-
 import org.junit.Test;
 
-public class NitzResponseTest {
+import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+
+public class NitzResponseTest extends BaseCommandTest {
 
   @Test
-  public void testNitz() throws Exception {
+  public void test_nitz_read() throws Exception {
     final NitzResponse nitzResponse = new NitzResponse();
-    nitzResponse.parseUnsolicited(Collections.singletonList("#NITZ: 15/04/03,16:07:54+08,1"));
+    nitzResponse.parseSolicited(createOkAtResponse("#NITZ: 1,2"));
 
-    assertEquals(15, nitzResponse.getYear());
-    assertEquals(4, nitzResponse.getMonth());
-    assertEquals(3, nitzResponse.getDay());
-    assertEquals(16, nitzResponse.getHour());
-    assertEquals(7, nitzResponse.getMinute());
-    assertEquals(54, nitzResponse.getSecond());
-    assertEquals(8, nitzResponse.getTimezone());
-    assertEquals(1, nitzResponse.getDst());
-
-  }
-
-  @Test
-  public void testNitz2() throws Exception {
-    final NitzResponse nitzResponse = new NitzResponse();
-    nitzResponse.parseUnsolicited(Collections.singletonList("#NITZ: 99/12/31,16:07:54-08,0"));
-
-    assertEquals(99, nitzResponse.getYear());
-    assertEquals(12, nitzResponse.getMonth());
-    assertEquals(31, nitzResponse.getDay());
-    assertEquals(16, nitzResponse.getHour());
-    assertEquals(7, nitzResponse.getMinute());
-    assertEquals(54, nitzResponse.getSecond());
-    assertEquals(-8, nitzResponse.getTimezone());
-    assertEquals(0, nitzResponse.getDst());
+    assertEquals(1, nitzResponse.getValue());
+    assertEquals(2, nitzResponse.getMode());
   }
 
 }

@@ -2,7 +2,7 @@ package com.github.pmoerenhout.atcommander.basic.exceptions;
 
 public class ErrorException extends ResponseException {
 
-  //private static final long serialVersionUID = -11864534698234598L;
+  private static final long serialVersionUID = -6787573899948158417L;
 
   /**
    * Default constructor.

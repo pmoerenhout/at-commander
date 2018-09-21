@@ -5,14 +5,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.module._3gpp.SimStatus;
 
-public class QuerySimStatusResponse extends BaseResponse implements Response, UnsolicitedResponse {
+public class QuerySimStatusResponse extends BaseResponse implements Response {
 
-  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^#QSS: (\\d)$");
   private static final Pattern PATTERN = Pattern.compile("^#QSS: (\\d),(\\d)$");
 
   private SimStatus status;
@@ -23,19 +21,6 @@ public class QuerySimStatusResponse extends BaseResponse implements Response, Un
 
   public QuerySimStatusResponse(final AtResponse s) {
     parseSolicited(s);
-  }
-
-  public void parseUnsolicited(final List<String> lines) {
-    if (lines.size() == 1) {
-      final String line = lines.get(0);
-      final Matcher m = UNSOLICITED_PATTERN.matcher(line);
-      if (m.find()) {
-        status = SimStatus.fromInt(Integer.parseInt(m.group(1)));
-        return;
-      }
-      throw createParseException(line);
-    }
-    throw createParseException(lines);
   }
 
   public void parseSolicited(final AtResponse response) {

@@ -13,7 +13,7 @@ import com.github.pmoerenhout.atcommander.common.Util;
 
 public class SelectServiceForMoSmsMessagesResponse extends BaseResponse implements Response {
 
-  private final static Pattern PATTERN = Pattern.compile("^\\+CGSMS: (\\d)$");
+  private static final Pattern PATTERN = Pattern.compile("^\\+CGSMS: (\\d)$");
   private static final Pattern PATTERNLIST = Pattern.compile("^\\+CGSMS: \\((.*)\\)$");
 
   private List<Integer> services;

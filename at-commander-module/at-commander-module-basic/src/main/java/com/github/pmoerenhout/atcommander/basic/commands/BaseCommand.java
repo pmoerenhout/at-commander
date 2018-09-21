@@ -3,6 +3,8 @@ package com.github.pmoerenhout.atcommander.basic.commands;
 import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 import com.github.pmoerenhout.atcommander.AtCommander;
@@ -11,10 +13,8 @@ import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class BaseCommand {
+public abstract class BaseCommand {
 
   protected static final String AT = "AT";
   protected static final char EQUAL = '=';
@@ -38,7 +38,7 @@ public class BaseCommand {
     this.timeout = DEFAULT_TIMEOUT;
   }
 
-  protected char oneOrZero(final boolean b) {
+  protected static char oneOrZero(final boolean b) {
     return b ? '1' : '0';
   }
 
@@ -98,9 +98,9 @@ public class BaseCommand {
       throw new TimeoutException(
           "Timeout on command " + Util.onlyPrintable(bytes) + " (" + Util.bytesToHexString(bytes) + ") after " + timeout + "ms");
     }
-    if (response.isOk()) {
-      return response;
-    }
+//    if (response.isOk()) {
+//      return response;
+//    }
 //    if (response.getFinalResponseCode() == null) {
 //      LOG.warn("getFinalResponse is NULL, on {} {} status:{}", Util.onlyPrintable(bytes), Util.bytesToHexString(bytes), response.getStatus());
 //      LOG.warn("getFinalResponse is NULL, resp {}, final {}", response.getInformationalText(), response.getFinalResponseCode());

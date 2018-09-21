@@ -5,13 +5,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
+import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 
 public class ServiceCentreAddressResponse extends BaseResponse implements Response {
 
-  private static final Pattern PATTERN = Pattern.compile("^\\+CSCA: \"([+0-9]*)\",([0-9]*)$");
+  private static final Pattern PATTERN = Pattern.compile("^\\+CSCA: \"(.*)\",([0-9]*)$");
+
+  // <type> - the type of number
+  // 129 - national numbering scheme
+  // 145 - international numbering scheme (contains the character "+")
 
   private String number;
   private int type;

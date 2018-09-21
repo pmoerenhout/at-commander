@@ -74,8 +74,8 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
         if (StringUtils.isNotBlank(tokens[0])) {
           plmn = Util.removeQuotes(StringUtils.trim(tokens[0]));
         }
-        arfcn = Integer.parseInt(tokens[1]);
-        rssi = Integer.parseInt(tokens[2]);
+        arfcn = Integer.valueOf(tokens[1]);
+        rssi = Integer.valueOf(tokens[2]);
         if (StringUtils.isNotBlank(tokens[3])) {
           locationAreaCode = tokens[3];
         }
@@ -84,12 +84,12 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
         }
         // Guess that it is the Tx Power which is missing
         // txPower = Integer.parseInt(tokens[4]);
-        mobilityManagementState = Integer.parseInt(tokens[5]);
+        mobilityManagementState = Integer.valueOf(tokens[5]);
         if (StringUtils.isNotBlank(tokens[6])) {
-          radioResourceState = Integer.parseInt(tokens[6]);
+          radioResourceState = Integer.valueOf(tokens[6]);
         }
         if (StringUtils.isNotBlank(tokens[7])) {
-          networkOperatorMode = Integer.parseInt(tokens[7]);
+          networkOperatorMode = Integer.valueOf(tokens[7]);
         }
         if (StringUtils.isNotBlank(tokens[8])) {
           cellId = tokens[8];
@@ -101,8 +101,8 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
             operatorName = unquoted;
           }
         }
-        serviceDomain = Integer.parseInt(tokens[11]);
-        activeBand = Integer.parseInt(tokens[12]);
+        serviceDomain = Integer.valueOf(tokens[11]);
+        activeBand = Integer.valueOf(tokens[12]);
         return;
       }
       if (tokensLength == 14) {
@@ -111,10 +111,10 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
           plmn = Util.removeQuotes(StringUtils.trim(tokens[0]));
         }
         if (StringUtils.isNotBlank(tokens[1])) {
-          arfcn = Integer.parseInt(tokens[1]);
+          arfcn = Integer.valueOf(tokens[1]);
         }
         if (StringUtils.isNotBlank(tokens[2])) {
-          rssi = Integer.parseInt(tokens[2]);
+          rssi = Integer.valueOf(tokens[2]);
         }
         if (StringUtils.isNotBlank(tokens[3])) {
           locationAreaCode = tokens[3];
@@ -123,16 +123,16 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
           routingAreaCode = tokens[4];
         }
         if (StringUtils.isNotBlank(tokens[5])) {
-          txPower = Integer.parseInt(tokens[5]);
+          txPower = Integer.valueOf(tokens[5]);
         }
         if (StringUtils.isNotBlank(tokens[6])) {
-          mobilityManagementState = Integer.parseInt(tokens[6]);
+          mobilityManagementState = Integer.valueOf(tokens[6]);
         }
         if (StringUtils.isNotBlank(tokens[7])) {
-          radioResourceState = Integer.parseInt(tokens[7]);
+          radioResourceState = Integer.valueOf(tokens[7]);
         }
         if (StringUtils.isNotBlank(tokens[8])) {
-          networkOperatorMode = Integer.parseInt(tokens[8]);
+          networkOperatorMode = Integer.valueOf(tokens[8]);
         }
         if (StringUtils.isNotBlank(tokens[9])) {
           cellId = tokens[9];
@@ -144,8 +144,8 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
             operatorName = unquoted;
           }
         }
-        serviceDomain = Integer.parseInt(tokens[12]);
-        activeBand = Integer.parseInt(tokens[13]);
+        serviceDomain = Integer.valueOf(tokens[12]);
+        activeBand = Integer.valueOf(tokens[13]);
         return;
       }
       if (tokensLength == 19 || tokensLength == 22 || tokensLength == 25 || tokensLength == 28 || tokensLength == 31 || tokensLength == 34 || tokensLength == 37) {
@@ -154,19 +154,19 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
           plmn = Util.removeQuotes(StringUtils.trim(tokens[0]));
         }
         if (StringUtils.isNotBlank(tokens[1])) {
-          uarfcn = Integer.parseInt(tokens[1]);
+          uarfcn = Integer.valueOf(tokens[1]);
         }
         if (StringUtils.isNotBlank(tokens[2])) {
-          psc = Float.parseFloat(tokens[2]);
+          psc = Float.valueOf(tokens[2]);
         }
         if (StringUtils.isNotBlank(tokens[3])) {
-          ecio = Float.parseFloat(tokens[3]);
+          ecio = Float.valueOf(tokens[3]);
         }
         if (StringUtils.isNotBlank(tokens[4])) {
-          rscp = Integer.parseInt(tokens[4]);
+          rscp = Integer.valueOf(tokens[4]);
         }
         if (StringUtils.isNotBlank(tokens[5])) {
-          rssi = Integer.parseInt(tokens[5]);
+          rssi = Integer.valueOf(tokens[5]);
         }
         if (StringUtils.isNotBlank(tokens[6])) {
           locationAreaCode = tokens[6];
@@ -175,22 +175,22 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
           routingAreaCode = tokens[7];
         }
         if (StringUtils.isNotBlank(tokens[8])) {
-          txPower = Integer.parseInt(tokens[8]);
+          txPower = Integer.valueOf(tokens[8]);
         }
         if (StringUtils.isNotBlank(tokens[9])) {
-          drx = Integer.parseInt(tokens[9]);
+          drx = Integer.valueOf(tokens[9]);
         }
         if (StringUtils.isNotBlank(tokens[10])) {
-          mobilityManagementState = Integer.parseInt(tokens[10]);
+          mobilityManagementState = Integer.valueOf(tokens[10]);
         }
         if (StringUtils.isNotBlank(tokens[11])) {
-          radioResourceState = Integer.parseInt(tokens[11]);
+          radioResourceState = Integer.valueOf(tokens[11]);
         }
         if (StringUtils.isNotBlank(tokens[12])) {
-          networkOperatorMode = Integer.parseInt(tokens[12]);
+          networkOperatorMode = Integer.valueOf(tokens[12]);
         }
         if (StringUtils.isNotBlank(tokens[13])) {
-          blockErrorRate = Integer.parseInt(tokens[13]);
+          blockErrorRate = Integer.valueOf(tokens[13]);
         }
         if (StringUtils.isNotBlank(tokens[14])) {
           cellId = tokens[14];
@@ -203,7 +203,7 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
           }
         }
         if (StringUtils.isNotBlank(tokens[17])) {
-          serviceDomain = Integer.parseInt(tokens[17]);
+          serviceDomain = Integer.valueOf(tokens[17]);
         }
         if (StringUtils.isNotBlank(tokens[18])) {
           numberOfActiveSet = Integer.parseInt(tokens[18]);
@@ -230,10 +230,10 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
           plmn = m.group(1);
         }
         if (StringUtils.isNotBlank(m.group(2))) {
-          arfcn = Integer.parseInt(m.group(2));
+          arfcn = Integer.valueOf(m.group(2));
         }
         if (StringUtils.isNotBlank(m.group(3))) {
-          rssi = Integer.parseInt(m.group(3));
+          rssi = Integer.valueOf(m.group(3));
         }
         if (StringUtils.isNotBlank(m.group(4))) {
           locationAreaCode = m.group(4);
@@ -242,16 +242,16 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
           routingAreaCode = m.group(5);
         }
         if (StringUtils.isNotBlank(m.group(6))) {
-          txPower = Integer.parseInt(m.group(6));
+          txPower = Integer.valueOf(m.group(6));
         }
         if (StringUtils.isNotBlank(m.group(7))) {
-          mobilityManagementState = Integer.parseInt(m.group(7));
+          mobilityManagementState = Integer.valueOf(m.group(7));
         }
         if (StringUtils.isNotBlank(m.group(8))) {
-          radioResourceState = Integer.parseInt(m.group(8));
+          radioResourceState = Integer.valueOf(m.group(8));
         }
         if (StringUtils.isNotBlank(m.group(9))) {
-          networkOperatorMode = Integer.parseInt(m.group(9));
+          networkOperatorMode = Integer.valueOf(m.group(9));
         }
         if (StringUtils.isNotBlank(m.group(10))) {
           cellId = m.group(10);
@@ -263,10 +263,10 @@ public class ReadNetworkStatusResponse extends BaseResponse implements Response 
           operatorName = m.group(12);
         }
         if (StringUtils.isNotBlank(m.group(13))) {
-          serviceDomain = Integer.parseInt(m.group(13));
+          serviceDomain = Integer.valueOf(m.group(13));
         }
         if (StringUtils.isNotBlank(m.group(14))) {
-          activeBand = Integer.parseInt(m.group(14));
+          activeBand = Integer.valueOf(m.group(14));
         }
         return;
       }

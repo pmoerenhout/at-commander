@@ -5,12 +5,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 
 public abstract class BaseResponse {
 
   protected static final char COMMA = ',';
+
+  protected static Integer getInteger(final String match) {
+    if (StringUtils.isNotBlank(match)) {
+      return Integer.valueOf(match);
+    }
+    return null;
+  }
 
   protected String getToken(final String[] tokenArray, final int index) {
     if (tokenArray.length > index) {
@@ -24,7 +33,7 @@ public abstract class BaseResponse {
   protected Integer getTokenAsInteger(final String[] tokenArray, final int index) {
     if (tokenArray.length > index) {
       if (tokenArray[index] != null) {
-        return Integer.parseInt(tokenArray[index]);
+        return Integer.valueOf(tokenArray[index]);
       }
     }
     return null;

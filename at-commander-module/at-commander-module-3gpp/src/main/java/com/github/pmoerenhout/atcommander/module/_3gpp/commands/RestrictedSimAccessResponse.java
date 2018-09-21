@@ -11,7 +11,7 @@ import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
 public class RestrictedSimAccessResponse extends BaseResponse implements Response {
 
-  private static final Pattern PATTERN = Pattern.compile("^\\+CRSM: (\\d*),(\\d*)(,(.*)|)$");
+  private static final Pattern PATTERN = Pattern.compile("^\\+CRSM: (\\d*),(\\d*)(,(.*))?$");
 
   private static final byte[] NO_DATA = new byte[]{};
 
@@ -40,6 +40,11 @@ public class RestrictedSimAccessResponse extends BaseResponse implements Respons
     throw createParseException(response);
   }
 
+  public int getSw() {
+    return (sw1 << 8) + sw2;
+  }
+
+
   public int getSw1() {
     return sw1;
   }
@@ -47,6 +52,7 @@ public class RestrictedSimAccessResponse extends BaseResponse implements Respons
   public int getSw2() {
     return sw2;
   }
+
 
   public byte[] getData() {
     return data;

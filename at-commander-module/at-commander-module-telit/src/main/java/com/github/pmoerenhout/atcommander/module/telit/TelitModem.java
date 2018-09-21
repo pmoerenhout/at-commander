@@ -26,6 +26,7 @@ import com.github.pmoerenhout.atcommander.module._3gpp.SimStatus;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsActStatusResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsActivateCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MobileEquipmentErrorModeCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SimDetectionModeCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.sms.SmsPdu;
 import com.github.pmoerenhout.atcommander.module._3gpp.types.GprsAct;
@@ -33,9 +34,6 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.AuthenticationPa
 import com.github.pmoerenhout.atcommander.module.telit.commands.AuthenticationUserIdCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.BandCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.BandResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.CodecInformationlResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.DialingResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.DisconnectedResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.EasyGprsActivationAuthenticationCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.EasyGprsActivationCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.EasyGprsActivationConfigurationCommand;
@@ -50,35 +48,26 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.GprsAuthenticati
 import com.github.pmoerenhout.atcommander.module.telit.commands.GprsCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.GprsDataVolumeCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.GprsDataVolumeResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.GprsNetworkRegistrationCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.GprsNetworkRegistrationResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.GprsResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.GprsStatusResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.GpsNmeaUnsolicitedCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.GpsNmunResponse;
+import com.github.pmoerenhout.atcommander.module.telit.commands.GpsNmunUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.commands.GpsPowerCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.GpsResetCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.GpsRestoreCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.HttpConfigurationCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.HttpQueryCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.HttpReceiveCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.HttpRingResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.IccidCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.IccidResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.IndicatorControlCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.IndicatorControlResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.IndicatorEventResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.JammedStatusResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.MobileEquipmentEventReportingCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkDnsCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkDnsResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkRegistrationResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.NitzCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.NitzResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.NoCarrierResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PacketServiceNetworkTypeCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.PacketServiceNetworkTypeResponse;
+import com.github.pmoerenhout.atcommander.module.telit.commands.PacketServiceNetworkTypeUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PingCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PingResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.QuerySimStatusCommand;
@@ -86,7 +75,6 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.QuerySimStatusRe
 import com.github.pmoerenhout.atcommander.module.telit.commands.ReadNetworkStatusCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.ReadNetworkStatusResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.RebootCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.RingingResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SelectInterfaceStyleCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SendMessageCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SendMessageResponse;
@@ -96,7 +84,8 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderN
 import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderNameResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.SimToolkitNotificationResponse;
+import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunCommand;
+import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunWhiteListCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsCommandsOperationModeCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketAcceptCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketConfigCommand;
@@ -112,7 +101,6 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.SocketListenComm
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketListenUdpCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketReceiveCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketReceiveResponse;
-import com.github.pmoerenhout.atcommander.module.telit.commands.SocketRingResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketSendCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketSendExtendedCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketSendUdpCommand;
@@ -137,40 +125,53 @@ import com.github.pmoerenhout.atcommander.module.telit.types.SocketInformation;
 import com.github.pmoerenhout.atcommander.module.telit.types.SocketLastClosure;
 import com.github.pmoerenhout.atcommander.module.telit.types.SocketStatus;
 import com.github.pmoerenhout.atcommander.module.telit.types.SocketType;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.CodecInformationUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.DialingUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.DisconnectedUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.HttpRingUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.IndicatorEventUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.JammedStatusUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.NitzUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.NoCarrierUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.QuerySimStatusUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.RingingUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimToolkitNotificationUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SocketRingUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.commands.AnyResponse;
-import com.github.pmoerenhout.atcommander.module.v250.commands.ConnectionFromResponse;
 import com.github.pmoerenhout.atcommander.module.v250.commands.HangupCommand;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 import com.github.pmoerenhout.atcommander.module.v250.enums.Authentication;
 import com.github.pmoerenhout.atcommander.module.v250.enums.DataMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.UmtsBand;
+import com.github.pmoerenhout.atcommander.module.v250.unsolicited.ConnectionFromUnsolicited;
 
 public class TelitModem extends EtsiModem {
 
   private static final Logger LOG = LoggerFactory.getLogger(TelitModem.class);
 
   private static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
-      new UnsolicitedPatternClass(NetworkRegistrationResponse.UNSOLICITED_PATTERN, NetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN_1, GprsNetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN_2, GprsNetworkRegistrationResponse.class),
-      new UnsolicitedPatternClass(QuerySimStatusResponse.UNSOLICITED_PATTERN, QuerySimStatusResponse.class),
-      new UnsolicitedPatternClass(IndicatorEventResponse.UNSOLICITED_PATTERN, IndicatorEventResponse.class),
-      new UnsolicitedPatternClass(SocketRingResponse.UNSOLICITED_PATTERN, SocketRingResponse.class),
-      new UnsolicitedPatternClass(NitzResponse.UNSOLICITED_PATTERN, NitzResponse.class),
-      new UnsolicitedPatternClass(PacketServiceNetworkTypeResponse.UNSOLICITED_PATTERN, PacketServiceNetworkTypeResponse.class),
-      new UnsolicitedPatternClass(SimPresenceStatusResponse.UNSOLICTED_PATTERN, SimPresenceStatusResponse.class),
-      new UnsolicitedPatternClass(ConnectionFromResponse.UNSOLICITED_PATTERN, ConnectionFromResponse.class),
-      new UnsolicitedPatternClass(GpsNmunResponse.UNSOLICITED_PATTERN, GpsNmunResponse.class),
-      new UnsolicitedPatternClass(HttpRingResponse.UNSOLICITED_PATTERN, HttpRingResponse.class),
-      new UnsolicitedPatternClass(JammedStatusResponse.UNSOLICITED_PATTERN, JammedStatusResponse.class),
-      new UnsolicitedPatternClass(CodecInformationlResponse.UNSOLICITED_PATTERN, CodecInformationlResponse.class),
-      new UnsolicitedPatternClass(NoCarrierResponse.UNSOLICITED_PATTERN, NoCarrierResponse.class),
-      new UnsolicitedPatternClass(DialingResponse.UNSOLICITED_PATTERN, DialingResponse.class),
-      new UnsolicitedPatternClass(RingingResponse.UNSOLICITED_PATTERN, RingingResponse.class),
-      new UnsolicitedPatternClass(DisconnectedResponse.UNSOLICITED_PATTERN, DisconnectedResponse.class),
+      // new UnsolicitedPatternClass(NetworkRegistrationUnsolicited.UNSOLICITED_PATTERN, NetworkRegistrationUnsolicited.class),
+//      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN_1, GprsNetworkRegistrationResponse.class),
+//      new UnsolicitedPatternClass(GprsNetworkRegistrationResponse.UNSOLICITED_PATTERN_2, GprsNetworkRegistrationResponse.class),
+      new UnsolicitedPatternClass(QuerySimStatusUnsolicited.UNSOLICITED_PATTERN, QuerySimStatusUnsolicited.class),
+      new UnsolicitedPatternClass(IndicatorEventUnsolicited.UNSOLICITED_PATTERN, IndicatorEventUnsolicited.class),
+      new UnsolicitedPatternClass(SocketRingUnsolicited.UNSOLICITED_PATTERN, SocketRingUnsolicited.class),
+      new UnsolicitedPatternClass(NitzUnsolicited.UNSOLICITED_PATTERN, NitzUnsolicited.class),
+      new UnsolicitedPatternClass(PacketServiceNetworkTypeUnsolicited.UNSOLICITED_PATTERN, PacketServiceNetworkTypeUnsolicited.class),
+      new UnsolicitedPatternClass(SimPresenceStatusUnsolicited.UNSOLICTED_PATTERN, SimPresenceStatusUnsolicited.class),
+      new UnsolicitedPatternClass(ConnectionFromUnsolicited.UNSOLICITED_PATTERN, ConnectionFromUnsolicited.class),
+      new UnsolicitedPatternClass(GpsNmunUnsolicited.UNSOLICITED_PATTERN, GpsNmunUnsolicited.class),
+      new UnsolicitedPatternClass(HttpRingUnsolicited.UNSOLICITED_PATTERN, HttpRingUnsolicited.class),
+      new UnsolicitedPatternClass(JammedStatusUnsolicited.UNSOLICITED_PATTERN, JammedStatusUnsolicited.class),
+      new UnsolicitedPatternClass(CodecInformationUnsolicited.UNSOLICITED_PATTERN, CodecInformationUnsolicited.class),
+      new UnsolicitedPatternClass(NoCarrierUnsolicited.UNSOLICITED_PATTERN, NoCarrierUnsolicited.class),
+      new UnsolicitedPatternClass(DialingUnsolicited.UNSOLICITED_PATTERN, DialingUnsolicited.class),
+      new UnsolicitedPatternClass(RingingUnsolicited.UNSOLICITED_PATTERN, RingingUnsolicited.class),
+      new UnsolicitedPatternClass(DisconnectedUnsolicited.UNSOLICITED_PATTERN, DisconnectedUnsolicited.class),
       // new UnsolicitedPatternClass(ReleasedResponse.UNSOLICITED_PATTERN, ReleasedResponse.class)
-      new UnsolicitedPatternClass(SimToolkitNotificationResponse.UNSOLICITED_PATTERN, SimToolkitNotificationResponse.class)
+      new UnsolicitedPatternClass(SimToolkitNotificationUnsolicited.UNSOLICITED_PATTERN, SimToolkitNotificationUnsolicited.class)
   ));
 
   private static final Pattern REVISION_PATTERN = Pattern.compile("(\\d*).(\\d*).(\\d*)(-.*|)$");
@@ -253,8 +254,7 @@ public class TelitModem extends EtsiModem {
 
   @Override
   public NetworkRegistrationResponse getNetworkRegistration() throws SerialException, TimeoutException, ResponseException {
-    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander);
-    final NetworkRegistrationResponse response = command.read();
+    final NetworkRegistrationResponse response = super.getNetworkRegistration();
     if (response.getAccessTechnology() != null) {
       // access technology is optional in response
       accessTechnology = response.getAccessTechnology();
@@ -262,21 +262,21 @@ public class TelitModem extends EtsiModem {
     return response;
   }
 
-  public void setNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
-    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander, mode);
-    command.set();
-  }
+//  public void setNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
+//    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander, mode);
+//    command.set();
+//  }
 
-  @Override
-  public void getGprsNetworkRegistration() throws SerialException, TimeoutException, ResponseException {
-    final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander);
-    command.read();
-  }
-
-  public void setGprsNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
-    final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander, mode);
-    command.set();
-  }
+//  @Override
+//  public void getGprsNetworkRegistration() throws SerialException, TimeoutException, ResponseException {
+//    final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander);
+//    command.read();
+//  }
+//
+//  public void setGprsNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
+//    final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander, mode);
+//    command.set();
+//  }
 
   public void reboot() throws SerialException, TimeoutException, ResponseException {
     final RebootCommand command = new RebootCommand(atCommander);
@@ -303,7 +303,6 @@ public class TelitModem extends EtsiModem {
   public SimStatus getQuerySimStatus() throws SerialException, TimeoutException, ResponseException {
     final QuerySimStatusCommand command = new QuerySimStatusCommand(atCommander);
     final QuerySimStatusResponse response = command.read();
-    LOG.info("Query SIM status: {}", response.getStatus());
     return response.getStatus();
   }
 
@@ -403,6 +402,16 @@ public class TelitModem extends EtsiModem {
 
   public void setSimDetectionMode(final int mode) throws SerialException, TimeoutException, ResponseException {
     final SimDetectionModeCommand command = new SimDetectionModeCommand(atCommander, mode);
+    command.set();
+  }
+
+  public void setSmsAtRun(final int mode) throws SerialException, TimeoutException, ResponseException {
+    final SmsAtRunCommand command = new SmsAtRunCommand(atCommander, mode);
+    command.set();
+  }
+
+  public void setSmsAtRunWhiteList(final int action, final int index, final int entryType, final String phonenumberOrPassword) throws SerialException, TimeoutException, ResponseException {
+    final SmsAtRunWhiteListCommand command = new SmsAtRunWhiteListCommand(atCommander, action, index, entryType, phonenumberOrPassword);
     command.set();
   }
 

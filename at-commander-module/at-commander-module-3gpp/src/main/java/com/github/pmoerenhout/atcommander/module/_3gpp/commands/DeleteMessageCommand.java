@@ -11,7 +11,7 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 
 public class DeleteMessageCommand extends BaseCommand implements Command<BaseResponse> {
 
-  static private final String COMMAND_MGD = "+CMGD";
+  private static final String COMMAND_MGD = "+CMGD";
 
   private int index;
   private Integer flag;

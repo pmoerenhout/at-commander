@@ -23,6 +23,22 @@ public class FacilityLockCommand extends BaseCommand implements Command<BaseResp
     this.mode = mode;
   }
 
+  public FacilityLockCommand(final AtCommander atCommander, final String facility, final int mode, final String password) {
+    super(COMMAND_CLCK, atCommander);
+    this.facility = facility;
+    this.mode = mode;
+    this.password = password;
+  }
+
+  public FacilityLockCommand(final AtCommander atCommander, final String facility, final int mode, final String password,
+                             final Integer clazz) {
+    super(COMMAND_CLCK, atCommander);
+    this.facility = facility;
+    this.mode = mode;
+    this.password = password;
+    this.clazz = clazz;
+  }
+
   public FacilityLockResponse set() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
@@ -34,9 +50,13 @@ public class FacilityLockCommand extends BaseCommand implements Command<BaseResp
       sb.append(DOUBLE_QUOTE);
       sb.append(COMMA);
       sb.append(mode);
-      if (clazz != null) {
+      if (password != null) {
         sb.append(COMMA);
-        sb.append(clazz);
+        sb.append(password);
+        if (clazz != null) {
+          sb.append(COMMA);
+          sb.append(clazz);
+        }
       }
       return new FacilityLockResponse(super.execute(sb.toString()));
     } finally {

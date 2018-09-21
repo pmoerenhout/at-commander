@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
@@ -23,10 +24,12 @@ public class NeulConfigResponse extends BaseResponse implements Response {
 
   public void parseSolicited(final AtResponse response) {
     final List<String> informationalText = response.getInformationalText();
-    for (String line: informationalText) {
+    for (final String line : informationalText) {
       final Matcher m = PATTERN.matcher(line);
       if (m.find()) {
         items.add(new ImmutablePair(m.group(1), m.group(2)));
+      } else {
+        throw createParseException(line);
       }
     }
   }

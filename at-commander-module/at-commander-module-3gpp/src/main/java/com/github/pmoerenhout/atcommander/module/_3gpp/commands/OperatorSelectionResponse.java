@@ -5,19 +5,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
 public class OperatorSelectionResponse extends BaseResponse implements Response {
 
-  private static final Pattern PATTERN1 = Pattern.compile("^\\+COPS: ([0-4])$");
-  private static final Pattern PATTERN2 = Pattern.compile("^\\+COPS: ([0-4]),(\\d),\"(.*)\"$");
-  private static final Pattern PATTERN3 = Pattern.compile("^\\+COPS: ([0-4]),(\\d),\"(.*)\",(\\d)$");
+  private static final Pattern PATTERN = Pattern.compile("^\\+COPS: ([0-4])(,(\\d),\"(.*)\"(,(\\d))?)?$");
 
   private int mode;
   private Integer format;
   private String oper;
   private Integer act;
+
+  public OperatorSelectionResponse() {
+  }
 
   public OperatorSelectionResponse(final AtResponse s) {
     parseSolicited(s);
@@ -27,25 +28,16 @@ public class OperatorSelectionResponse extends BaseResponse implements Response 
     final List<String> informationalText = response.getInformationalText();
     if (informationalText.size() == 1) {
       final String line = informationalText.get(0);
-      final Matcher m1 = PATTERN1.matcher(line);
-      if (m1.find()) {
-        //mode = PacketServiceNetworkType.fromInt(Integer.parseInt(m.group(1)));
-        mode = Integer.parseInt(m1.group(1));
-        return;
-      }
-      final Matcher m2 = PATTERN2.matcher(line);
-      if (m2.find()) {
-        mode = Integer.parseInt(m2.group(1));
-        format = Integer.parseInt(m2.group(2));
-        oper = m2.group(3);
-        return;
-      }
-      final Matcher m3 = PATTERN3.matcher(line);
-      if (m3.find()) {
-        mode = Integer.parseInt(m3.group(1));
-        format = Integer.parseInt(m3.group(2));
-        oper = m3.group(3);
-        act = Integer.parseInt(m3.group(4));
+      final Matcher m = PATTERN.matcher(line);
+      if (m.find()) {
+        mode = Integer.parseInt(m.group(1));
+        if (m.group(2) != null) {
+          format = Integer.valueOf(m.group(3));
+          oper = m.group(4);
+          if (m.group(5) != null) {
+            act = Integer.valueOf(m.group(6));
+          }
+        }
         return;
       }
       throw createParseException(line);
