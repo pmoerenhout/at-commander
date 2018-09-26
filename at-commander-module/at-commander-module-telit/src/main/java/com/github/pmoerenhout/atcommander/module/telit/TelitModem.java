@@ -85,6 +85,8 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderN
 import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunCommand;
+import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunConfigurationCommand;
+import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunConfigurationResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunWhiteListCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsCommandsOperationModeCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SocketAcceptCommand;
@@ -137,6 +139,7 @@ import com.github.pmoerenhout.atcommander.module.telit.unsolicited.QuerySimStatu
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.RingingUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimToolkitNotificationUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SmsAtRunUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SocketRingUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.commands.AnyResponse;
 import com.github.pmoerenhout.atcommander.module.v250.commands.HangupCommand;
@@ -171,7 +174,9 @@ public class TelitModem extends EtsiModem {
       new UnsolicitedPatternClass(RingingUnsolicited.UNSOLICITED_PATTERN, RingingUnsolicited.class),
       new UnsolicitedPatternClass(DisconnectedUnsolicited.UNSOLICITED_PATTERN, DisconnectedUnsolicited.class),
       // new UnsolicitedPatternClass(ReleasedResponse.UNSOLICITED_PATTERN, ReleasedResponse.class)
-      new UnsolicitedPatternClass(SimToolkitNotificationUnsolicited.UNSOLICITED_PATTERN, SimToolkitNotificationUnsolicited.class)
+      new UnsolicitedPatternClass(SimToolkitNotificationUnsolicited.UNSOLICITED_PATTERN, SimToolkitNotificationUnsolicited.class),
+      new UnsolicitedPatternClass(SmsAtRunUnsolicited.UNSOLICITED_PATTERN, SmsAtRunUnsolicited.class)
+
   ));
 
   private static final Pattern REVISION_PATTERN = Pattern.compile("(\\d*).(\\d*).(\\d*)(-.*|)$");
@@ -410,7 +415,23 @@ public class TelitModem extends EtsiModem {
     command.set();
   }
 
-  public void setSmsAtRunWhiteList(final int action, final int index, final int entryType, final String phonenumberOrPassword) throws SerialException, TimeoutException, ResponseException {
+  public void setSmsAtRunConfiguration(final int instance, final int urcMode) throws SerialException, TimeoutException, ResponseException {
+    final SmsAtRunConfigurationCommand command = new SmsAtRunConfigurationCommand(atCommander, instance, urcMode);
+    command.set();
+  }
+
+  public void setSmsAtRunConfiguration(final int instance, final int urcMode, final int timeout) throws SerialException, TimeoutException, ResponseException {
+    final SmsAtRunConfigurationCommand command = new SmsAtRunConfigurationCommand(atCommander, instance, urcMode, timeout);
+    command.set();
+  }
+
+  public SmsAtRunConfigurationResponse getSmsAtRunConfiguration() throws SerialException, TimeoutException, ResponseException {
+    final SmsAtRunConfigurationCommand command = new SmsAtRunConfigurationCommand(atCommander);
+    return command.read();
+  }
+
+  public void setSmsAtRunWhiteList(final int action, final int index, final int entryType,
+                                   final String phonenumberOrPassword) throws SerialException, TimeoutException, ResponseException {
     final SmsAtRunWhiteListCommand command = new SmsAtRunWhiteListCommand(atCommander, action, index, entryType, phonenumberOrPassword);
     command.set();
   }

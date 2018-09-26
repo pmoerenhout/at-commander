@@ -13,8 +13,15 @@ public class SmsAtRunConfigurationCommand extends BaseCommand implements Command
 
   private static final String COMMAND_SMSATRUNCFG = "#SMSATRUNCFG";
 
+  /*
+   * To set the configuration, the SMSATRUN must be disabled.
+   */
+
+  // 1=UART, 2=USB1, 3=USB2
   private int instance;
+  // 0=disable, 1=enable
   private Integer urcMode;
+  // 0-60, default 5 minutes
   private Integer timeout;
 
   public SmsAtRunConfigurationCommand(final AtCommander atCommander) {
@@ -26,6 +33,19 @@ public class SmsAtRunConfigurationCommand extends BaseCommand implements Command
     this.instance = instance;
   }
 
+  public SmsAtRunConfigurationCommand(final AtCommander atCommander, final int instance, final int urcMode) {
+    super(COMMAND_SMSATRUNCFG, atCommander);
+    this.instance = instance;
+    this.urcMode = urcMode;
+  }
+
+  public SmsAtRunConfigurationCommand(final AtCommander atCommander, final int instance, final int urcMode, final int timeout) {
+    super(COMMAND_SMSATRUNCFG, atCommander);
+    this.instance = instance;
+    this.urcMode = urcMode;
+    this.timeout = timeout;
+  }
+
   public EmptyResponse set() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
@@ -33,10 +53,10 @@ public class SmsAtRunConfigurationCommand extends BaseCommand implements Command
       sb.append(COMMAND_SMSATRUNCFG);
       sb.append(EQUAL);
       sb.append(instance);
-      if (urcMode != null){
+      if (urcMode != null) {
         sb.append(COMMA);
         sb.append(urcMode);
-        if (timeout != null){
+        if (timeout != null) {
           sb.append(COMMA);
           sb.append(timeout);
         }
@@ -47,13 +67,13 @@ public class SmsAtRunConfigurationCommand extends BaseCommand implements Command
     }
   }
 
-  public SmsAtRunResponse read() throws SerialException, TimeoutException, ResponseException {
+  public SmsAtRunConfigurationResponse read() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_SMSATRUNCFG);
       sb.append(QUERY);
-      return new SmsAtRunResponse(super.execute(sb.toString()));
+      return new SmsAtRunConfigurationResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }

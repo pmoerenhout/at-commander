@@ -291,7 +291,6 @@ public class ServInfoResponseTest extends BaseCommandTest {
 
   @Test
   public void test_servinfo_response_ge910() {
-
     final AtResponse response = createOkAtResponse("#SERVINFO: 1020,-63,\"vodafone NL\",\"20404\",61,00DE,00,0");
 
     final ServInfoResponse servInfoResponse = new ServInfoResponse(response, AccessTechnology.GSM);
@@ -306,4 +305,21 @@ public class ServInfoResponseTest extends BaseCommandTest {
     assertFalse(servInfoResponse.isGprsSupported());
   }
 
+  @Test
+  public void test_servinfo_response_he910() {
+    final AtResponse response = createOkAtResponse("#SERVINFO: 65535,--256,\"vodafone NL\",\"20404\",65535,00DE,64,1,--1,\"II\"");
+
+    final ServInfoResponse servInfoResponse = new ServInfoResponse(response, AccessTechnology.GSM);
+
+    assertEquals(Integer.valueOf(65535), servInfoResponse.getBcchArfcn());
+    assertEquals(Integer.valueOf(-256), servInfoResponse.getDbm());
+    assertEquals("vodafone NL", servInfoResponse.getNetName());
+    assertEquals("20404", servInfoResponse.getNetCode());
+    assertEquals("65535", servInfoResponse.getBaseStationIdentificationCode());
+    assertEquals("00DE", servInfoResponse.getLocationAreaCode());
+    assertEquals("64", servInfoResponse.getTimeAdvance());
+    assertTrue(servInfoResponse.isGprsSupported());
+    assertEquals("--1", servInfoResponse.getPbArfcn());
+    assertEquals("II", servInfoResponse.getNetworkOperationMode());
+  }
 }

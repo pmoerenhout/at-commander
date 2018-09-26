@@ -33,7 +33,12 @@ public abstract class BaseResponse {
   protected Integer getTokenAsInteger(final String[] tokenArray, final int index) {
     if (tokenArray.length > index) {
       if (tokenArray[index] != null) {
-        return Integer.valueOf(tokenArray[index]);
+        final String token = tokenArray[index];
+        if (token.startsWith("--")) {
+          // For servinfo, The Telit modem could return --256
+          return Integer.valueOf(StringUtils.substring(token, 1));
+        }
+        return Integer.valueOf(token);
       }
     }
     return null;
