@@ -26,7 +26,7 @@ public class ShowTextModeParametersCommand extends BaseCommand implements Comman
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_SHOW_TEXT_MODE);
       sb.append(EQUAL);
-      sb.append(Integer.toString(show));
+      sb.append(show);
       return new EmptyResponse(super.execute(sb.toString()));
     } finally {
       available.release();

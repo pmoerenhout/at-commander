@@ -17,13 +17,10 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdentificationPresentationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CallingLineIdentificationPresentationResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.CallingLineIdentificationPresentationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.CellularResultCodesResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.CellularRingUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ClockCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ClockResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.ConnectedLineIdentificationPresentationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DefinePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DeleteMessageCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockCommand;
@@ -31,18 +28,14 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockResp
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsActivateCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.GprsEventReportingUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsMobileStationClassCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsMobileStationClassResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationCommand;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.GprsNetworkRegistrationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ImsiCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ImsiResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ListMessagesResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageFormatCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MessageFormatResponse;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTerminatingIndicationUnsolicited;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTerminatingUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MobileEquipmentErrorCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ModelIdentificationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ModelIdentificationResponse;
@@ -59,6 +52,8 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.PinCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.PinResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ProductSerialNumberIdentificationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ProductSerialNumberIdentificationResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.ReadMessageCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.ReadMessageResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.RestrictedSimAccessCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.RestrictedSimAccessResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.RevisionIdentificationCommand;
@@ -74,9 +69,8 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.SendMessageRespo
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ServiceCentreAddressCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ServiceCentreAddressResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ServiceReportingControlCommand;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.NetworkRegistrationUnsolicited;
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.ServiceReportingControlUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SettingsDateFormatCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.ShowTextModeParametersCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SignalQualityCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SignalQualityResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.WirelessNetworkCommand;
@@ -86,6 +80,15 @@ import com.github.pmoerenhout.atcommander.module._3gpp.types.FacilityStatus;
 import com.github.pmoerenhout.atcommander.module._3gpp.types.ListMessage;
 import com.github.pmoerenhout.atcommander.module._3gpp.types.PdpAddress;
 import com.github.pmoerenhout.atcommander.module._3gpp.types.SignalQuality;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.CallingLineIdentificationPresentationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.CellularRingUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.ConnectedLineIdentificationPresentationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.GprsEventReportingUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.GprsNetworkRegistrationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTerminatingIndicationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTerminatingUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.NetworkRegistrationUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.ServiceReportingControlUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.V250;
 import com.github.pmoerenhout.atcommander.module.v250.commands.ManufacturerIdentificationCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.ManufacturerIdentificationResponse;
@@ -355,11 +358,6 @@ public class EtsiModem extends V250 {
     command.set();
   }
 
-  public void setServiceCentreAddress(final String number) throws SerialException, TimeoutException, ResponseException {
-    final ServiceCentreAddressCommand command = new ServiceCentreAddressCommand(atCommander, number);
-    command.set();
-  }
-
   public void setServiceCentreAddress(final String number, final int type) throws SerialException, TimeoutException, ResponseException {
     final ServiceCentreAddressCommand command = new ServiceCentreAddressCommand(atCommander, number, type);
     command.set();
@@ -370,6 +368,11 @@ public class EtsiModem extends V250 {
     final ServiceCentreAddressResponse response = command.read();
     LOG.info("SMSC address: {} type {}", response.getNumber(), response.getType());
     return response;
+  }
+
+  public void setServiceCentreAddress(final String number) throws SerialException, TimeoutException, ResponseException {
+    final ServiceCentreAddressCommand command = new ServiceCentreAddressCommand(atCommander, number);
+    command.set();
   }
 
   public List<ListMessage> getMessagesList(final MessageStatus status) throws SerialException, TimeoutException, ResponseException {
@@ -453,8 +456,25 @@ public class EtsiModem extends V250 {
     command.setTypeOfAddress(145);
     command.setText(text);
     final SendMessageResponse response = command.set();
-    LOG.info("The text SMS was send to {}: reference {}", destination, response.getReference());
+    LOG.debug("The text SMS was send to {}: reference {}", destination, response.getReference());
     return response;
+  }
+
+  public ReadMessageResponse readSmsAsPdu(final int index)
+      throws SerialException, TimeoutException, ResponseException {
+    if (!MessageMode.PDU.equals(this.messageMode)) {
+      throw new IllegalStateException("The modem must be put in PDU message mode first");
+    }
+    final ReadMessageCommand command = new ReadMessageCommand(atCommander, messageMode, index);
+    final ReadMessageResponse response = command.set();
+    LOG.debug("The PDU SMS read {}: {}", index, response.getMessage());
+    return response;
+  }
+
+  public void setShowTextModeParameters(final int show)
+      throws SerialException, TimeoutException, ResponseException {
+    final ShowTextModeParametersCommand command = new ShowTextModeParametersCommand(atCommander, show);
+    command.set();
   }
 
   public byte[] getRestrictedSimAccess(final int command, final int fileId, final int p1, final int p2, final int p3)

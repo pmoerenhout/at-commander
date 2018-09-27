@@ -14,6 +14,9 @@ public class RevisionIdentificationResponse extends BaseResponse implements Resp
 
   private String revision;
 
+  public RevisionIdentificationResponse() {
+  }
+
   public RevisionIdentificationResponse(final AtResponse s) {
     parseSolicited(s);
   }

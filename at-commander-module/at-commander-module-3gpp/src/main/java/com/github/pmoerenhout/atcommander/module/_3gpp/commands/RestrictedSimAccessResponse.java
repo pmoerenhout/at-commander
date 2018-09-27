@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
+import com.github.pmoerenhout.atcommander.common.Util;
 
 public class RestrictedSimAccessResponse extends BaseResponse implements Response {
 
@@ -18,6 +18,9 @@ public class RestrictedSimAccessResponse extends BaseResponse implements Respons
   private int sw1;
   private int sw2;
   private byte[] data;
+
+  public RestrictedSimAccessResponse() {
+  }
 
   public RestrictedSimAccessResponse(final AtResponse s) {
     parseSolicited(s);
@@ -43,7 +46,6 @@ public class RestrictedSimAccessResponse extends BaseResponse implements Respons
   public int getSw() {
     return (sw1 << 8) + sw2;
   }
-
 
   public int getSw1() {
     return sw1;
