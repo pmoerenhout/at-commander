@@ -3,12 +3,12 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StrTokenizer;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
+import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
 public class ServInfoResponse extends BaseResponse implements Response {
@@ -55,9 +55,10 @@ public class ServInfoResponse extends BaseResponse implements Response {
     if (informationalText.size() == 1) {
       line = informationalText.get(0);
       final String data = StringUtils.stripStart(line, SERVINFO);
-      final StrTokenizer tokenizer = new StrTokenizer(data).setDelimiterChar(',').setQuoteChar('\"')
-          .setIgnoreEmptyTokens(false).setEmptyTokenAsNull(true);
-      final String[] tokenArray = tokenizer.getTokenArray();
+//      final StrTokenizer tokenizer = new StrTokenizer(data).setDelimiterChar(',').setQuoteChar('\"')
+//          .setIgnoreEmptyTokens(false).setEmptyTokenAsNull(true);
+//      final String[] tokenArray = tokenizer.getTokenArray();
+      final String[] tokenArray = Util.tokenize(data);
       // LOG.debug("Data: {} Tokens: {} ACT:{}", data, tokenArray.length, accessTechnology);
       final int length = tokenArray.length;
       if (length == 0) {

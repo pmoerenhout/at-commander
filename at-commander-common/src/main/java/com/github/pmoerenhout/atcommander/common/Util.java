@@ -1,5 +1,7 @@
 package com.github.pmoerenhout.atcommander.common;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
@@ -154,6 +156,20 @@ public class Util {
       }
     }
     return values;
+  }
+
+  public static ZonedDateTime getTimestamp(final String datetime)
+  {
+    // timestamp is formatted as 18/09/28,17:02:36+08
+    int year = Integer.parseInt(StringUtils.substring(datetime,0,2));
+    int month = Integer.parseInt(StringUtils.substring(datetime,3,5));
+    int day = Integer.parseInt(StringUtils.substring(datetime,6,8));
+    int hour = Integer.parseInt(StringUtils.substring(datetime,9,11));
+    int minute = Integer.parseInt(StringUtils.substring(datetime,12,14));
+    int second = Integer.parseInt(StringUtils.substring(datetime,15,17));
+    int timezoneQuarters = Integer.parseInt(StringUtils.substring(datetime,17,20));
+    final ZoneOffset zoneOffset = ZoneOffset.ofTotalSeconds(timezoneQuarters * 900);
+    return ZonedDateTime.of(year + 2000, month, day, hour, minute, second, 0, zoneOffset);
   }
 
 }

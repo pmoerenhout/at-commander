@@ -2,10 +2,13 @@ package com.github.pmoerenhout.atcommander.common;
 
 import static org.junit.Assert.assertTrue;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class UtilTest {
@@ -44,5 +47,12 @@ public class UtilTest {
         .collect(Collectors.joining(", ", "\"", "\""));
 
     System.out.println(commaSeparatedNumbers);
+  }
+
+  @Test
+  public void test_timezone() {
+    final String datetime = "18/09/28,17:02:36+08";
+    final ZonedDateTime zonedDateTime = Util.getTimestamp(datetime);
+    Assert.assertEquals(ZonedDateTime.of(2018, 9, 28, 17, 2, 36, 0, ZoneOffset.ofTotalSeconds(7200)), zonedDateTime);
   }
 }

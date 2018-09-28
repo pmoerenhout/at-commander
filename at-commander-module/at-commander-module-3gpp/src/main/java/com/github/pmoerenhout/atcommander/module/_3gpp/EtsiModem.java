@@ -77,7 +77,7 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.WirelessNetworkC
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.WirelessNetworkStatusResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.sms.SmsPdu;
 import com.github.pmoerenhout.atcommander.module._3gpp.types.FacilityStatus;
-import com.github.pmoerenhout.atcommander.module._3gpp.types.ListMessage;
+import com.github.pmoerenhout.atcommander.module._3gpp.types.IndexMessage;
 import com.github.pmoerenhout.atcommander.module._3gpp.types.PdpAddress;
 import com.github.pmoerenhout.atcommander.module._3gpp.types.SignalQuality;
 import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.CallingLineIdentificationPresentationUnsolicited;
@@ -375,10 +375,10 @@ public class EtsiModem extends V250 {
     command.set();
   }
 
-  public List<ListMessage> getMessagesList(final MessageStatus status) throws SerialException, TimeoutException, ResponseException {
+  public List<IndexMessage> getMessagesList(final MessageStatus status) throws SerialException, TimeoutException, ResponseException {
     final SendListMessagesCommand command = new SendListMessagesCommand(atCommander, messageMode, status);
     final ListMessagesResponse response = command.set();
-    final List<ListMessage> messages = response.getMessageList();
+    final List<IndexMessage> messages = response.getIndexMessages();
     return messages;
   }
 
@@ -457,6 +457,13 @@ public class EtsiModem extends V250 {
     command.setText(text);
     final SendMessageResponse response = command.set();
     LOG.debug("The text SMS was send to {}: reference {}", destination, response.getReference());
+    return response;
+  }
+
+  public ReadMessageResponse readSms(final int index)
+      throws SerialException, TimeoutException, ResponseException {
+    final ReadMessageCommand command = new ReadMessageCommand(atCommander, messageMode, index);
+    final ReadMessageResponse response = command.set();
     return response;
   }
 
