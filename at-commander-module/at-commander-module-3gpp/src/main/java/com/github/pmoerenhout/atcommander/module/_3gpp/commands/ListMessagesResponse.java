@@ -59,7 +59,8 @@ public class ListMessagesResponse extends BaseResponse implements Response {
 
   private static final Pattern PATTERN_PDU = Pattern.compile("^\\+CMGL: (\\d*),(\\d*)(,\"(.*)\")?,(\\d*)$");
   // +CMGL: <index>,<stat>,<oa/da>,[<alpha>],[<scts>]
-  private static final Pattern PATTERN_TEXT = Pattern.compile("^\\+CMGL: (\\d*),\"(.*)\",\"(.*)\",\"(.*)\",\"(.*)\"$");
+  // +CMGL: 1,"REC READ","+31614240689","","18/09/21,16:35:38+08",145,5
+  private static final Pattern PATTERN_TEXT = Pattern.compile("^\\+CMGL: (\\d*),\"(.*)\",\"(.*)\",\"(.*)\",\"(.*)\"(,\\d*,\\d*)?$");
   private List<IndexMessage> indexMessages;
 
   public ListMessagesResponse(final AtResponse s) {
@@ -90,12 +91,20 @@ public class ListMessagesResponse extends BaseResponse implements Response {
       }
       final Matcher matcherText = PATTERN_TEXT.matcher(line);
       if (matcherText.find()) {
-        final int index = Integer.parseInt(matcherText.group(1));
-        final MessageStatus status = MessageStatus.fromString(matcherText.group(2));
-        final String oada = matcherText.group(3);
-        final String alpha = matcherText.group(4);
-        final ZonedDateTime scts = ZonedDateTime.parse(matcherText.group(5), DATE_TIME_FORMATTER);
         final String text = informationalText.get(i + 1);
+
+        final String[] tokens = Util.tokenize(StringUtils.stripStart(line, CMGL));
+        final int index = Integer.parseInt(tokens[0]);
+        final MessageStatus status = MessageStatus.fromString(tokens[1]);
+        final String oada = tokens[2];
+        final String alpha = tokens[3];
+        final ZonedDateTime scts = ZonedDateTime.parse(tokens[4], DATE_TIME_FORMATTER);
+        if (tokens.length > 5) {
+          final int tooada = Integer.parseInt(tokens[5]);
+          final int length = Integer.parseInt(tokens[6]);
+          arrayList.add(new IndexTextMessage(index, status, oada, alpha, scts, tooada, length, text));
+          continue;
+        }
         arrayList.add(new IndexTextMessage(index, status, oada, alpha, scts, text));
         continue;
       }

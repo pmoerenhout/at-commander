@@ -158,7 +158,7 @@ public abstract class BaseCommand {
 //    }
   }
 
-  public void writeBytes(final byte[] bytes) throws SerialException, ResponseException {
+  public void writeBytes(final byte[] bytes) throws SerialException {
     LOG.debug("Send {}", Util.bytesToHexString(bytes));
     atCommander.write(bytes);
   }

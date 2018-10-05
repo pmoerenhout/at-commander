@@ -57,7 +57,7 @@ public class ListMessagesResponseTest extends BaseCommandTest {
     assertEquals(1, message.getIndex());
     assertEquals(MessageStatus.RECEIVED_READ, message.getStatus());
     assertEquals("+31612345678", message.getOada());
-    assertEquals("", message.getAlpha());
+    assertNull(message.getAlpha());
     assertEquals(ZonedDateTime.of(2017, 12, 13, 2, 34, 52, 0, ZoneId.of("+04")),
         message.getScts());
   }
@@ -120,5 +120,30 @@ public class ListMessagesResponseTest extends BaseCommandTest {
     assertEquals(MessageStatus.RECEIVED_UNREAD, message2.getStatus());
     assertEquals("", message2.getAlpha());
     assertEquals("07911346101919F9040B911316240486F900007160621123058005C7F3598C06", message2.getPdu());
+  }
+
+  @Test
+  public void test_cmgl_text_rec_read_with_alpha_tooada_and_length() throws Exception {
+
+    final AtResponse response = createAtResponse(
+        new String[]{
+            "+CMGL: 4,\"REC READ\",\"+31614240689\",\"\",\"18/09/21,16:35:38+08\",145,13",
+            "Test message",
+            "OK"
+        });
+
+    final ListMessagesResponse listMessagesResponse = new ListMessagesResponse(response);
+    final List<IndexMessage> messageList = listMessagesResponse.getIndexMessages();
+
+    assertEquals(1, messageList.size());
+
+    final IndexTextMessage message0 = (IndexTextMessage) messageList.get(0);
+    assertEquals(4, message0.getIndex());
+    assertEquals(MessageStatus.RECEIVED_READ, message0.getStatus());
+    assertEquals("+31614240689", message0.getOada());
+    assertNull(message0.getAlpha());
+    assertEquals(Integer.valueOf(145), message0.getToOada());
+    assertEquals(Integer.valueOf(13), message0.getLength());
+    assertEquals("Test message", message0.getText());
   }
 }

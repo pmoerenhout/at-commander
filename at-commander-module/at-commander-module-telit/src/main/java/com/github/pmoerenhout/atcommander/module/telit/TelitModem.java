@@ -140,6 +140,7 @@ import com.github.pmoerenhout.atcommander.module.telit.unsolicited.RingingUnsoli
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimToolkitNotificationUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SmsAtRunUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SmsOverflowUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SocketRingUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.commands.AnyResponse;
 import com.github.pmoerenhout.atcommander.module.v250.commands.HangupCommand;
@@ -175,8 +176,8 @@ public class TelitModem extends EtsiModem {
       new UnsolicitedPatternClass(DisconnectedUnsolicited.UNSOLICITED_PATTERN, DisconnectedUnsolicited.class),
       // new UnsolicitedPatternClass(ReleasedResponse.UNSOLICITED_PATTERN, ReleasedResponse.class)
       new UnsolicitedPatternClass(SimToolkitNotificationUnsolicited.UNSOLICITED_PATTERN, SimToolkitNotificationUnsolicited.class),
-      new UnsolicitedPatternClass(SmsAtRunUnsolicited.UNSOLICITED_PATTERN, SmsAtRunUnsolicited.class)
-
+      new UnsolicitedPatternClass(SmsAtRunUnsolicited.UNSOLICITED_PATTERN, SmsAtRunUnsolicited.class),
+      new UnsolicitedPatternClass(SmsOverflowUnsolicited.UNSOLICITED_PATTERN, SmsOverflowUnsolicited.class)
   ));
 
   private static final Pattern REVISION_PATTERN = Pattern.compile("(\\d*).(\\d*).(\\d*)(-.*|)$");

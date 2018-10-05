@@ -1,7 +1,6 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,10 +19,10 @@ import com.github.pmoerenhout.atcommander.module.v250.enums.MessageStatus;
 
 public class ReadMessageResponse extends BaseResponse implements Response {
 
-  final static private DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yy/MM/dd,HH:mm:ssX");
-
   // +CMGR: "REC UNREAD","+31614240689","","18/09/28,16:34:55+08",145,4,0,0,"+31640191919",145,33
   // +CMGR: <stat>,<oa>,,<scts> [,<tooa>,<fo>,<pid>,<dcs>,<sca>,<tosca>,<length>]<CR><LF><data>
+  // +CMGR: "REC UNREAD","+31614240689","","18/10/05,11:51:25+08",145,4,0,0,"+31640191919",145,5
+  // +CMGR: <stat>,<oa>,<alpha>,<scts>[,<tooa>,<fo>,<pid>,<dcs>,<sca>,<tosca>,<length>]<CR><LF><data>
   private static final Pattern PATTERN_TEXT = Pattern.compile("^\\+CMGR: \"(.*)\",\"(.*)\",\"(.*)\",\"(.*)\"");
   private static final Pattern PATTERN_PDU = Pattern.compile("^\\+CMGR: (\\d),\"(.*)\",(\\d*)$");
   private static final String CMGR = "+CMGR: ";
@@ -43,12 +42,28 @@ public class ReadMessageResponse extends BaseResponse implements Response {
       if (messageMode == MessageMode.TEXT) {
         final Matcher matcherText = PATTERN_TEXT.matcher(line);
         if (matcherText.find()) {
+          final String text = informationalText.get(1);
           final String[] tokens = Util.tokenize(StringUtils.removeStart(line, CMGR));
+          System.out.println("Tokens " + tokens.length);
           final MessageStatus status = MessageStatus.fromString(tokens[0]);
           final String oada = tokens[1];
           final String alpha = StringUtils.defaultString(tokens[2]);
           final ZonedDateTime scts = Util.getTimestamp(tokens[3]);
-          final String text = informationalText.get(1);
+          if (tokens.length == 4) {
+            message = new TextMessage(status, oada, alpha, scts, text);
+            return;
+          } else if (tokens.length == 11) {
+            // +CSDH is set
+            final int toOa = Integer.parseInt(tokens[4]);
+            final int firstOctet = Integer.parseInt(tokens[5]);
+            final int pid = Integer.parseInt(tokens[6]);
+            final int dcs = Integer.parseInt(tokens[7]);
+            final String sca = tokens[8];
+            final int toSca = Integer.parseInt(tokens[9]);
+            final int length = Integer.parseInt(tokens[10]);
+            message = new TextMessage(status, oada, alpha, scts, toOa,firstOctet, pid, dcs, sca, toSca, length, text);
+            return;
+          }
           message = new TextMessage(status, oada, alpha, scts, text);
           return;
         }

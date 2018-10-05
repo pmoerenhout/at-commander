@@ -47,6 +47,15 @@ public class AtCommander implements SolicitedResponseCallback {
   }
 
   public void write(final byte[] bytes) throws SerialException {
+    int tries = 5;
+    while (tries-- > 0 && !serial.isCts()) {
+      LOG.debug("Waiting 100ms for CTS signal");
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e){
+        LOG.error("Interrupted", e);
+      }
+    }
     LOG.debug("write {}", Util.onlyPrintable(bytes));
     serial.write(bytes);
   }
@@ -54,10 +63,6 @@ public class AtCommander implements SolicitedResponseCallback {
   private void panic() {
     serial.panic();
   }
-
-//  public AtResponse send(final String command, final long timeout) throws SerialException {
-//    return send(ArrayUtils.addAll(command.getBytes(), NEWLINE), timeout);
-//  }
 
   public AtResponse send(final byte[] bytes, final long timeout) throws SerialException {
     lock.acquireUninterruptibly();

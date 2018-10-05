@@ -1,6 +1,7 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -16,7 +17,7 @@ import com.github.pmoerenhout.atcommander.module.v250.enums.MessageStatus;
 public class ReadMessageResponseTest extends BaseCommandTest {
 
   @Test
-  public void test_cmgr_text_rec_unread() throws Exception {
+  public void test_cmgr_text_rec_unread_with_csdh_set() throws Exception {
 
     final AtResponse response = createAtResponse(
         new String[]{
@@ -34,5 +35,32 @@ public class ReadMessageResponseTest extends BaseCommandTest {
     assertEquals(ZonedDateTime.of(2018, 9, 28, 16, 34, 55, 0, ZoneId.of("+02")),
         message.getScts());
     assertEquals("Europe wins the Ryder cup", message.getText());
+  }
+
+  @Test
+  public void test_cmgr_text_rec_unread() throws Exception {
+    final AtResponse response = createAtResponse(
+        new String[]{
+            "+CMGR: \"REC UNREAD\",\"+31614240689\",\"\",\"18/10/05,12:16:11+08\"",
+            "Europe wins the Ryder cup again",
+            "OK"
+        });
+
+    final ReadMessageResponse readMessageResponse = new ReadMessageResponse(MessageMode.TEXT, response);
+
+    final TextMessage message = (TextMessage) readMessageResponse.getMessage();
+    assertEquals(MessageStatus.RECEIVED_UNREAD, message.getStatus());
+    assertEquals("+31614240689", message.getOada());
+    assertEquals("", message.getAlpha());
+    assertEquals(ZonedDateTime.of(2018, 10, 5, 12, 16, 11, 0, ZoneId.of("+02")),
+        message.getScts());
+    assertNull(message.getToOa());
+    assertNull(message.getFirstOctet());
+    assertNull(message.getPid());
+    assertNull(message.getDcs());
+    assertNull(message.getSca());
+    assertNull(message.getToSca());
+    assertNull(message.getLength());
+    assertEquals("Europe wins the Ryder cup again", message.getText());
   }
 }
