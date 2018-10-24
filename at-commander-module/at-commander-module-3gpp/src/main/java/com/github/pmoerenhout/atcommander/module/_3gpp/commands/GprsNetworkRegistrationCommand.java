@@ -37,13 +37,13 @@ public class GprsNetworkRegistrationCommand extends BaseCommand implements Comma
     }
   }
 
-  public EmptyResponse read() throws SerialException, TimeoutException, ResponseException {
+  public GprsNetworkRegistrationResponse read() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_CGREG);
       sb.append(QUERY);
-      return new EmptyResponse(super.execute(sb.toString()));
+      return new GprsNetworkRegistrationResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }

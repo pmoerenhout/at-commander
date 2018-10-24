@@ -68,19 +68,6 @@ public class GprsNetworkRegistrationUnsolicitedTest extends BaseCommandTest {
     assertEquals(Integer.valueOf(0x09cd), gprsNetworkRegistrationUnsolicited.getCellId());
   }
 
-//  @Test
-//  public void test_2_5_with_lac_and_cellid() {
-//    final String line = "+CGREG: 2,5,\"ABCD\",\"123A\"";
-//
-//    final GprsNetworkRegistrationUnsolicited gprsNetworkRegistrationUnsolicited = new GprsNetworkRegistrationUnsolicited();
-//    gprsNetworkRegistrationUnsolicited.parseUnsolicited(Collections.singletonList(line));
-//
-//    assertEquals(RegistrationState.REGISTERED_ROAMING, gprsNetworkRegistrationUnsolicited.getRegistrationState());
-//    assertEquals(Integer.valueOf(0xabcd), gprsNetworkRegistrationUnsolicited.getLac());
-//    assertEquals(Integer.valueOf(0x123a), gprsNetworkRegistrationUnsolicited.getCellId());
-//    assertNull(gprsNetworkRegistrationUnsolicited.getAccessTechnology());
-//  }
-
   @Test
   public void test_gprs_network_registration_stat_home_with_lac_and_cellid_and_act() {
     final String line = "+CGREG: 1,\"00DE\",\"2D3C1C6\",2";
@@ -145,44 +132,4 @@ public class GprsNetworkRegistrationUnsolicitedTest extends BaseCommandTest {
     assertEquals("11001100", gprsNetworkRegistrationUnsolicited.getGprsReadyTimer());
   }
 
-//  @Test
-//  public void test2GWithLacAndCi() {
-//    final String line = "+CGREG: 1,\"00DE\",\"C1AD\"";
-//
-//    final GprsNetworkRegistrationUnsolicited gprsNetworkRegistrationUnsolicited = new GprsNetworkRegistrationUnsolicited();
-//    gprsNetworkRegistrationUnsolicited.parseUnsolicited(Collections.singletonList(line));
-//
-//    assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, gprsNetworkRegistrationUnsolicited.getRegistrationState());
-//    assertEquals(Integer.valueOf(0x00de), gprsNetworkRegistrationUnsolicited.getLac());
-//    assertEquals(Integer.valueOf(0xc1ad), gprsNetworkRegistrationUnsolicited.getCellId());
-//    assertNull(gprsNetworkRegistrationUnsolicited.getAccessTechnology());
-//  }
-
-//  @Test
-//  public void test_solicited_2G_withLacAndCiAndAct() {
-//    final String line = "+CGREG: 2,1,\"00DE\",\"FD4F\",0";
-//
-//    final GprsNetworkRegistrationUnsolicited gprsNetworkRegistrationUnsolicited = new GprsNetworkRegistrationUnsolicited();
-//    gprsNetworkRegistrationUnsolicited.parseUnsolicited(Collections.singletonList(line));
-//
-//    assertEquals(Integer.valueOf(2), gprsNetworkRegistrationUnsolicited.getMode());
-//    assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, gprsNetworkRegistrationUnsolicited.getRegistrationState());
-//    assertEquals(Integer.valueOf(0x00de), gprsNetworkRegistrationUnsolicited.getLac());
-//    assertEquals(Integer.valueOf(0xfd4f), gprsNetworkRegistrationUnsolicited.getCellId());
-//    assertEquals(AccessTechnology.GSM, gprsNetworkRegistrationUnsolicited.getAccessTechnology());
-//  }
-
-//  @Test
-//  public void test_solicited_3G_withLacAndCiAndAct() {
-//    final String line = "+CGREG: 2,5,\"0CBC\",\"D1A7\",0";
-//
-//    final GprsNetworkRegistrationUnsolicited gprsNetworkRegistrationUnsolicited = new GprsNetworkRegistrationUnsolicited();
-//    gprsNetworkRegistrationUnsolicited.parseUnsolicited(Collections.singletonList(line));
-//
-//    assertEquals(Integer.valueOf(2), gprsNetworkRegistrationUnsolicited.getMode());
-//    assertEquals(RegistrationState.REGISTERED_ROAMING, gprsNetworkRegistrationUnsolicited.getRegistrationState());
-//    assertEquals(Integer.valueOf(0x0cbc), gprsNetworkRegistrationUnsolicited.getLac());
-//    assertEquals( Integer.valueOf(0xd1a7), gprsNetworkRegistrationUnsolicited.getCellId());
-//    assertEquals(AccessTechnology.GSM, gprsNetworkRegistrationUnsolicited.getAccessTechnology());
-//  }
 }
