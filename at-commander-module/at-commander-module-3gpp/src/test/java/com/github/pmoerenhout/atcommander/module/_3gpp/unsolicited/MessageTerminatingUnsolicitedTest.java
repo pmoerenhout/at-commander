@@ -7,15 +7,17 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTerminatingUnsolicited;
+import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
 
-public class MessageTerminatingUnsolicitedTest {
+public class MessageTerminatingUnsolicitedTest extends BaseCommandTest {
 
   @Test
   public void test_cmt() {
     final List<String> lines = new ArrayList<>();
     lines.add("+CMT: \"\",22");
     lines.add("001122334455");
+
+    assertPatternMatch(MessageTerminatingUnsolicited.UNSOLICITED_PATTERN, "+CMT: \"\",22");
 
     final MessageTerminatingUnsolicited messageTerminatingUnsolicited = new MessageTerminatingUnsolicited();
     messageTerminatingUnsolicited.parseUnsolicited(lines);

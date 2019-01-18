@@ -183,8 +183,9 @@ public class ReadThread {
         final byte[] lineArray = new byte[lineBuffer.limit()];
         lineBuffer.get(lineArray);
         final String line = new String(lineArray);
-        LOG.debug("Received line: '{}'", Util.onlyPrintable(line.getBytes()));
-        if (fetchAdditionalLines-- > 0) {
+        // LOG.debug("Received line: '{}' (additional:{})", Util.onlyPrintable(line.getBytes()), fetchAdditionalLines);
+        if (fetchAdditionalLines > 0) {
+          fetchAdditionalLines--;
           additionalLines.add(line);
           if (fetchAdditionalLines == 0) {
             // Multi line unsolicited
@@ -202,6 +203,7 @@ public class ReadThread {
             fetchAdditionalLines = numberOfAdditionalLines;
             additionalLines.add(line);
           } else {
+            // LOG.debug("Publish unsolicited line: '{}'", line);
             publishUnsolicitedEvent(Collections.singletonList(line));
           }
         } else {
@@ -229,7 +231,7 @@ public class ReadThread {
           return pattern.getNumberOfAdditionalLines();
         }
       }
-      throw new IllegalStateException("Couldnot determine number of lines for " + line);
+      throw new IllegalStateException("Couldn't determine number of lines for " + line);
     }
 
     public String getLine() {

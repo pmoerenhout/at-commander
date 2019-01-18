@@ -31,6 +31,7 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachRespon
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsMobileStationClassCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsMobileStationClassResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ImsiCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ImsiResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ListMessagesResponse;
@@ -116,12 +117,6 @@ public class EtsiModem extends V250 {
   public static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
       new UnsolicitedPatternClass(NetworkRegistrationUnsolicited.UNSOLICITED_PATTERN, NetworkRegistrationUnsolicited.class),
       new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN, GprsNetworkRegistrationUnsolicited.class),
-//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN1, GprsNetworkRegistrationUnsolicited.class),
-//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN2, GprsNetworkRegistrationUnsolicited.class),
-//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN3, GprsNetworkRegistrationUnsolicited.class),
-//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN4, GprsNetworkRegistrationUnsolicited.class),
-//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN5, GprsNetworkRegistrationUnsolicited.class),
-//      new UnsolicitedPatternClass(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN6, GprsNetworkRegistrationUnsolicited.class),
       new UnsolicitedPatternClass(GprsEventReportingUnsolicited.UNSOLICITED_PATTERN, GprsEventReportingUnsolicited.class),
       new UnsolicitedPatternClass(ServiceReportingControlUnsolicited.UNSOLICITED_PATTERN, ServiceReportingControlUnsolicited.class),
       new UnsolicitedPatternClass(CellularRingUnsolicited.UNSOLICITED_PATTERN, CellularRingUnsolicited.class),
@@ -132,6 +127,7 @@ public class EtsiModem extends V250 {
           ConnectedLineIdentificationPresentationUnsolicited.class)
   ));
   private static final Logger LOG = LoggerFactory.getLogger(EtsiModem.class);
+
   protected MessageMode messageMode;
   protected String characterSet;
 
@@ -620,9 +616,9 @@ public class EtsiModem extends V250 {
     return command.set();
   }
 
-  public void getGprsNetworkRegistration() throws SerialException, TimeoutException, ResponseException {
+  public GprsNetworkRegistrationResponse getGprsNetworkRegistration() throws SerialException, TimeoutException, ResponseException {
     final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander);
-    command.read();
+    return command.read();
   }
 
   public void setGprsNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {

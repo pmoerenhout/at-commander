@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StrTokenizer;
+import org.apache.commons.text.StringTokenizer;
 
 public class Util {
 
@@ -73,7 +73,7 @@ public class Util {
   }
 
   public static String[] tokenize(final String str, final char delimiterChar, final char quoteChar) {
-    final StrTokenizer tokenizer = new StrTokenizer(str).setDelimiterChar(delimiterChar).setQuoteChar(quoteChar)
+    final StringTokenizer tokenizer = new StringTokenizer(str).setDelimiterChar(delimiterChar).setQuoteChar(quoteChar)
         .setIgnoreEmptyTokens(false).setEmptyTokenAsNull(true);
     return tokenizer.getTokenArray();
   }

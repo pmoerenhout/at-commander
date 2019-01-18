@@ -7,12 +7,18 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-public class NoCarrierUnsolicitedTest {
+import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+
+public class NoCarrierUnsolicitedTest extends BaseCommandTest {
 
   @Test
   public void test_no_carrier_with_socketid() throws Exception {
+    final String line = "NO CARRIER:3";
+
+    assertPatternMatch(NoCarrierUnsolicited.UNSOLICITED_PATTERN, line);
+
     final NoCarrierUnsolicited noCarrierResponse = new NoCarrierUnsolicited();
-    noCarrierResponse.parseUnsolicited(Collections.singletonList("NO CARRIER:3"));
+    noCarrierResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(Integer.valueOf(3), noCarrierResponse.getSocketId());
     assertNull(noCarrierResponse.getCause());
@@ -20,8 +26,12 @@ public class NoCarrierUnsolicitedTest {
 
   @Test
   public void test_no_carrier_with_socketid_and_cause() throws Exception {
+    final String line = "NO CARRIER:2,1";
+
+    assertPatternMatch(NoCarrierUnsolicited.UNSOLICITED_PATTERN, line);
+
     final NoCarrierUnsolicited noCarrierResponse = new NoCarrierUnsolicited();
-    noCarrierResponse.parseUnsolicited(Collections.singletonList("NO CARRIER:2,1"));
+    noCarrierResponse.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(Integer.valueOf(2), noCarrierResponse.getSocketId());
     assertEquals(Integer.valueOf(1), noCarrierResponse.getCause());

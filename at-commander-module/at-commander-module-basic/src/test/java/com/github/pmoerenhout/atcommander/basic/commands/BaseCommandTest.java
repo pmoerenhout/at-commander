@@ -3,6 +3,10 @@ package com.github.pmoerenhout.atcommander.basic.commands;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.junit.Assert;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.BasicFinalFactory;
@@ -26,5 +30,10 @@ public abstract class BaseCommandTest {
       list.add(s);
     }
     return new AtResponse(Collections.singletonList(new BasicFinalFactory()), list);
+  }
+
+  protected void assertPatternMatch(final Pattern pattern, final String line) {
+    final Matcher matcher = pattern.matcher(line);
+    Assert.assertTrue(matcher.matches());
   }
 }

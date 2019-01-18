@@ -69,6 +69,8 @@ public class JsscSerial implements SerialInterface {
 
   public void addUnsolicited(final UnsolicitedPatternClass unsolicitedPatternClass) {
     this.unsolicitedPatterns.add(unsolicitedPatternClass);
+    LOG.debug("Added Unsolicited {} - {}", unsolicitedPatternClass.getClazz().getName(), unsolicitedPatternClass.getPattern().toString());
+    LOG.debug("Total unsolicited size is {}", this.unsolicitedPatterns.size());
   }
 
   public void setSolicitedResponseCallback(final SolicitedResponseCallback solicitedResponseCallback) {

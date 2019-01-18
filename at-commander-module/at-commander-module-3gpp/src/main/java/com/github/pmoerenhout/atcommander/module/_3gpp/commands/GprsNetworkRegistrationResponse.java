@@ -15,7 +15,7 @@ import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
 public class GprsNetworkRegistrationResponse extends BaseResponse implements Response {
 
-  private static final String CGREG = "+CGREG: ";
+  public static final String CGREG = "+CGREG: ";
 
   // "+CGREG: 2,5
   // "+CGREG: 2,1,\"0CBC\",\"D1A7\"";

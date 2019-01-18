@@ -1,41 +1,51 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.unsolicited;
 
+import static com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationResponse.CGREG;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module._3gpp.RegistrationState;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
 public class GprsNetworkRegistrationUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
+  // 3GPP TS 27.007 version 10.3.0 Release 10
+  // https://www.etsi.org/deliver/etsi_ts/127000_127099/127007/10.03.00_60/ts_127007v100300p.pdf
+  // https://www.etsi.org/deliver/etsi_ts/127000_127099/127007/13.04.00_60/ts_127007v130400p.pdf
+
   // when <n>=0, 1, 2 or 3 and command successful:
   // +CGREG: <n>,<stat>[,[<lac>],[<ci>],[<AcT>],[ <rac>][,<cause_type>,<reject_cause>]]
   // when <n>=4 or 5 and command successful:
-  // +CGREG: <n>,<stat>[,[<lac>],[<ci>],[<AcT>],[ <rac>][,[<cause_type>],[<reject_cause>][,[<A ctive-Time>],[<Periodic-RAU>],[<GPRS-READY- timer>]]]]
+  // +CGREG: <n>,<stat>[,[<lac>],[<ci>],[<AcT>],[ <rac>][,[<cause_type>],[<reject_cause>][,[<Active-Time>],[<Periodic-RAU>],[<GPRS-READY- timer>]]]]
+
+  // 2
+  // +CGREG: <stat>[,<[lac>,]<[ci>],[<AcT>],[<rac>]]
+  // 3
+  // +CGREG: <stat>[,[<lac>],[<ci>],[<AcT>],[<rac>][,<cause_type>,<reject_cause>]]
+  // 4
+  // +CGREG:  +CGREG: <stat>[,[<lac>],[<ci>],[<AcT>],[<rac>][,,[,[<Active-Time>],[<Periodic-RAU>],[<GPRS-READY-timer>]]]]
+  // 5
+  // CGREG: <stat>[,[<lac>],[<ci>],[<AcT>],[<rac>][,[<cause_type>],[<reject_cause>][,[<Active-Time>],[<Periodic-RAU>],[<GPRS-READY-timer>]]]]
 
   // +CGREG: 1,"00DE","C1AD",0,"01"
   // +CGREG: 1,"00DE","FD4F",0,"01"
+  // +CGREG: 1,"00DE","0A5B",0,"01"
 
-  public static final Pattern UNSOLICITED_PATTERN = Pattern
-      .compile("^\\+CGREG: (\\d)(,\"([0-9A-F]*)\",\"([0-9A-F]*)\"(,(\\d)(,(\\d|),(\\d*|)(,(.*),(.*),(.*))?)?)?)?$");
-  public static final Pattern UNSOLICITED_PATTERN1 = Pattern.compile("^\\+CGREG: (\\d)$");
-  public static final Pattern UNSOLICITED_PATTERN2 = Pattern.compile("^\\+CGREG: (\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\"$");
-  public static final Pattern UNSOLICITED_PATTERN3 = Pattern.compile("^\\+CGREG: (\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\",(\\d)$");
-  //public static final Pattern UNSOLICITED_PATTERN4 = Pattern.compile("^\\+CGREG: (\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\",(\\d),\"(.*)\"$");
+  // public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+CGREG: (\\d)((,\"([0-9A-F]*)\",\"([0-9A-F]*)\")?(,.*))?$");
+  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+CGREG: (\\d)(,\"([0-9A-F]*)\",\"([0-9A-F]*)\"(,.*)?)?$");
 
-//  public static final Pattern UNSOLICITED_PATTERN4 = Pattern.compile("^\\+CGREG: (\\d),(\\d)$");
-//  public static final Pattern UNSOLICITED_PATTERN5 = Pattern.compile("^\\+CGREG: (\\d),(\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\"$");
-//  public static final Pattern UNSOLICITED_PATTERN6 = Pattern.compile("^\\+CGREG: (\\d),(\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\",(\\d)$");
-  // private static final Pattern PATTERN6 = Pattern.compile("^\\+CGREG: (\\d),(\\d),\"([0-9A-F]*)\",\"([0-9A-F]*)\",(\\d),\"(.*)\"$");
-
-  // protected Integer mode;
   protected RegistrationState registrationState;
   protected Integer lac;
   protected Integer cellId;
   protected AccessTechnology accessTechnology;
+  protected Byte routingAreaCode;
   private Integer causeType;
   private Integer rejectCause;
   private String activeTime;
@@ -50,19 +60,21 @@ public class GprsNetworkRegistrationUnsolicited extends BaseResponse implements 
       final String line = lines.get(0);
       final Matcher m = UNSOLICITED_PATTERN.matcher(line);
       if (m.find()) {
-        registrationState = RegistrationState.fromString(m.group(1));
-        if (m.group(2) != null) {
-          lac = Integer.valueOf(Integer.parseUnsignedInt(m.group(3), 16));
-          cellId = Integer.valueOf(Integer.parseUnsignedInt(m.group(4), 16));
-          if (m.group(5) != null) {
-            accessTechnology = AccessTechnology.fromInt(Integer.parseInt(m.group(6)));
-            if (m.group(7) != null) {
-              causeType = getInteger(m.group(8));
-              rejectCause = getInteger(m.group(9));
-              if (m.group(10) != null) {
-                activeTime = m.group(11);
-                periodicRau = m.group(12);
-                gprsReadyTimer = m.group(13);
+        final String[] tokens = Util.tokenize(StringUtils.stripStart(line, CGREG));
+        registrationState = RegistrationState.fromString(tokens[0]);
+        if (tokens.length > 1) {
+          lac = Integer.valueOf(Integer.parseUnsignedInt(tokens[1], 16));
+          cellId = Integer.valueOf(Integer.parseUnsignedInt(tokens[2], 16));
+          if (tokens.length > 3) {
+            accessTechnology = AccessTechnology.fromInt(Integer.parseInt(tokens[3]));
+            routingAreaCode = Byte.valueOf(tokens[4], 16);
+            if (tokens.length > 5) {
+              causeType = getInteger(tokens[5]);
+                rejectCause = getInteger(tokens[6]);
+                if (tokens.length > 7) {
+                  activeTime = m.group(tokens[7]);
+                  periodicRau = m.group(tokens[8]);
+                  gprsReadyTimer = m.group(tokens[9]);
               }
             }
           }
@@ -171,6 +183,10 @@ public class GprsNetworkRegistrationUnsolicited extends BaseResponse implements 
 
   public AccessTechnology getAccessTechnology() {
     return accessTechnology;
+  }
+
+  public Byte getRoutingAreaCode() {
+    return routingAreaCode;
   }
 
   public Integer getCauseType() {

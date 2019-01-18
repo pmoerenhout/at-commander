@@ -10,12 +10,18 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-public class NitzUnsolicitedTest {
+import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+
+public class NitzUnsolicitedTest extends BaseCommandTest {
 
   @Test
   public void test_nitz_unsolicited_basic() throws Exception {
+    final String line = "#NITZ: 03/12/31,16:07:54";
+
+    assertPatternMatch(NitzUnsolicited.UNSOLICITED_PATTERN, line);
+
     final NitzUnsolicited nitz = new NitzUnsolicited();
-    nitz.parseUnsolicited(Collections.singletonList("#NITZ: 03/12/31,16:07:54"));
+    nitz.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(03, nitz.getYear());
     assertEquals(12, nitz.getMonth());

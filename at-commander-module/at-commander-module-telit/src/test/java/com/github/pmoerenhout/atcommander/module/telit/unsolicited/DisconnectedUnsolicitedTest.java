@@ -4,10 +4,16 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-public class DisconnectedUnsolicitedTest {
+import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+
+public class DisconnectedUnsolicitedTest extends BaseCommandTest {
 
   @Test
   public void test_disconnected() throws Exception {
+    final String line = "DISCONNECTED";
+
+    assertPatternMatch(DisconnectedUnsolicited.UNSOLICITED_PATTERN, line);
+
     final DisconnectedUnsolicited disconnected = new DisconnectedUnsolicited();
     disconnected.parseUnsolicited(Collections.singletonList("DISCONNECTED"));
   }
