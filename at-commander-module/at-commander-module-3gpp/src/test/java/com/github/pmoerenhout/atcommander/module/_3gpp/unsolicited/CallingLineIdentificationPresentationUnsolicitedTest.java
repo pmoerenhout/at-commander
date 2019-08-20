@@ -6,9 +6,9 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class CallingLineIdentificationPresentationUnsolicitedTest extends BaseCommandTest {
+public class CallingLineIdentificationPresentationUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_clip_unsolicited_2() throws Exception {

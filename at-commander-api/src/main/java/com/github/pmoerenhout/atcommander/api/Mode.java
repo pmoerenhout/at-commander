@@ -1,6 +1,6 @@
 package com.github.pmoerenhout.atcommander.api;
 
-public enum State {
+public enum Mode {
   COMMAND,
   DATA
 }

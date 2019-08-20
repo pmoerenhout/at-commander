@@ -7,9 +7,9 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class GprsEventReportingUnsolicitedTest extends BaseCommandTest {
+public class GprsEventReportingUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_cgev_me_deact_ip() throws Exception {

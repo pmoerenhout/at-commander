@@ -37,6 +37,7 @@ import com.github.pmoerenhout.atcommander.module.v250.commands.SoftResetCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.StoreCurrentConfigurationCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.VerboseCommand;
 import com.github.pmoerenhout.atcommander.module.v250.exceptions.UnknownResponseException;
+import com.github.pmoerenhout.atcommander.module.v250.unsolicited.ConnectionFromUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.unsolicited.RingUnsolicited;
 
 public class V250 extends Basic {
@@ -47,7 +48,8 @@ public class V250 extends Basic {
 
   private static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
       // new UnsolicitedPatternClass(NoCarrierResponse.PATTERN, NoCarrierResponse.class),
-      new UnsolicitedPatternClass(RingUnsolicited.PATTERN, RingUnsolicited.class)
+      new UnsolicitedPatternClass(ConnectionFromUnsolicited.UNSOLICITED_PATTERN, ConnectionFromUnsolicited.class),
+      new UnsolicitedPatternClass(RingUnsolicited.UNSOLICITED_PATTERN, RingUnsolicited.class)
   ));
 
   public V250(final SerialInterface serial) {
@@ -130,6 +132,12 @@ public class V250 extends Basic {
   public void setCircuit108(final int value) throws SerialException, TimeoutException, ResponseException {
     final Circuit108Command command = new Circuit108Command(atCommander, value);
     command.set();
+  }
+
+  public List<String> getIdentificationInformation() throws SerialException, TimeoutException, ResponseException {
+    final IdentificationInformationCommand command = new IdentificationInformationCommand(atCommander);
+    final AnyResponse response = command.set();
+    return response.getLines();
   }
 
   public List<String> getIdentificationInformation(final int information) throws SerialException, TimeoutException, ResponseException {

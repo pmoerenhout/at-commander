@@ -10,9 +10,9 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class NitzUnsolicitedTest extends BaseCommandTest {
+public class NitzUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_nitz_unsolicited_basic() throws Exception {

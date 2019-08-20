@@ -2,6 +2,7 @@ package com.github.pmoerenhout.atcommander.module.neul;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ import com.github.pmoerenhout.atcommander.module.neul.commands.RevisionIdentific
 import com.github.pmoerenhout.atcommander.module.neul.commands.RevisionIdentificationResponse;
 import com.github.pmoerenhout.atcommander.module.neul.commands.SignalQualityCommand;
 import com.github.pmoerenhout.atcommander.module.neul.commands.SignalQualityResponse;
+import com.github.pmoerenhout.atcommander.module.v250.commands.AnyResponse;
+import com.github.pmoerenhout.atcommander.module.v250.commands.IdentificationInformationCommand;
 
 public class Neul extends Basic {
 
@@ -90,5 +93,17 @@ public class Neul extends Basic {
     Thread.sleep(50);
     final ManufacturerIdentificationCommand command = new ManufacturerIdentificationCommand(atCommander);
     return command.set();
+  }
+
+  public List<String> getIdentificationInformation() throws SerialException, TimeoutException, ResponseException {
+    final IdentificationInformationCommand command = new IdentificationInformationCommand(atCommander);
+    final AnyResponse response = command.set();
+    return response.getLines();
+  }
+
+  public List<String> getIdentificationInformation(final int information) throws SerialException, TimeoutException, ResponseException {
+    final IdentificationInformationCommand command = new IdentificationInformationCommand(atCommander, information);
+    final AnyResponse response = command.set();
+    return response.getLines();
   }
 }

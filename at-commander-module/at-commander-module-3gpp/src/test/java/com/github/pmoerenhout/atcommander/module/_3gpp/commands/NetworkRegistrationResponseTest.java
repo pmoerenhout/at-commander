@@ -13,6 +13,19 @@ import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 public class NetworkRegistrationResponseTest extends BaseCommandTest {
 
   @Test
+  public void test_creg_solicited_2_2() throws Exception {
+    final AtResponse response = createOkAtResponse("+CREG: 2,2");
+
+    final NetworkRegistrationResponse networkRegistrationResponse = new NetworkRegistrationResponse(response);
+
+    assertEquals(2, networkRegistrationResponse.getMode());
+    assertEquals(RegistrationState.SEARCHING, networkRegistrationResponse.getRegistrationState());
+    assertNull(networkRegistrationResponse.getLac());
+    assertNull(networkRegistrationResponse.getCellId());
+    assertNull(networkRegistrationResponse.getAccessTechnology());
+  }
+
+  @Test
   public void test_creg_solicited_2_3() throws Exception {
     final AtResponse response = createOkAtResponse("+CREG: 2,3");
 

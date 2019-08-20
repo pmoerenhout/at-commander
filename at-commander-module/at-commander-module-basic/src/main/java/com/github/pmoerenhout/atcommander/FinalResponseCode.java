@@ -9,7 +9,7 @@ public enum FinalResponseCode {
 
   EMPTY("^\r\n$", 0),
   OK("^OK$", 0),
-  CONNECT("^CONNECT (.*)$", 1),
+  CONNECT("^CONNECT\\s?(.*)$", 1),
   ERROR("^ERROR$", 0),
   NO_CARRIER("^NO CARRIER$", 0),
   NO_DIALTONE("^NO DIALTONE$", 0),

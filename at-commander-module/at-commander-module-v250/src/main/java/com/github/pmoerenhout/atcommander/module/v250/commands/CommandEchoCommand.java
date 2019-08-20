@@ -25,7 +25,7 @@ public class CommandEchoCommand extends BaseCommand implements Command<BaseRespo
     try {
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_COMMAND_ECHO);
-        sb.append(oneOrZero(enable));
+      sb.append(oneOrZero(enable));
       return new EmptyResponse(super.execute(sb.toString()));
     } finally {
       available.release();

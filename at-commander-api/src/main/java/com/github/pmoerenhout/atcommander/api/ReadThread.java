@@ -1,9 +1,12 @@
 package com.github.pmoerenhout.atcommander.api;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.Pipe;
 import java.nio.channels.SelectionKey;
@@ -30,6 +33,10 @@ public class ReadThread {
 
   private ReadThreadTask task;
   private Thread thread;
+
+  private Mode mode;
+  private InputStream dataInputStream;
+  private OutputStream dataOutputStream;
 
   private int fetchAdditionalLines = 0;
   private List<String> additionalLines = new ArrayList<>();
@@ -132,8 +139,19 @@ public class ReadThread {
               final SelectionKey key2 = it.next();
               it.remove();
               if (key2.isReadable()) {
+
+                if (mode == Mode.DATA){
+                  final int bytesRead = sourceChannel.read(dst);
+                  LOG.trace("read {} bytes from sourceChannel", bytesRead);
+                  dst.flip();
+                  Pipe.SinkChannel s = null;
+                  dataOutputStream = Channels.newOutputStream(s);
+                  s.write(dst);
+                  continue;
+                }
+
                 final int bytesRead = sourceChannel.read(dst);
-                // LOG.info("read {} bytes from sourceChannel", bytesRead);
+                LOG.trace("read {} bytes from sourceChannel", bytesRead);
                 dst.flip();
                 // LOG.debug("position {} limit {}", dst.position(), dst.limit());
                 for (int i = dst.position(); i < dst.limit(); i++) {
@@ -183,7 +201,11 @@ public class ReadThread {
         final byte[] lineArray = new byte[lineBuffer.limit()];
         lineBuffer.get(lineArray);
         final String line = new String(lineArray);
-        // LOG.debug("Received line: '{}' (additional:{})", Util.onlyPrintable(line.getBytes()), fetchAdditionalLines);
+        LOG.debug("Received line: '{}' (additional:{})", Util.onlyPrintable(line.getBytes()), fetchAdditionalLines);
+        if ("CONNECT".equals(line)) {
+          LOG.info("CONNECT received, go to DATA mode");
+          mode = Mode.DATA;
+        }
         if (fetchAdditionalLines > 0) {
           fetchAdditionalLines--;
           additionalLines.add(line);

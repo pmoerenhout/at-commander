@@ -164,7 +164,7 @@ public class TelitModem extends EtsiModem {
       new UnsolicitedPatternClass(SocketRingUnsolicited.UNSOLICITED_PATTERN, SocketRingUnsolicited.class),
       new UnsolicitedPatternClass(NitzUnsolicited.UNSOLICITED_PATTERN, NitzUnsolicited.class),
       new UnsolicitedPatternClass(PacketServiceNetworkTypeUnsolicited.UNSOLICITED_PATTERN, PacketServiceNetworkTypeUnsolicited.class),
-      new UnsolicitedPatternClass(SimPresenceStatusUnsolicited.UNSOLICTED_PATTERN, SimPresenceStatusUnsolicited.class),
+      new UnsolicitedPatternClass(SimPresenceStatusUnsolicited.UNSOLICITED_PATTERN, SimPresenceStatusUnsolicited.class),
       new UnsolicitedPatternClass(ConnectionFromUnsolicited.UNSOLICITED_PATTERN, ConnectionFromUnsolicited.class),
       new UnsolicitedPatternClass(GpsNmunUnsolicited.UNSOLICITED_PATTERN, GpsNmunUnsolicited.class),
       new UnsolicitedPatternClass(HttpRingUnsolicited.UNSOLICITED_PATTERN, HttpRingUnsolicited.class),
@@ -261,6 +261,16 @@ public class TelitModem extends EtsiModem {
   @Override
   public NetworkRegistrationResponse getNetworkRegistration() throws SerialException, TimeoutException, ResponseException {
     final NetworkRegistrationResponse response = super.getNetworkRegistration();
+    if (response.getAccessTechnology() != null) {
+      // access technology is optional in response
+      accessTechnology = response.getAccessTechnology();
+    }
+    return response;
+  }
+
+  @Override
+  public NetworkRegistrationResponse getNetworkRegistration(final long timeout) throws SerialException, TimeoutException, ResponseException {
+    final NetworkRegistrationResponse response = super.getNetworkRegistration(timeout);
     if (response.getAccessTechnology() != null) {
       // access technology is optional in response
       accessTechnology = response.getAccessTechnology();

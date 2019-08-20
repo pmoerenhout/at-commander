@@ -3,11 +3,11 @@ package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.SerialException;
-import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommand;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
+import com.github.pmoerenhout.atcommander.common.Util;
 
 public class RestrictedSimAccessCommand extends BaseCommand implements Command<BaseResponse> {
 
@@ -18,7 +18,8 @@ public class RestrictedSimAccessCommand extends BaseCommand implements Command<B
   static public final int COMMAND_UPDATE_RECORD = 220;
   static public final int COMMAND_STATUS = 242;
 
-  static public final int FILE_FPLMN = 28539;
+  static public final int FILE_FPLMN = 0x6f7b;
+  static public final int FILE_LOCATION = 0x6f7e;
   static public final int FILE_APN = 36614;
 
   private static final String COMMAND_CRSM = "+CRSM";

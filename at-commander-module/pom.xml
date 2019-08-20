@@ -22,8 +22,9 @@
     <module>at-commander-module-basic</module>
     <module>at-commander-module-v250</module>
     <module>at-commander-module-3gpp</module>
-    <module>at-commander-module-telit</module>
+    <module>at-commander-module-quectel</module>
     <module>at-commander-module-neul</module>
+    <module>at-commander-module-telit</module>
   </modules>
 
   <dependencies>

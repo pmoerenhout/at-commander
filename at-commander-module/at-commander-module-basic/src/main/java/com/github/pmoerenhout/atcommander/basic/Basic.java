@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.InitException;
+import com.github.pmoerenhout.atcommander.api.Mode;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.basic.commands.AttentionCommand;
@@ -20,7 +21,6 @@ public class Basic {
 
   private static final Logger LOG = LoggerFactory.getLogger(Basic.class);
 
-  //private static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>();
   public SerialInterface serial;
   protected AtCommander atCommander;
 
@@ -28,7 +28,6 @@ public class Basic {
     this.serial = serial;
     this.atCommander = new AtCommander(serial);
     serial.setSolicitedResponseCallback(atCommander);
-    // UNSOLICITED_PATTERN_CLASS_LIST.forEach(u -> serial.addUnsolicited(u));
   }
 
   public void init() throws InitException, SerialException, TimeoutException, ResponseException {
@@ -38,6 +37,14 @@ public class Basic {
       LOG.error("Could not initialize basic modem", e);
       throw new InitException(e);
     }
+  }
+
+  public Mode getMode() {
+    return serial.getMode();
+  }
+
+  public void setMode(Mode mode) {
+    serial.setMode(mode);
   }
 
   public void close() {
@@ -52,6 +59,12 @@ public class Basic {
 
   public void getAttention() throws SerialException, TimeoutException, ResponseException {
     final AttentionCommand command = new AttentionCommand(atCommander);
+    command.set();
+  }
+
+  public void getAttention(final long timeout) throws SerialException, TimeoutException, ResponseException {
+    final AttentionCommand command = new AttentionCommand(atCommander);
+    command.setTimeout(timeout);
     command.set();
   }
 

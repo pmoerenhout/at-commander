@@ -255,6 +255,12 @@ public class EtsiModem extends V250 {
     return command.read();
   }
 
+  public NetworkRegistrationResponse getNetworkRegistration(final long timeout) throws SerialException, TimeoutException, ResponseException {
+    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander);
+    command.setTimeout(timeout);
+    return command.read();
+  }
+
   public void setNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
     final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander, mode);
     command.set();
@@ -509,6 +515,9 @@ public class EtsiModem extends V250 {
     return getRestrictedSimAccess(RestrictedSimAccessCommand.COMMAND_UPDATE_BINARY, RestrictedSimAccessCommand.FILE_FPLMN, 0, 0, 12, data);
   }
 
+  public byte[] getLocation() throws SerialException, TimeoutException, ResponseException {
+    return getRestrictedSimAccess(RestrictedSimAccessCommand.COMMAND_READ_BINARY, RestrictedSimAccessCommand.FILE_LOCATION, 0, 0, 11);
+  }
 
   public FacilityLockResponse setFacilityLock(final String facility, final int mode) throws SerialException, TimeoutException, ResponseException {
     final FacilityLockCommand command = new FacilityLockCommand(atCommander, facility, mode);

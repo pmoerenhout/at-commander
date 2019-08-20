@@ -7,9 +7,9 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class NoCarrierUnsolicitedTest extends BaseCommandTest {
+public class NoCarrierUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_no_carrier_with_socketid() throws Exception {

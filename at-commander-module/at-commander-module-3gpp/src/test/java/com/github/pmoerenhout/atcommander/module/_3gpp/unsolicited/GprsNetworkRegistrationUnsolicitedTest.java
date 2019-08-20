@@ -8,12 +8,12 @@ import java.util.Collections;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 import com.github.pmoerenhout.atcommander.module._3gpp.RegistrationState;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
 
-public class GprsNetworkRegistrationUnsolicitedTest extends BaseCommandTest {
+public class GprsNetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
 
   // +CGREG: <stat>
   // +CGREG: <stat>[,<[lac>,]<[ci>],[<AcT>],[<rac>]]

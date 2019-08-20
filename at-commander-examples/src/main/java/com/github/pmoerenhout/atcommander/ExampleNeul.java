@@ -3,6 +3,8 @@ package com.github.pmoerenhout.atcommander;
 import static jssc.SerialPort.FLOWCONTROL_XONXOFF_IN;
 import static jssc.SerialPort.FLOWCONTROL_XONXOFF_OUT;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,10 +20,11 @@ public class ExampleNeul {
   private static final Logger LOG = LoggerFactory.getLogger(ExampleNeul.class);
 
   public static void main(String[] arg) {
-    LOG.info("Test modem which only understand AT");
 
     final Neul modem = new Neul(
-        new JsscSerial("/dev/tty.usbserial-A1056QHL", 9600, FLOWCONTROL_XONXOFF_IN | FLOWCONTROL_XONXOFF_OUT, new UnsolicitedCallback()));
+        // new JsscSerial("/dev/tty.usbserial-A1056QHL", 9600, FLOWCONTROL_XONXOFF_IN | FLOWCONTROL_XONXOFF_OUT, new UnsolicitedCallback())
+        new JsscSerial("/dev/tty.usbmodem1411101", 9600, FLOWCONTROL_XONXOFF_IN | FLOWCONTROL_XONXOFF_OUT, new UnsolicitedCallback())
+    );
 
     try {
       modem.init();
@@ -37,6 +40,15 @@ public class ExampleNeul {
       modem.getAttention();
       modem.getAttention();
 
+      LOG.info("Identification: {}", getIdentificationInformation(modem, 0));
+      LOG.info("Identification IMEI: {}", getIdentificationInformation(modem, 5));
+//      IntStream.range(0,10).forEachOrdered(information -> {
+//        try {
+//          LOG.info("Identification {}: {}", information, getIdentificationInformation(modem, information));
+//        } catch (Exception e){
+//          LOG.error("Identification", e);
+//        }
+//      });
       LOG.info("Manufacturer: {}", getManufacturer(modem));
       LOG.info("Module revision: {}", getRevisionIdentification(modem));
       Thread.sleep(1000);
@@ -58,10 +70,20 @@ public class ExampleNeul {
 
   }
 
-  private static String getManufacturer(final Neul modem) throws TimeoutException, ResponseException, SerialException, InterruptedException{
+  private static List<String> getIdentificationInformation(final Neul modem) throws TimeoutException, ResponseException, SerialException, InterruptedException {
+    return modem.getIdentificationInformation();
+  }
+
+  private static List<String> getIdentificationInformation(final Neul modem, final int information) throws TimeoutException, ResponseException, SerialException, InterruptedException {
+    return modem.getIdentificationInformation(information);
+  }
+
+
+  private static String getManufacturer(final Neul modem) throws TimeoutException, ResponseException, SerialException, InterruptedException {
     return modem.getManufacturerIdentification().getManufacturer();
   }
-  private static String getRevisionIdentification(final Neul modem) throws TimeoutException, ResponseException, SerialException, InterruptedException{
+
+  private static String getRevisionIdentification(final Neul modem) throws TimeoutException, ResponseException, SerialException, InterruptedException {
     return modem.getRevisionIdentification().getRevision();
   }
 

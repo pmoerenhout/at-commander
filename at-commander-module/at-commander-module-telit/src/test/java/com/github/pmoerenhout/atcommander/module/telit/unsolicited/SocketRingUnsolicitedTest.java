@@ -6,13 +6,19 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-public class SocketRingUnsolicitedTest {
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
+
+public class SocketRingUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_socket_ring_simple() {
     // SRING: 6'
+    final String line = "SRING: 6";
+
+    assertPatternMatch(SocketRingUnsolicited.UNSOLICITED_PATTERN, line);
+
     final SocketRingUnsolicited socketRingUnsolicited = new SocketRingUnsolicited();
-    socketRingUnsolicited.parseUnsolicited(Collections.singletonList("SRING: 6"));
+    socketRingUnsolicited.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(6, socketRingUnsolicited.getSocketId());
   }
@@ -21,6 +27,9 @@ public class SocketRingUnsolicitedTest {
   public void test_socket_ring() {
     // SRING: "195.8.209.155",7,6,69,0,2015-06-08T09:45:49.0512015-06-08T09:45:49.0532015-06-08T09:45:49.054'
     final String line = "SRING: \"195.8.209.155\",7,6,69,0,2015-06-08T09:45:49.0512015-06-08T09:45:49.0532015-06-08T09:45:49.054";
+
+    assertPatternMatch(SocketRingUnsolicited.UNSOLICITED_PATTERN, line);
+
     final SocketRingUnsolicited socketRingUnsolicited = new SocketRingUnsolicited();
     socketRingUnsolicited.parseUnsolicited(Collections.singletonList(line));
 
@@ -36,6 +45,9 @@ public class SocketRingUnsolicitedTest {
   public void test_socket_ring_2() {
     // SRING: 5,69,5544503B343833393B36653833613436642D356530342D343736312D613132362D3063663732333162393138393B323031352D30362D30385431353A33393A31342E373633
     final String line = "SRING: 5,69,5544503B343833393B36653833613436642D356530342D343736312D613132362D3063663732333162393138393B323031352D30362D30385431353A33393A31342E373633";
+
+    assertPatternMatch(SocketRingUnsolicited.UNSOLICITED_PATTERN, line);
+
     final SocketRingUnsolicited socketRingUnsolicited = new SocketRingUnsolicited();
     socketRingUnsolicited.parseUnsolicited(Collections.singletonList(line));
 
@@ -49,8 +61,12 @@ public class SocketRingUnsolicitedTest {
   @Test
   public void test_socket_ring_3() {
     // SRING: 6,69
+    final String line = "SRING: 6,69";
+
+    assertPatternMatch(SocketRingUnsolicited.UNSOLICITED_PATTERN, line);
+
     final SocketRingUnsolicited socketRingUnsolicited = new SocketRingUnsolicited();
-    socketRingUnsolicited.parseUnsolicited(Collections.singletonList("SRING: 6,69"));
+    socketRingUnsolicited.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(6, socketRingUnsolicited.getSocketId());
     assertEquals(Integer.valueOf(69), socketRingUnsolicited.getReceivedData());

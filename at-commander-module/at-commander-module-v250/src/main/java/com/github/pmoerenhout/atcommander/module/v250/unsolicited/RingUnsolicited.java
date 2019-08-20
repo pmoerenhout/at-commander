@@ -9,7 +9,7 @@ import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
 public class RingUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
-  public static final Pattern PATTERN = Pattern.compile("^RING$");
+  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^RING$");
 
   public RingUnsolicited() {
   }
@@ -17,7 +17,7 @@ public class RingUnsolicited extends BaseResponse implements UnsolicitedResponse
   public void parseUnsolicited(final List<String> lines) {
     if (lines.size() == 1) {
       final String line = lines.get(0);
-      final Matcher m1 = PATTERN.matcher(line);
+      final Matcher m1 = UNSOLICITED_PATTERN.matcher(line);
       if (m1.find()) {
         return;
       }

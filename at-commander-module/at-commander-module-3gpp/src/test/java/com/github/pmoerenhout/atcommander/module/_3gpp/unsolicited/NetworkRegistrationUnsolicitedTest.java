@@ -7,12 +7,12 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 import com.github.pmoerenhout.atcommander.module._3gpp.RegistrationState;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
-public class NetworkRegistrationUnsolicitedTest extends BaseCommandTest {
+public class NetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_creg_unsolicited_1() throws Exception {

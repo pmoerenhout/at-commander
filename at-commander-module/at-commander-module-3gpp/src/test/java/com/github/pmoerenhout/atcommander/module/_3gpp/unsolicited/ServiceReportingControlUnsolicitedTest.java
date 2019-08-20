@@ -6,9 +6,9 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class ServiceReportingControlUnsolicitedTest extends BaseCommandTest {
+public class ServiceReportingControlUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_service_reporting_control() {

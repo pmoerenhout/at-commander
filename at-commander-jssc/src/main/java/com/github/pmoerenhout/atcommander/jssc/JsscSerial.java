@@ -4,20 +4,28 @@ import static jssc.SerialPort.PURGE_RXCLEAR;
 import static jssc.SerialPort.PURGE_TXCLEAR;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.Pipe;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.spi.SelectorProvider;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.pmoerenhout.atcommander.api.Mode;
 import com.github.pmoerenhout.atcommander.api.ReadThread;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.SolicitedResponseCallback;
-import com.github.pmoerenhout.atcommander.api.State;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponseCallback;
 import com.github.pmoerenhout.atcommander.common.Util;
@@ -30,14 +38,17 @@ public class JsscSerial implements SerialInterface {
 
   private final List<UnsolicitedPatternClass> unsolicitedPatterns;
   private final UnsolicitedResponseCallback unsolicitedResponseCallback;
-  State state;
-  Pipe pipe;
-  List<String> lines;
-  private SerialPort serialPort;
-  private String id;
   private final String port;
   private final int speed;
   private final int flowControlMode;
+  Mode mode;
+  Pipe pipe;
+  Pipe outputPipe;
+  InputStream inputStream;
+  OutputStream outputStream;
+  List<String> lines;
+  private SerialPort serialPort;
+  private String id;
   private SolicitedResponseCallback solicitedResponseCallback;
   private ReadThread readThread;
 
@@ -49,6 +60,13 @@ public class JsscSerial implements SerialInterface {
     this.unsolicitedResponseCallback = unsolicitedResponseCallback;
     this.unsolicitedPatterns = new ArrayList<>();
     LOG.debug("Construct JsscSerial with id {}", this.id);
+  }
+
+  private byte[] readBytes(final ByteBuffer byteBuffer) {
+    // Buffer must be flipped after writing
+    final byte[] bytesArray = new byte[byteBuffer.remaining()];
+    byteBuffer.get(bytesArray, byteBuffer.position(), bytesArray.length);
+    return bytesArray;
   }
 
   public String getId() {
@@ -69,8 +87,7 @@ public class JsscSerial implements SerialInterface {
 
   public void addUnsolicited(final UnsolicitedPatternClass unsolicitedPatternClass) {
     this.unsolicitedPatterns.add(unsolicitedPatternClass);
-    LOG.debug("Added Unsolicited {} - {}", unsolicitedPatternClass.getClazz().getName(), unsolicitedPatternClass.getPattern().toString());
-    LOG.debug("Total unsolicited size is {}", this.unsolicitedPatterns.size());
+    LOG.trace("Added Unsolicited {} - {}", unsolicitedPatternClass.getClazz().getName(), unsolicitedPatternClass.getPattern().toString());
   }
 
   public void setSolicitedResponseCallback(final SolicitedResponseCallback solicitedResponseCallback) {
@@ -84,7 +101,7 @@ public class JsscSerial implements SerialInterface {
       throw new IllegalArgumentException("Port cannot be null");
     }
 
-    state = State.COMMAND;
+    mode = Mode.COMMAND;
 
     try {
       pipe = Pipe.open();
@@ -108,6 +125,14 @@ public class JsscSerial implements SerialInterface {
       //serialPort.setDTR(true);
       //serialPort.setRTS(true);
       serialPort.addEventListener(new JsscSerialPortReader(serialPort, pipe.sink()));
+
+      outputPipe = Pipe.open();
+      outputStream = Channels.newOutputStream(outputPipe.sink());
+
+      final WriteTask writetask = new WriteTask(outputPipe, serialPort);
+      final Thread writeTaskThread = new Thread(writetask);
+      writeTaskThread.start();
+
     } catch (final SerialPortException e) {
       LOG.error("SerialPortException {} on {} in method {}", e.getExceptionType(), e.getPortName(), e.getMethodName());
       close();
@@ -142,16 +167,25 @@ public class JsscSerial implements SerialInterface {
 //    LOG.trace("Closing pipe, done");
   }
 
-  public void write(byte[] bytes) throws SerialException {
-    try {
-      if (!serialPort.writeBytes(bytes)) {
-        LOG.warn("Could not write the bytes! ({})", new String(bytes));
-      }
-    } catch (final SerialPortException e) {
-      LOG.error("Could not write serial bytes", e);
-      throw new SerialException(e);
-    }
+  public InputStream getInputStream() {
+    return inputStream;
   }
+
+  public OutputStream getOutputStream() {
+    return outputStream;
+  }
+
+//  public void write(final byte[] bytes) throws SerialException {
+//    try {
+//      outputStream.write(bytes);
+////      if (!serialPort.writeBytes(bytes)) {
+////        LOG.warn("Could not write the bytes! ({})", new String(bytes));
+////      }
+//    } catch (final IOException e) {
+//      LOG.error("Could not write serial bytes", e);
+//      throw new SerialException(e);
+//    }
+//  }
 
   public byte[] read() {
     try {
@@ -195,8 +229,12 @@ public class JsscSerial implements SerialInterface {
     }
   }
 
-  public State getState() {
-    return state;
+  public Mode getMode() {
+    return mode;
+  }
+
+  public void setMode(final Mode mode) {
+    this.mode = mode;
   }
 
   public boolean isDsr() {
@@ -266,4 +304,64 @@ public class JsscSerial implements SerialInterface {
     }
   }
 
+  private class WriteTask implements Runnable {
+    private final Pipe pipe;
+    private final SerialPort serialPort;
+
+    //private ByteBuffer dst = ByteBuffer.wrap(new byte[256]);
+    private Selector selector = null;
+
+    /**
+     * Create a new DownloadTask with an URL to download.
+     */
+    public WriteTask(final Pipe pipe, final SerialPort serialPort) {
+      this.pipe = pipe;
+      this.serialPort = serialPort;
+    }
+
+    @Override
+    public void run() {
+      try {
+        final Pipe.SourceChannel sourceChannel = pipe.source();
+        sourceChannel.configureBlocking(false);
+        selector = SelectorProvider.provider().openSelector();
+        final SelectionKey readKey = sourceChannel.register(selector, SelectionKey.OP_READ);
+        while (true) {
+          final int n = selector.select(1000);
+          if (!sourceChannel.isOpen()) {
+            LOG.debug("SourceChannel is not open, exiting...");
+            break;
+          }
+          if (n > 0) {
+            final Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+            while (it.hasNext()) {
+              final SelectionKey selectedKey = it.next();
+              // LOG.debug("Key {} accp:{} read:{} writ:{} valid:{}", key2, key2.isAcceptable(), key2.isReadable(), key2.isWritable(), key2.isValid());
+              final ByteBuffer dst = ByteBuffer.wrap(new byte[256]);
+              it.remove();
+              if (selectedKey.isReadable()) {
+                final int bytesRead = sourceChannel.read(dst);
+                dst.flip();
+                final byte[] data = readBytes(dst);
+                LOG.info("{} bytes read: {} ({})", bytesRead, Util.bytesToHexString(data), data.length);
+                serialPort.writeBytes(data);
+              }
+            }
+          }
+        }
+      } catch (final ClosedChannelException e) {
+        LOG.debug("ClosedChannel exception");
+      } catch (final IOException e) {
+        LOG.error("I/O exception", e);
+      } catch (final Exception e) {
+        LOG.error("Exception", e);
+      } finally {
+        try {
+          selector.close();
+        } catch (final IOException e) {
+          LOG.error("I/O exception on selector close: {} {}", e.getMessage());
+        }
+      }
+    }
+  }
 }

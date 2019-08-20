@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class MessageTerminatingUnsolicitedTest extends BaseCommandTest {
+public class MessageTerminatingUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_cmt() {

@@ -1,5 +1,7 @@
 package com.github.pmoerenhout.atcommander;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +21,6 @@ import com.github.pmoerenhout.atcommander.common.Util;
 public class AtCommander implements SolicitedResponseCallback {
 
   private static final Logger LOG = LoggerFactory.getLogger(AtCommander.class);
-  // private static final byte[] NEWLINE = "\r".getBytes(StandardCharsets.US_ASCII);
 
   final List<String> lines = Collections.synchronizedList(new ArrayList<>());
   final List<FinalResponseFactory> finalResponseFactories = new ArrayList<>();
@@ -28,10 +29,12 @@ public class AtCommander implements SolicitedResponseCallback {
   private final Semaphore linesLock = new Semaphore(1, true);
   private FinalResponse atResponseFinal;
   private SerialInterface serial;
+  private OutputStream serialOutputStream;
 
   public AtCommander(final SerialInterface serial) {
     this.serial = serial;
     finalResponseFactories.add(new BasicFinalFactory());
+    LOG.debug("Outputstream is {}", serialOutputStream);
   }
 
   public void addFinalResponseFactory(final FinalResponseFactory finalResponseFactory) {
@@ -40,6 +43,8 @@ public class AtCommander implements SolicitedResponseCallback {
 
   public void init() throws SerialException {
     serial.init();
+    serialOutputStream = serial.getOutputStream();
+    LOG.info("Outputstream is {}", serialOutputStream);
   }
 
   public void close() {
@@ -52,12 +57,16 @@ public class AtCommander implements SolicitedResponseCallback {
       LOG.debug("Waiting 100ms for CTS signal");
       try {
         Thread.sleep(100);
-      } catch (InterruptedException e){
+      } catch (InterruptedException e) {
         LOG.error("Interrupted", e);
       }
     }
-    LOG.debug("write {}", Util.onlyPrintable(bytes));
-    serial.write(bytes);
+    LOG.debug("write {} ({})", Util.onlyPrintable(bytes), bytes.length);
+    try {
+      serialOutputStream.write(bytes);
+    } catch (final IOException e) {
+      throw new SerialException(e);
+    }
   }
 
   private void panic() {
@@ -99,7 +108,8 @@ public class AtCommander implements SolicitedResponseCallback {
     }
     atResponseFinal = FinalResponseCode.fromStringEx(response);
     if (atResponseFinal != null) {
-      if (atResponseFinal.getCode() != FinalResponseCode.OK && atResponseFinal.getCode() != FinalResponseCode.MORE_DATA) {
+      if (atResponseFinal.getCode() != FinalResponseCode.OK && atResponseFinal.getCode() != FinalResponseCode.CONNECT && atResponseFinal
+          .getCode() != FinalResponseCode.MORE_DATA) {
         if (LOG.isTraceEnabled()) {
           if (atResponseFinal.getParameter() == null) {
             LOG.trace("Final response {} ({})", atResponseFinal.getCode(), response);

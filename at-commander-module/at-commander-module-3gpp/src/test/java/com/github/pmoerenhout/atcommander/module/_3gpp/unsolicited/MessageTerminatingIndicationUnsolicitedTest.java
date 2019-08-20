@@ -6,9 +6,9 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class MessageTerminatingIndicationUnsolicitedTest extends BaseCommandTest {
+public class MessageTerminatingIndicationUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_message_terminating_indication_response() throws Exception {

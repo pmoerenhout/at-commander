@@ -6,13 +6,12 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class CellularRingUnsolicitedTest extends BaseCommandTest {
+public class CellularRingUnsolicitedTest extends UnsolicitedTest {
 
   @Test
-  public void test_cellular_ring_data()
-  {
+  public void test_cellular_ring_data() {
     final String line = "+CRING: DATA";
 
     assertPatternMatch(CellularRingUnsolicited.UNSOLICITED_PATTERN, line);

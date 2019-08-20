@@ -1,18 +1,27 @@
 package com.github.pmoerenhout.atcommander.api;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
 public interface SerialInterface {
 
   String getId();
 
   void init() throws SerialException;
 
-  void write(byte[] data) throws SerialException;
+  // void write(byte[] data) throws SerialException;
+
+  OutputStream getOutputStream();
+
+  InputStream getInputStream();
 
   byte[] read();
 
   void close();
 
-  State getState();
+  Mode getMode();
+
+  void setMode(Mode mode);
 
   boolean isDsr();
 

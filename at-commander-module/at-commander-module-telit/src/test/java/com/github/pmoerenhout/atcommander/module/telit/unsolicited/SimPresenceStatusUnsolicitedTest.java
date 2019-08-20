@@ -6,11 +6,15 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-public class SimPresenceStatusUnsolicitedTest {
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
+
+public class SimPresenceStatusUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_simpr_unsolicited() {
     final String line = "#SIMPR: 0,1";
+
+    assertPatternMatch(SimPresenceStatusUnsolicited.UNSOLICITED_PATTERN, line);
 
     final SimPresenceStatusUnsolicited simPresenceStatus = new SimPresenceStatusUnsolicited();
     simPresenceStatus.parseUnsolicited(Collections.singletonList(line));

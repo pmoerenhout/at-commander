@@ -4,9 +4,9 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.basic.unsolicited.UnsolicitedTest;
 
-public class DisconnectedUnsolicitedTest extends BaseCommandTest {
+public class DisconnectedUnsolicitedTest extends UnsolicitedTest {
 
   @Test
   public void test_disconnected() throws Exception {
