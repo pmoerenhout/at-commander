@@ -6,10 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.RegistrationState;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
+@Unsolicited
 public class NetworkRegistrationUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // +CREG: <stat> when <n> = 1
@@ -26,6 +28,10 @@ public class NetworkRegistrationUnsolicited extends BaseResponse implements Unso
   private Integer rejectCause;
 
   public NetworkRegistrationUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

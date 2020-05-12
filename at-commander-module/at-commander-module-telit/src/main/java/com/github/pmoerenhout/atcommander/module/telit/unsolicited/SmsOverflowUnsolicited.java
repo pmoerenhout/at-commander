@@ -5,8 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
+@Unsolicited
 public class SmsOverflowUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   public final static Pattern UNSOLICITED_PATTERN = Pattern.compile("^#SMOV: \"(.*)\"$");
@@ -15,6 +17,10 @@ public class SmsOverflowUnsolicited extends BaseResponse implements UnsolicitedR
   private String memo;
 
   public SmsOverflowUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

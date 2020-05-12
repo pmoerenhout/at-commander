@@ -5,8 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
+@Unsolicited
 public class SimPresenceStatusUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^#SIMPR: ([0-1]),([0-1])$");
@@ -15,6 +17,10 @@ public class SimPresenceStatusUnsolicited extends BaseResponse implements Unsoli
   private Integer inserted;
 
   public SimPresenceStatusUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

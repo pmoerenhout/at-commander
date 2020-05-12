@@ -5,9 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.common.Util;
 
+@Unsolicited
 public class SimToolkitNotificationUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // https://www.telit.com/wp-content/uploads/2017/09/Telit_SIM_USIM_Toolkit_Application_Note_r5.pdf
@@ -21,6 +23,10 @@ public class SimToolkitNotificationUnsolicited extends BaseResponse implements U
   private Integer refreshType;
 
   public SimToolkitNotificationUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

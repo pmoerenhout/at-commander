@@ -17,6 +17,7 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.module._3gpp.EtsiModem;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.IccidCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.IccidResponse;
+import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelUsimUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
 public class QuectelModem extends EtsiModem {
@@ -46,6 +47,7 @@ public class QuectelModem extends EtsiModem {
 //      new UnsolicitedPatternClass(SimToolkitNotificationUnsolicited.UNSOLICITED_PATTERN, SimToolkitNotificationUnsolicited.class),
 //      new UnsolicitedPatternClass(SmsAtRunUnsolicited.UNSOLICITED_PATTERN, SmsAtRunUnsolicited.class),
 //      new UnsolicitedPatternClass(SmsOverflowUnsolicited.UNSOLICITED_PATTERN, SmsOverflowUnsolicited.class)
+      new UnsolicitedPatternClass(QuectelUsimUnsolicited.UNSOLICITED_PATTERN, QuectelUsimUnsolicited.class)
   ));
 
   private static final Pattern REVISION_PATTERN = Pattern.compile("(\\d*).(\\d*).(\\d*)(-.*|)$");

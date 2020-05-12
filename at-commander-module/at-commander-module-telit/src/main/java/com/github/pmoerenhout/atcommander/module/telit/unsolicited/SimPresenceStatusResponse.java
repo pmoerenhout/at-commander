@@ -1,4 +1,4 @@
-package com.github.pmoerenhout.atcommander.module.telit.commands;
+package com.github.pmoerenhout.atcommander.module.telit.unsolicited;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,12 @@ import org.apache.commons.lang3.BooleanUtils;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.module.telit.types.SimPresence;
 
+@Unsolicited
 public class SimPresenceStatusResponse extends BaseResponse implements Response, UnsolicitedResponse {
 
   public static final Pattern UNSOLICTED_PATTERN = Pattern.compile("^#SIMPR: ([0-1]),([0-1])$");
@@ -26,6 +28,10 @@ public class SimPresenceStatusResponse extends BaseResponse implements Response,
 
   public SimPresenceStatusResponse(final AtResponse s) {
     parseSolicited(s);
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICTED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

@@ -25,7 +25,7 @@ public class SelectMessageServiceCommand extends BaseCommand implements Command<
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_SELECT_MESSAGE_SERVICE);
       sb.append(EQUAL);
-      sb.append(Integer.toString(service));
+      sb.append(service);
       return new SelectMessageServiceResponse(super.execute(sb.toString()));
     } finally {
       available.release();

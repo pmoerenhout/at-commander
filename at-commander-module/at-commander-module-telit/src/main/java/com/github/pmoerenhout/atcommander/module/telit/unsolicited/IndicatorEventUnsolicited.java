@@ -5,8 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
+@Unsolicited
 public class IndicatorEventUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // +CIEV: rssi,4
@@ -16,6 +18,10 @@ public class IndicatorEventUnsolicited extends BaseResponse implements Unsolicit
   private int status;
 
   public IndicatorEventUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

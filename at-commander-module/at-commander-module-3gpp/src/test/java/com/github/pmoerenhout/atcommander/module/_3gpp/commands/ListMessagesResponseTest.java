@@ -1,7 +1,6 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -57,7 +56,7 @@ public class ListMessagesResponseTest extends BaseCommandTest {
     assertEquals(1, message.getIndex());
     assertEquals(MessageStatus.RECEIVED_READ, message.getStatus());
     assertEquals("+31612345678", message.getOada());
-    assertNull(message.getAlpha());
+    assertEquals("", message.getAlpha());
     assertEquals(ZonedDateTime.of(2017, 12, 13, 2, 34, 52, 0, ZoneId.of("+04")),
         message.getScts());
   }
@@ -67,7 +66,7 @@ public class ListMessagesResponseTest extends BaseCommandTest {
 
     final AtResponse response = createAtResponse(
         new String[]{
-            "+CMGL: 1,0,27",
+            "+CMGL: 1,0,,27",
             "07911346101919F9040B911316240486F900007160621123918009C8309BFD0641D36D",
             "OK"
         });
@@ -77,11 +76,11 @@ public class ListMessagesResponseTest extends BaseCommandTest {
 
     assertEquals(1, messageList.size());
 
-    final IndexPduMessage message0 = (IndexPduMessage) messageList.get(0);
-    assertEquals(1, message0.getIndex());
-    assertEquals(MessageStatus.RECEIVED_UNREAD, message0.getStatus());
-    assertNull(message0.getAlpha());
-    assertEquals("07911346101919F9040B911316240486F900007160621123918009C8309BFD0641D36D", message0.getPdu());
+    final IndexPduMessage message = (IndexPduMessage) messageList.get(0);
+    assertEquals(1, message.getIndex());
+    assertEquals(MessageStatus.RECEIVED_UNREAD, message.getStatus());
+    assertEquals("", message.getAlpha());
+    assertEquals("07911346101919F9040B911316240486F900007160621123918009C8309BFD0641D36D", message.getPdu());
   }
 
   @Test
@@ -141,9 +140,31 @@ public class ListMessagesResponseTest extends BaseCommandTest {
     assertEquals(4, message0.getIndex());
     assertEquals(MessageStatus.RECEIVED_READ, message0.getStatus());
     assertEquals("+31614240689", message0.getOada());
-    assertNull(message0.getAlpha());
+    assertEquals("", message0.getAlpha());
     assertEquals(Integer.valueOf(145), message0.getToOada());
     assertEquals(Integer.valueOf(13), message0.getLength());
     assertEquals("Test message", message0.getText());
+  }
+
+  @Test
+  public void test_cmgl_pdu_rec_read() throws Exception {
+
+    final AtResponse response = createAtResponse(
+        new String[]{
+            "+CMGL: 2,1,,41",
+            "099193338548000011F7040D91137910248665F60004025080604593001508411181BC3048320035A001AD800D1454EDFD95C0",
+            "OK"
+        });
+
+    final ListMessagesResponse listMessagesResponse = new ListMessagesResponse(response);
+    final List<IndexMessage> messageList = listMessagesResponse.getIndexMessages();
+
+    assertEquals(1, messageList.size());
+
+    final IndexPduMessage message = (IndexPduMessage) messageList.get(0);
+    assertEquals(2, message.getIndex());
+    assertEquals(MessageStatus.RECEIVED_READ, message.getStatus());
+    assertEquals("099193338548000011F7040D91137910248665F60004025080604593001508411181BC3048320035A001AD800D1454EDFD95C0", message.getPdu());
+    assertEquals("", message.getAlpha());
   }
 }

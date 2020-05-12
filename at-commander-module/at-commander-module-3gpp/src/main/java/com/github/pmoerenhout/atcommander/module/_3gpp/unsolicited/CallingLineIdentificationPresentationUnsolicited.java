@@ -5,9 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.common.Splitter;
 
+@Unsolicited
 public class CallingLineIdentificationPresentationUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // +CLIP: "+31348503413",145,"",128,"",0
@@ -23,6 +25,10 @@ public class CallingLineIdentificationPresentationUnsolicited extends BaseRespon
   private Integer cliValidity;
 
   public CallingLineIdentificationPresentationUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

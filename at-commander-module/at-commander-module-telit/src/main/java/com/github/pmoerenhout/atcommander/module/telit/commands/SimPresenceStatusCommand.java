@@ -8,6 +8,7 @@ import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusResponse;
 
 public class SimPresenceStatusCommand extends BaseCommand implements Command<BaseResponse> {
 

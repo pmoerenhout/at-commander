@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusResponse;
 
 public class SimPresenceStatusResponseTest extends BaseCommandTest {
 

@@ -5,8 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
+@Unsolicited
 public class HttpRingUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // #HTTPRING: <prof_id>,<http_status_code>,<content_type>,<data_size>
@@ -18,6 +20,10 @@ public class HttpRingUnsolicited extends BaseResponse implements UnsolicitedResp
   private int dataSize;
 
   public HttpRingUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

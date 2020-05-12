@@ -1,4 +1,4 @@
-package com.github.pmoerenhout.atcommander.module._3gpp.unsolicited;
+package com.github.pmoerenhout.atcommander.module.quectel.unsolicited;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -9,14 +9,14 @@ import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
 @Unsolicited
-public class CellularRingUnsolicited extends BaseResponse implements UnsolicitedResponse {
+public class QuectelUsimUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
-  // +CRING: <DATA|FAX|VOICE>
-  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+CRING: (.*)$");
+  // +QUSIM: <0|1>>
+  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+QUSIM: (\\d)$");
 
-  private String type;
+  private int usim;
 
-  public CellularRingUnsolicited() {
+  public QuectelUsimUnsolicited() {
   }
 
   @Override
@@ -31,13 +31,13 @@ public class CellularRingUnsolicited extends BaseResponse implements Unsolicited
   public void parse(final String response) {
     final Matcher m = UNSOLICITED_PATTERN.matcher(response);
     if (m.find()) {
-      type = m.group(1);
+      usim = Integer.valueOf(m.group(1));
       return;
     }
     throw createParseException(response);
   }
 
-  public String getType() {
-    return type;
+  public int getUsim() {
+    return usim;
   }
 }

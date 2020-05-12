@@ -5,9 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.common.Util;
 
+@Unsolicited
 public class NoCarrierUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^NO CARRIER:(.*)$");
@@ -16,6 +18,10 @@ public class NoCarrierUnsolicited extends BaseResponse implements UnsolicitedRes
   private Integer cause;
 
   public NoCarrierUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

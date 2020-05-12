@@ -9,11 +9,13 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module._3gpp.RegistrationState;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
+@Unsolicited
 public class GprsNetworkRegistrationUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // 3GPP TS 27.007 version 10.3.0 Release 10
@@ -53,6 +55,10 @@ public class GprsNetworkRegistrationUnsolicited extends BaseResponse implements 
   private String gprsReadyTimer;
 
   public GprsNetworkRegistrationUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

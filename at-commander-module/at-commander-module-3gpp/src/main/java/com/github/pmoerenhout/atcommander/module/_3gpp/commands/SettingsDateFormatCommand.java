@@ -33,10 +33,10 @@ public class SettingsDateFormatCommand extends BaseCommand implements Command<Ba
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_CSDF);
       sb.append(EQUAL);
-      sb.append(Integer.toString(mode));
+      sb.append(mode);
       if (auxMode != null) {
         sb.append(COMMA);
-        sb.append(Integer.toString(auxMode.intValue()));
+        sb.append(auxMode.intValue());
       }
       return new EmptyResponse(super.execute(sb.toString()));
     } finally {

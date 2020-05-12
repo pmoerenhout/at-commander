@@ -24,7 +24,7 @@ public class ReadMessageResponse extends BaseResponse implements Response {
   // +CMGR: "REC UNREAD","+31614240689","","18/10/05,11:51:25+08",145,4,0,0,"+31640191919",145,5
   // +CMGR: <stat>,<oa>,<alpha>,<scts>[,<tooa>,<fo>,<pid>,<dcs>,<sca>,<tosca>,<length>]<CR><LF><data>
   private static final Pattern PATTERN_TEXT = Pattern.compile("^\\+CMGR: \"(.*)\",\"(.*)\",\"(.*)\",\"(.*)\"");
-  private static final Pattern PATTERN_PDU = Pattern.compile("^\\+CMGR: (\\d),\"(.*)\",(\\d*)$");
+  private static final Pattern PATTERN_PDU = Pattern.compile("^\\+CMGR: (\\d),(\"(.*)\")?,(\\d*)$");
   private static final String CMGR = "+CMGR: ";
 
   private MessageMode messageMode;
@@ -70,9 +70,9 @@ public class ReadMessageResponse extends BaseResponse implements Response {
       } else if (messageMode == MessageMode.PDU) {
         final Matcher matcherPdu = PATTERN_PDU.matcher(line);
         if (matcherPdu.find()) {
-          final MessageStatus status = MessageStatus.fromString(matcherPdu.group(1));
-          final String alpha = matcherPdu.group(2);
-          final int length = Integer.valueOf(matcherPdu.group(3));
+          final MessageStatus status = MessageStatus.fromInt(Integer.valueOf(matcherPdu.group(1)));
+          final String alpha = matcherPdu.group(3);
+          final int length = Integer.valueOf(matcherPdu.group(4));
           final String pdu = informationalText.get(1);
           message = new PduMessage(status, alpha, length, pdu);
           return;

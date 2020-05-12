@@ -1,6 +1,7 @@
 package com.github.pmoerenhout.atcommander.module.v250;
 
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +13,7 @@ import com.github.pmoerenhout.atcommander.api.InitException;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
+import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.basic.Basic;
 import com.github.pmoerenhout.atcommander.basic.commands.SimpleResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
@@ -39,6 +41,9 @@ import com.github.pmoerenhout.atcommander.module.v250.commands.VerboseCommand;
 import com.github.pmoerenhout.atcommander.module.v250.exceptions.UnknownResponseException;
 import com.github.pmoerenhout.atcommander.module.v250.unsolicited.ConnectionFromUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.unsolicited.RingUnsolicited;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
 
 public class V250 extends Basic {
 
@@ -54,7 +59,46 @@ public class V250 extends Basic {
 
   public V250(final SerialInterface serial) {
     super(serial);
-    UNSOLICITED_PATTERN_CLASS_LIST.forEach(u -> serial.addUnsolicited(u));
+
+    String routeAnnotation = "com.github.pmoerenhout.atcommander.api.annotation.Unsolicited";
+
+    try (ScanResult scanResult =
+             new ClassGraph()
+                 // .verbose()                   // Log to stderr
+                 //.enableAllInfo()             // Scan classes, methods, fields, annotations
+                 .enableClassInfo().enableAnnotationInfo()
+                 .whitelistPackages("com.github.pmoerenhout.atcommander.module.v250")
+                 // Scan com.xyz and subpackages (omit to scan all packages)
+                 .scan()) {                   // Start the scan
+      for (ClassInfo routeClassInfo : scanResult.getClassesWithAnnotation(routeAnnotation)) {
+        // AnnotationInfo routeAnnotationInfo = routeClassInfo.getAnnotationInfo(routeAnnotation);
+        // List<AnnotationParameterValue> routeParamVals = routeAnnotationInfo.getParameterValues();
+        // @com.xyz.Route has one required parameter
+        // String route = (String) routeParamVals.get(0).getValue();
+        System.out.println(routeClassInfo.getName() + " is annotated");
+
+        ClassLoader loader = this.getClass().getClassLoader();
+        try {
+          final Class<?> myClass = loader.loadClass(routeClassInfo.getName());
+          final Constructor<?> constructor = myClass.getConstructor();
+          final UnsolicitedResponse unsolicitedResponse = (UnsolicitedResponse) constructor.newInstance(new Object[]{});
+          LOG.info("Object {}", myClass);
+          LOG.info("Object {}", unsolicitedResponse);
+
+          unsolicitedResponse.getPattern();
+          UnsolicitedPatternClass u = new UnsolicitedPatternClass(unsolicitedResponse.getPattern(), myClass);
+          serial.addUnsolicited(u);
+
+          // UNSOLICITED_PATTERN_CLASS_LIST.forEach(u -> serial.addUnsolicited(unsolicitedResponse));
+
+        } catch (Exception e) {
+          LOG.error("Could not load class", e);
+        }
+
+      }
+    }
+
+    // UNSOLICITED_PATTERN_CLASS_LIST.forEach(u -> serial.addUnsolicited(u));
   }
 
   public void init() throws InitException, SerialException, TimeoutException, ResponseException {

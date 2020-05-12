@@ -5,9 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 
+@Unsolicited
 public class SocketRingUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // SRING: 6
@@ -28,6 +30,10 @@ public class SocketRingUnsolicited extends BaseResponse implements UnsolicitedRe
   private String data;
 
   public SocketRingUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

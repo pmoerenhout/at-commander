@@ -1,13 +1,15 @@
-package com.github.pmoerenhout.atcommander.module.telit.commands;
+package com.github.pmoerenhout.atcommander.module.telit.unsolicited;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.module.v250.enums.PacketServiceNetworkType;
 
+@Unsolicited
 public class PacketServiceNetworkTypeUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^#PSNT: ([0-4])$");
@@ -15,6 +17,10 @@ public class PacketServiceNetworkTypeUnsolicited extends BaseResponse implements
   private PacketServiceNetworkType type;
 
   public PacketServiceNetworkTypeUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

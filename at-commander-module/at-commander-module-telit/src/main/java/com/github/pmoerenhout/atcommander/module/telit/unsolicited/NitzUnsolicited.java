@@ -9,8 +9,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
+@Unsolicited
 public class NitzUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   /* #NITZ: 15/03/27,16:37:22 */
@@ -29,6 +31,10 @@ public class NitzUnsolicited extends BaseResponse implements UnsolicitedResponse
   private Integer dst;
 
   public NitzUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

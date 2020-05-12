@@ -56,8 +56,7 @@ public class ListMessagesResponse extends BaseResponse implements Response {
 //<CR><LF><data>[<CR><LF>
 //+CMGL: <index>,<stat>,<sn>,<mid>,<page>,<pages>
 //<CR><LF><data>[...]]
-
-  private static final Pattern PATTERN_PDU = Pattern.compile("^\\+CMGL: (\\d*),(\\d*)(,\"(.*)\")?,(\\d*)$");
+  private static final Pattern PATTERN_PDU = Pattern.compile("^\\+CMGL: (\\d*),(\\d*),(\"(.*)?\")?,(\\d*)$");
   // +CMGL: <index>,<stat>,<oa/da>,[<alpha>],[<scts>]
   // +CMGL: 1,"REC READ","+31614240689","","18/09/21,16:35:38+08",145,5
   private static final Pattern PATTERN_TEXT = Pattern.compile("^\\+CMGL: (\\d*),\"(.*)\",\"(.*)\",\"(.*)\",\"(.*)\"(,\\d*,\\d*)?$");
@@ -82,7 +81,8 @@ public class ListMessagesResponse extends BaseResponse implements Response {
           final String pdu = informationalText.get(i + 1);
           arrayList.add(new IndexPduMessage(index, status, length, pdu));
         } else {
-          final String alpha = StringUtils.defaultString(tokens[2],"");
+          // final String alpha = StringUtils.defaultString(tokens[2],"");
+          final String alpha = tokens[2];
           final int length = Integer.parseInt(tokens[3]);
           final String pdu = informationalText.get(i + 1);
           arrayList.add(new IndexPduMessage(index, status, alpha, length, pdu));

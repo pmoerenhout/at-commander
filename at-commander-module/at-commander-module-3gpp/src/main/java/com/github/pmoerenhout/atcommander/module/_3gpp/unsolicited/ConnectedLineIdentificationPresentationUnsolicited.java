@@ -5,9 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.common.Splitter;
 
+@Unsolicited
 public class ConnectedLineIdentificationPresentationUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // +COLP: <number>,<type>[,<subaddr>,<satype> [,<alpha>]]
@@ -21,6 +23,10 @@ public class ConnectedLineIdentificationPresentationUnsolicited extends BaseResp
   private String alpha;
 
   public ConnectedLineIdentificationPresentationUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

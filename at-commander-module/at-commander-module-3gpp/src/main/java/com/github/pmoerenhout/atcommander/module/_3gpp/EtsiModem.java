@@ -74,6 +74,7 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.SettingsDateForm
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ShowTextModeParametersCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SignalQualityCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SignalQualityResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.UnstructuredSupplementaryServiceDataCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.WirelessNetworkCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.WirelessNetworkStatusResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.sms.SmsPdu;
@@ -90,6 +91,7 @@ import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTermin
 import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.MessageTerminatingUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.NetworkRegistrationUnsolicited;
 import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.ServiceReportingControlUnsolicited;
+import com.github.pmoerenhout.atcommander.module._3gpp.unsolicited.UnstructuredSupplementaryServiceDataUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.V250;
 import com.github.pmoerenhout.atcommander.module.v250.commands.ManufacturerIdentificationCommand;
 import com.github.pmoerenhout.atcommander.module.v250.commands.ManufacturerIdentificationResponse;
@@ -124,10 +126,13 @@ public class EtsiModem extends V250 {
       new UnsolicitedPatternClass(MessageTerminatingIndicationUnsolicited.UNSOLICITED_PATTERN, MessageTerminatingIndicationUnsolicited.class),
       new UnsolicitedPatternClass(CallingLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN, CallingLineIdentificationPresentationUnsolicited.class),
       new UnsolicitedPatternClass(ConnectedLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN,
-          ConnectedLineIdentificationPresentationUnsolicited.class)
+          ConnectedLineIdentificationPresentationUnsolicited.class),
+      new UnsolicitedPatternClass(UnstructuredSupplementaryServiceDataUnsolicited.UNSOLICITED_PATTERN,
+          UnstructuredSupplementaryServiceDataUnsolicited.class)
   ));
   private static final Logger LOG = LoggerFactory.getLogger(EtsiModem.class);
 
+  public AccessTechnology accessTechnology = null;
   protected MessageMode messageMode;
   protected String characterSet;
 
@@ -255,15 +260,15 @@ public class EtsiModem extends V250 {
     return command.read();
   }
 
+  public void setNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
+    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander, mode);
+    command.set();
+  }
+
   public NetworkRegistrationResponse getNetworkRegistration(final long timeout) throws SerialException, TimeoutException, ResponseException {
     final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander);
     command.setTimeout(timeout);
     return command.read();
-  }
-
-  public void setNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
-    final NetworkRegistrationCommand command = new NetworkRegistrationCommand(atCommander, mode);
-    command.set();
   }
 
   public NetworkRegistrationResponse getNetworkRegistrations() throws SerialException, TimeoutException, ResponseException {
@@ -632,6 +637,25 @@ public class EtsiModem extends V250 {
 
   public void setGprsNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
     final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander, mode);
+    command.set();
+  }
+
+  public void setAccessTechnology(final AccessTechnology accessTechnology) {
+    this.accessTechnology = accessTechnology;
+  }
+
+  public void setUssd(final int type) throws SerialException, TimeoutException, ResponseException {
+    final UnstructuredSupplementaryServiceDataCommand command = new UnstructuredSupplementaryServiceDataCommand(atCommander, type);
+    command.set();
+  }
+
+  public void setUssd(final int type, final String ussdString) throws SerialException, TimeoutException, ResponseException {
+    final UnstructuredSupplementaryServiceDataCommand command = new UnstructuredSupplementaryServiceDataCommand(atCommander, type, ussdString);
+    command.set();
+  }
+
+  public void setUssd(final int type, final String ussdString, final int dcs) throws SerialException, TimeoutException, ResponseException {
+    final UnstructuredSupplementaryServiceDataCommand command = new UnstructuredSupplementaryServiceDataCommand(atCommander, type, ussdString, dcs);
     command.set();
   }
 

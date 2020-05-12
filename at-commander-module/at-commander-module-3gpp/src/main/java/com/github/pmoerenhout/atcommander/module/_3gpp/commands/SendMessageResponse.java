@@ -5,13 +5,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
-import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.Response;
 
 public class SendMessageResponse extends BaseResponse implements Response {
 
-  private static final Pattern PATTERN = Pattern.compile("^\\+CMGS: (\\d*)$");
+  private static final Pattern PATTERN = Pattern.compile("^\\+CMGS: (\\d*)(,(.*))?$");
   private int reference;
+  private String ackPdu;
 
   public SendMessageResponse(final AtResponse s) {
     parseSolicited(s);
@@ -24,6 +25,24 @@ public class SendMessageResponse extends BaseResponse implements Response {
       final Matcher m = PATTERN.matcher(line);
       if (m.find()) {
         reference = Integer.parseInt(m.group(1));
+        if (m.groupCount() > 0) {
+          ackPdu = m.group(3);
+          return;
+        }
+        return;
+      }
+      throw createParseException(line);
+    } else if (informationalText.size() == 2) {
+      // SONY ERICCSON T610 send extra 0x00 character
+      System.out.println("TTT: "  + informationalText.get(0));
+      final String line = informationalText.get(1);
+      final Matcher m = PATTERN.matcher(line);
+      if (m.find()) {
+        reference = Integer.parseInt(m.group(1));
+        if (m.groupCount() > 0) {
+          ackPdu = m.group(3);
+          return;
+        }
         return;
       }
       throw createParseException(line);
@@ -33,5 +52,9 @@ public class SendMessageResponse extends BaseResponse implements Response {
 
   public int getReference() {
     return reference;
+  }
+
+  public String getAckPdu() {
+    return ackPdu;
   }
 }

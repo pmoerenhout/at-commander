@@ -3,6 +3,9 @@ package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import java.nio.charset.Charset;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.Command;
@@ -14,8 +17,6 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module._3gpp.EtsiUtil;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SendMessageCommand extends BaseCommand implements Command<BaseResponse> {
 
@@ -50,7 +51,7 @@ public class SendMessageCommand extends BaseCommand implements Command<BaseRespo
       switch (messageMode) {
         case PDU:
           LOG.debug("PDU length {} CMGS length {}", pdu.length(), length);
-          sb.append(Integer.toString(length));
+          sb.append(length);
 
           final AtResponse s = super.execute(sb.toString());
           s.getInformationalText().forEach(line -> LOG.debug("Received line {}", line));
@@ -62,7 +63,7 @@ public class SendMessageCommand extends BaseCommand implements Command<BaseRespo
           sb.append(address);
           if (typeOfAddress != null) {
             sb.append(COMMA);
-            sb.append(String.valueOf(typeOfAddress));
+            sb.append(typeOfAddress);
           }
           final AtResponse s2 = super.execute(sb.toString());
           s2.getInformationalText().forEach(line -> LOG.debug("Received line {}", line));

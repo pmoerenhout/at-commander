@@ -139,7 +139,7 @@ public class SerialMock implements SerialInterface {
   }
 
   public void addUnsolicited(final UnsolicitedPatternClass unsolicitedPatternClass) {
-    LOG.info("Mock addUnsolicited: {}", unsolicitedPatternClass);
+    LOG.info("Mock addUnsolicited: {}", unsolicitedPatternClass.getClazz().getName());
   }
 
   public class ReaderThread extends Thread {

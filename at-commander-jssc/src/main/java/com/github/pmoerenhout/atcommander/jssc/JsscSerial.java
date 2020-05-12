@@ -1,5 +1,7 @@
 package com.github.pmoerenhout.atcommander.jssc;
 
+import static jssc.SerialPort.FLOWCONTROL_RTSCTS_IN;
+import static jssc.SerialPort.FLOWCONTROL_RTSCTS_OUT;
 import static jssc.SerialPort.PURGE_RXCLEAR;
 import static jssc.SerialPort.PURGE_TXCLEAR;
 
@@ -59,7 +61,7 @@ public class JsscSerial implements SerialInterface {
     this.flowControlMode = flowControlMode;
     this.unsolicitedResponseCallback = unsolicitedResponseCallback;
     this.unsolicitedPatterns = new ArrayList<>();
-    LOG.debug("Construct JsscSerial with id {}", this.id);
+    LOG.debug("JsscSerial id {} on port {} {} (flowcontrol:{})", this.id, this.port, this.speed, this.flowControlMode);
   }
 
   private byte[] readBytes(final ByteBuffer byteBuffer) {
@@ -115,15 +117,17 @@ public class JsscSerial implements SerialInterface {
       serialPort = new SerialPort(port);
       final boolean opened = serialPort.openPort();
       LOG.debug("Is port {} opened? {}", port, opened);
-      serialPort.setParams(speed, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, true, true);
-      // serialPort.setFlowControlMode(FLOWCONTROL_RTSCTS_IN | FLOWCONTROL_RTSCTS_OUT);
-      // serialPort.setFlowControlMode(FLOWCONTROL_XONXOFF_IN | FLOWCONTROL_XONXOFF_OUT);
+      // serialPort.setParams(speed, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, true, true);
+      final boolean setRts = flowControlMode == (FLOWCONTROL_RTSCTS_IN|FLOWCONTROL_RTSCTS_OUT);
+      final boolean setDtr = flowControlMode == (FLOWCONTROL_RTSCTS_IN|FLOWCONTROL_RTSCTS_OUT);
+      serialPort.setParams(speed, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, setRts, setDtr);
+      LOG.debug("Flow control mode: {}", flowControlMode);
       serialPort.setFlowControlMode(flowControlMode);
       serialPort.purgePort(PURGE_TXCLEAR | PURGE_RXCLEAR);
       final int mask = SerialPort.MASK_TXEMPTY + SerialPort.MASK_RXCHAR + SerialPort.MASK_RXFLAG + SerialPort.MASK_CTS + SerialPort.MASK_DSR + SerialPort.MASK_BREAK + SerialPort.MASK_RLSD + SerialPort.MASK_ERR + SerialPort.MASK_RING;
       serialPort.setEventsMask(mask);
-      //serialPort.setDTR(true);
-      //serialPort.setRTS(true);
+      // serialPort.setDTR(true);
+      // serialPort.setRTS(true);
       serialPort.addEventListener(new JsscSerialPortReader(serialPort, pipe.sink()));
 
       outputPipe = Pipe.open();
@@ -195,10 +199,9 @@ public class JsscSerial implements SerialInterface {
       }
       final ByteBuffer dst = ByteBuffer.allocate(1024);
       final int bytesRead = sourceChannel.read(dst);
-      // LOG.debug("read {} bytes from source channel", bytesRead);
       final byte[] data = new byte[bytesRead];
       System.arraycopy(dst.array(), 0, data, 0, bytesRead);
-      LOG.info("read {} bytes [{}]", data.length, Util.onlyPrintable(data));
+      LOG.debug("read {} bytes [{}]", data.length, Util.onlyPrintable(data));
       return data;
     } catch (final IOException e) {
       LOG.error("Could not read serial bytes", e);
@@ -343,14 +346,16 @@ public class JsscSerial implements SerialInterface {
                 final int bytesRead = sourceChannel.read(dst);
                 dst.flip();
                 final byte[] data = readBytes(dst);
-                LOG.info("{} bytes read: {} ({})", bytesRead, Util.bytesToHexString(data), data.length);
+                if (LOG.isTraceEnabled()) {
+                  LOG.trace("{} bytes read: {} ({})", bytesRead, Util.bytesToHexString(data), data.length);
+                }
                 serialPort.writeBytes(data);
               }
             }
           }
         }
       } catch (final ClosedChannelException e) {
-        LOG.debug("ClosedChannel exception");
+        LOG.debug("Channel closed");
       } catch (final IOException e) {
         LOG.error("I/O exception", e);
       } catch (final Exception e) {
@@ -359,7 +364,7 @@ public class JsscSerial implements SerialInterface {
         try {
           selector.close();
         } catch (final IOException e) {
-          LOG.error("I/O exception on selector close: {} {}", e.getMessage());
+          LOG.error("I/O exception on selector close: {}", e.getMessage());
         }
       }
     }

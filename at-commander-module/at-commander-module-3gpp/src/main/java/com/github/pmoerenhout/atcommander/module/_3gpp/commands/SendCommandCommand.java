@@ -33,10 +33,10 @@ public class SendCommandCommand extends BaseCommand implements Command<BaseRespo
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_CMGC);
       sb.append(EQUAL);
-      sb.append(String.valueOf(mr));
+      sb.append(mr);
       if (ackpdu != null) {
         sb.append(COMMA);
-        sb.append(String.valueOf(ackpdu));
+        sb.append(ackpdu);
       }
       return new EmptyResponse(super.execute(sb.toString()));
     } finally {

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
+import com.github.pmoerenhout.atcommander.module._3gpp.types.PduMessage;
 import com.github.pmoerenhout.atcommander.module._3gpp.types.TextMessage;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageStatus;
@@ -62,5 +63,24 @@ public class ReadMessageResponseTest extends BaseCommandTest {
     assertNull(message.getToSca());
     assertNull(message.getLength());
     assertEquals("Europe wins the Ryder cup again", message.getText());
+  }
+
+  @Test
+  public void test_cmgr_pdu() throws Exception {
+    final AtResponse response = createAtResponse(
+        new String[]{
+            "+CMGR: 0,,41",
+            "099193338548000011F6040D91137910248665F60004025021113150001508411181BC3048320035A001AD800D1454EDFD95C0",
+            "OK"
+        });
+
+    final ReadMessageResponse readMessageResponse = new ReadMessageResponse(MessageMode.PDU, response);
+
+    final PduMessage message = (PduMessage) readMessageResponse.getMessage();
+    assertEquals(MessageStatus.RECEIVED_UNREAD, message.getStatus());
+    assertEquals("099193338548000011F6040D91137910248665F60004025021113150001508411181BC3048320035A001AD800D1454EDFD95C0", message.getPdu());
+    assertNull(message.getAlpha());
+    assertEquals(41, message.getLength());
+    assertEquals("099193338548000011F6040D91137910248665F60004025021113150001508411181BC3048320035A001AD800D1454EDFD95C0", message.getPdu());
   }
 }

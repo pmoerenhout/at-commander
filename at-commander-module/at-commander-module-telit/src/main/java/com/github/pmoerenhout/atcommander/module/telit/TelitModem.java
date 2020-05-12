@@ -67,7 +67,7 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkDnsComman
 import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkDnsResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.NitzCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PacketServiceNetworkTypeCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.PacketServiceNetworkTypeUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.PacketServiceNetworkTypeUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PingCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PingResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.QuerySimStatusCommand;
@@ -83,7 +83,7 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.ServInfoResponse
 import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderNameCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderNameResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusCommand;
-import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusResponse;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunConfigurationCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunConfigurationResponse;
@@ -144,7 +144,6 @@ import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SmsOverflowUn
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SocketRingUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.commands.AnyResponse;
 import com.github.pmoerenhout.atcommander.module.v250.commands.HangupCommand;
-import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 import com.github.pmoerenhout.atcommander.module.v250.enums.Authentication;
 import com.github.pmoerenhout.atcommander.module.v250.enums.DataMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageMode;
@@ -181,7 +180,6 @@ public class TelitModem extends EtsiModem {
   ));
 
   private static final Pattern REVISION_PATTERN = Pattern.compile("(\\d*).(\\d*).(\\d*)(-.*|)$");
-  public AccessTechnology accessTechnology = null;
   private Firmware firmware;
   private Integer interfaceStyle = null;
   private Integer smsMode = null;
@@ -883,9 +881,5 @@ public class TelitModem extends EtsiModem {
       default:
         throw new IllegalStateException("Unknown message mode");
     }
-  }
-
-  public void setAccessTechnology(final AccessTechnology accessTechnology) {
-    this.accessTechnology = accessTechnology;
   }
 }

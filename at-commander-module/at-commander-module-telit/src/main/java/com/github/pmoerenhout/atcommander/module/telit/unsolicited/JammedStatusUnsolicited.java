@@ -5,8 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
+import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 
+@Unsolicited
 public class JammedStatusUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^#JDR: (.*)$");
@@ -14,6 +16,10 @@ public class JammedStatusUnsolicited extends BaseResponse implements Unsolicited
   private String status;
 
   public JammedStatusUnsolicited() {
+  }
+
+  public Pattern getPattern() {
+    return UNSOLICITED_PATTERN;
   }
 
   public void parseUnsolicited(final List<String> lines) {

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,6 @@ public class AtCommander implements SolicitedResponseCallback {
   public AtCommander(final SerialInterface serial) {
     this.serial = serial;
     finalResponseFactories.add(new BasicFinalFactory());
-    LOG.debug("Outputstream is {}", serialOutputStream);
   }
 
   public void addFinalResponseFactory(final FinalResponseFactory finalResponseFactory) {
@@ -44,22 +42,25 @@ public class AtCommander implements SolicitedResponseCallback {
   public void init() throws SerialException {
     serial.init();
     serialOutputStream = serial.getOutputStream();
-    LOG.info("Outputstream is {}", serialOutputStream);
   }
 
   public void close() {
+    LOG.debug("close");
     serial.close();
   }
 
   public void write(final byte[] bytes) throws SerialException {
     int tries = 5;
     while (tries-- > 0 && !serial.isCts()) {
-      LOG.debug("Waiting 100ms for CTS signal");
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
         LOG.error("Interrupted", e);
       }
+    }
+    if (tries == 0){
+      LOG.info("Serial: CTS:{} DSR:{} CD:{}", serial.isCts(), serial.isDsr(), serial.isCd());
+      LOG.debug("Waiting 500ms for CTS signal, but didn't get it");
     }
     LOG.debug("write {} ({})", Util.onlyPrintable(bytes), bytes.length);
     try {
@@ -103,7 +104,7 @@ public class AtCommander implements SolicitedResponseCallback {
 
   public void solicited(final String response) {
     linesLock.acquireUninterruptibly();
-    if (StringUtils.isNotBlank(response)) {
+    if (response.length() != 0) {
       lines.add(response);
     }
     atResponseFinal = FinalResponseCode.fromStringEx(response);

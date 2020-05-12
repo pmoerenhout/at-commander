@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,7 +141,7 @@ public class ReadThread {
               it.remove();
               if (key2.isReadable()) {
 
-                if (mode == Mode.DATA){
+                if (mode == Mode.DATA) {
                   final int bytesRead = sourceChannel.read(dst);
                   LOG.trace("read {} bytes from sourceChannel", bytesRead);
                   dst.flip();
@@ -154,17 +155,22 @@ public class ReadThread {
                 LOG.trace("read {} bytes from sourceChannel", bytesRead);
                 dst.flip();
                 // LOG.debug("position {} limit {}", dst.position(), dst.limit());
+                LOG.trace("dst: {}", Util.onlyPrintable(ArrayUtils.subarray(dst.array(), dst.position(), dst.limit())));
                 for (int i = dst.position(); i < dst.limit(); i++) {
+
                   final byte b = dst.get();
-                  if (b == '\r' || b == '\n') {
-                    sendLine();
+                  // /x0d/x0a
+                  if (b == '\n') {
+                    if (previous == '\r') {
+                      sendLine(true);
+                    }
                   } else if (b == ' ') {
                     //LOG.trace("received linebuffer {}", b,
                     //    ArrayUtils.subarray(lineBuffer.array(), 0, lineBuffer.position()));
                     if (previous == '>' && lineBuffer.position() == 1) {
                       lineBuffer.put(b);
                       // LOG.debug("linebuffer {}", b, ArrayUtils.subarray(lineBuffer.array(), 0, lineBuffer.position()));
-                      sendLine();
+                      sendLine(false);
                     } else {
                       lineBuffer.put(b);
                     }
@@ -194,16 +200,35 @@ public class ReadThread {
       }
     }
 
-    private void sendLine() {
+    private void sendLine(final boolean chopLastByte) {
       if (lineBuffer.position() != 0) {
         // There is some data in the line buffer...
         lineBuffer.flip();
-        final byte[] lineArray = new byte[lineBuffer.limit()];
-        lineBuffer.get(lineArray);
+        final byte[] lineArray;
+        if (chopLastByte) {
+          lineArray = new byte[lineBuffer.limit() - 1];
+          lineBuffer.get(lineArray);
+          // eat last char
+          lineBuffer.get();
+        } else {
+          lineArray = new byte[lineBuffer.limit()];
+          lineBuffer.get(lineArray);
+        }
+        if (lineArray.length == 0) {
+          // empty line
+          // TODO: instead of compact read more
+          lineBuffer.compact();
+          return;
+        }
+        // TODO: Read ASCII, or Latin1?
         final String line = new String(lineArray);
-        LOG.debug("Received line: '{}' (additional:{})", Util.onlyPrintable(line.getBytes()), fetchAdditionalLines);
+        if (fetchAdditionalLines > 0) {
+          LOG.trace("Received line: '{}' (additional:{})", Util.onlyPrintable(line.getBytes()), fetchAdditionalLines);
+        } else {
+          LOG.trace("Received line: '{}'", Util.onlyPrintable(line.getBytes()));
+        }
         if ("CONNECT".equals(line)) {
-          LOG.info("CONNECT received, go to DATA mode");
+          LOG.debug("CONNECT received, go to DATA mode");
           mode = Mode.DATA;
         }
         if (fetchAdditionalLines > 0) {
@@ -211,16 +236,15 @@ public class ReadThread {
           additionalLines.add(line);
           if (fetchAdditionalLines == 0) {
             // Multi line unsolicited
-            LOG.debug("Publish {} unsolicited lines: '{}'", additionalLines.size(), additionalLines);
+            LOG.trace("Publish {} unsolicited lines: '{}'", additionalLines.size(), additionalLines);
             publishUnsolicitedEvent(additionalLines);
             additionalLines.clear();
           }
         } else if (isUnsolicited(line)) {
-          if (LOG.isTraceEnabled()) {
-            LOG.trace("Received unsolicited line: '{}'", Util.onlyPrintable(line.getBytes()));
-          }
           final int numberOfAdditionalLines = getNumberOfAdditionalLines(line);
-          LOG.info("Received unsolicited line: '{}' with {} additional lines", Util.onlyPrintable(line.getBytes()), numberOfAdditionalLines);
+          if (LOG.isTraceEnabled()) {
+            LOG.trace("Received unsolicited line: '{}' with {} additional lines", Util.onlyPrintable(line.getBytes()), numberOfAdditionalLines);
+          }
           if (numberOfAdditionalLines > 0) {
             fetchAdditionalLines = numberOfAdditionalLines;
             additionalLines.add(line);
