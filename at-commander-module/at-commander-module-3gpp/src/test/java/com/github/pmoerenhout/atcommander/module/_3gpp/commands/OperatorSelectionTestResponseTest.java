@@ -3,10 +3,11 @@ package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.junit.Test;
+
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommandTest;
 import com.github.pmoerenhout.atcommander.module.v250.enums.Status;
-import org.junit.Test;
 
 public class OperatorSelectionTestResponseTest extends BaseCommandTest {
 

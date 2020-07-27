@@ -48,4 +48,18 @@ public class UnstructuredSupplementaryServiceDataUnsolicitedTest extends Unsolic
     assertEquals("Beste klant, uw huidige tegoed is 0,1 euro. Uw extra bonustegoed is 0 euro. Groet, KPN", ussd.getUssdString());
     assertEquals(Integer.valueOf(15), ussd.getDcs());
   }
+
+  @Test
+  public void test_cusd_unsolicited_with_0x0d_char() throws Exception {
+    final String line = "+CUSD: 0,\"Beste klant, wij zijn op 12 februari gestopt met deze bundel. Kijk op kpn.com/bundels voor meer informatie. Groet, KPN.\r\",15";
+
+    assertPatternMatch(UnstructuredSupplementaryServiceDataUnsolicited.UNSOLICITED_PATTERN, line);
+
+    final UnstructuredSupplementaryServiceDataUnsolicited ussd = new UnstructuredSupplementaryServiceDataUnsolicited();
+    ussd.parseUnsolicited(Collections.singletonList(line));
+
+    assertEquals(Integer.valueOf(0), ussd.getResponse());
+    assertEquals("Beste klant, wij zijn op 12 februari gestopt met deze bundel. Kijk op kpn.com/bundels voor meer informatie. Groet, KPN.\r", ussd.getUssdString());
+    assertEquals(Integer.valueOf(15), ussd.getDcs());
+  }
 }

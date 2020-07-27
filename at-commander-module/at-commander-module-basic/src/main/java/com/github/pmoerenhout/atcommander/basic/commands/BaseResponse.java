@@ -34,7 +34,9 @@ public abstract class BaseResponse {
     if (tokenArray.length > index) {
       if (tokenArray[index] != null) {
         final String token = tokenArray[index];
-        if (token.startsWith("--")) {
+        if (token.isEmpty()) {
+          return null;
+        } else if (token.startsWith("--")) {
           // For servinfo, The Telit modem could return --256
           return Integer.valueOf(StringUtils.substring(token, 1));
         }

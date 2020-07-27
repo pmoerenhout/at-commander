@@ -15,8 +15,16 @@ import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.module._3gpp.EtsiModem;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.ActivatePdpContextCommand;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.ConfigureParametersTcpipContextCommand;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.DeactivatePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.IccidCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.IccidResponse;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.PingCommand;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.SynchronizeNetworkTimeProtocolCommand;
+import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelIndicationUnsolicited;
+import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelPingUnsolicited;
+import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelPsmTimerUnsolicited;
 import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelUsimUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
 
@@ -47,13 +55,16 @@ public class QuectelModem extends EtsiModem {
 //      new UnsolicitedPatternClass(SimToolkitNotificationUnsolicited.UNSOLICITED_PATTERN, SimToolkitNotificationUnsolicited.class),
 //      new UnsolicitedPatternClass(SmsAtRunUnsolicited.UNSOLICITED_PATTERN, SmsAtRunUnsolicited.class),
 //      new UnsolicitedPatternClass(SmsOverflowUnsolicited.UNSOLICITED_PATTERN, SmsOverflowUnsolicited.class)
-      new UnsolicitedPatternClass(QuectelUsimUnsolicited.UNSOLICITED_PATTERN, QuectelUsimUnsolicited.class)
+      new UnsolicitedPatternClass(QuectelIndicationUnsolicited.UNSOLICITED_PATTERN, QuectelIndicationUnsolicited.class),
+      new UnsolicitedPatternClass(QuectelUsimUnsolicited.UNSOLICITED_PATTERN, QuectelUsimUnsolicited.class),
+      new UnsolicitedPatternClass(QuectelPsmTimerUnsolicited.UNSOLICITED_PATTERN, QuectelPsmTimerUnsolicited.class),
+      new UnsolicitedPatternClass(QuectelPingUnsolicited.UNSOLICITED_PATTERN, QuectelPingUnsolicited.class)
   ));
 
   private static final Pattern REVISION_PATTERN = Pattern.compile("(\\d*).(\\d*).(\\d*)(-.*|)$");
   public AccessTechnology accessTechnology = null;
-  private Integer interfaceStyle = null;
-  private Integer smsMode = null;
+//  private Integer interfaceStyle = null;
+//  private Integer smsMode = null;
 
   public QuectelModem(final SerialInterface serial) {
     super(serial);
@@ -69,12 +80,46 @@ public class QuectelModem extends EtsiModem {
     LOG.info("Revision {}", revisionIdentification);
   }
 
-
   public String getIntegratedCircuitCardIdentification() throws SerialException, TimeoutException, ResponseException {
     final IccidCommand command = new IccidCommand(atCommander);
     final IccidResponse response = command.set();
     return response.getIccid();
   }
 
+  public void configureParametersTcpipContext(final int contextId, final int contextType,
+                                              final String apn) throws SerialException, TimeoutException, ResponseException {
+    final ConfigureParametersTcpipContextCommand command = new ConfigureParametersTcpipContextCommand(atCommander, contextId, contextType, apn);
+    command.set();
+  }
+
+  public void activatePdpContext(final int contextId) throws SerialException, TimeoutException, ResponseException {
+    final ActivatePdpContextCommand command = new ActivatePdpContextCommand(atCommander, contextId);
+    command.set();
+  }
+
+  public void deactivatePdpContext(final int contextId) throws SerialException, TimeoutException, ResponseException {
+    final DeactivatePdpContextCommand command = new DeactivatePdpContextCommand(atCommander, contextId);
+    command.set();
+  }
+
+  public void ping(final int contextId, final String host) throws SerialException, TimeoutException, ResponseException {
+    final PingCommand command = new PingCommand(atCommander, contextId, host);
+    command.set();
+  }
+
+  public void synchronizeNtp(final int contextId, final String address) throws SerialException, TimeoutException, ResponseException {
+    final SynchronizeNetworkTimeProtocolCommand command = new SynchronizeNetworkTimeProtocolCommand(atCommander, contextId, address);
+    command.set();
+  }
+
+  public void synchronizeNtp(final int contextId, final String address, final int port) throws SerialException, TimeoutException, ResponseException {
+    final SynchronizeNetworkTimeProtocolCommand command = new SynchronizeNetworkTimeProtocolCommand(atCommander, contextId, address, port);
+    command.set();
+  }
+
+  public void synchronizeNtp(final int contextId, final String address, final int port, final boolean autoSetTime) throws SerialException, TimeoutException, ResponseException {
+    final SynchronizeNetworkTimeProtocolCommand command = new SynchronizeNetworkTimeProtocolCommand(atCommander, contextId, address, port, autoSetTime);
+    command.set();
+  }
 
 }

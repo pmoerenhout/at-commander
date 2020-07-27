@@ -13,7 +13,7 @@ import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 public class UnstructuredSupplementaryServiceDataUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
   // +CUSD: <m>[,<str>,<dcs>]
-  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\+CUSD: (\\d)(,\"(.*)\"(,(\\d*))?)?$");
+  public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("(?s)^\\+CUSD: (\\d)(,\"(.*)\"(,(\\d*))?)?$");
 
   private Integer response;
   private String ussdString;

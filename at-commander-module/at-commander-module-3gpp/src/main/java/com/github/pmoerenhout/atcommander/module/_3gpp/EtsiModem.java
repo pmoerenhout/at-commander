@@ -25,6 +25,7 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.DefinePdpContext
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.DeleteMessageCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.FacilityLockResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.FunctionalityCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsActivateCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsAttachResponse;
@@ -49,6 +50,8 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.OperatorSelectio
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.OperatorSelectionTestResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.PdPAddressCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.PdpAddressResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.PhoneActivityStatusCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.PhoneActivityStatusResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.PinCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.PinResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ProductSerialNumberIdentificationCommand;
@@ -190,6 +193,12 @@ public class EtsiModem extends V250 {
     final ImsiCommand command = new ImsiCommand(atCommander);
     final ImsiResponse response = command.set();
     return response.getImsi();
+  }
+
+  public int getPhoneActivityStatus() throws SerialException, TimeoutException, ResponseException {
+    final PhoneActivityStatusCommand command = new PhoneActivityStatusCommand(atCommander);
+    final PhoneActivityStatusResponse response = command.set();
+    return response.getStatus();
   }
 
   public WirelessNetwork getWirelessNetwork() throws SerialException, TimeoutException, ResponseException {
@@ -635,6 +644,12 @@ public class EtsiModem extends V250 {
     return command.read();
   }
 
+  public GprsNetworkRegistrationResponse getGprsNetworkRegistration(final long timeout) throws SerialException, TimeoutException, ResponseException {
+    final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander);
+    command.setTimeout(timeout);
+    return command.read();
+  }
+
   public void setGprsNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
     final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander, mode);
     command.set();
@@ -657,6 +672,18 @@ public class EtsiModem extends V250 {
   public void setUssd(final int type, final String ussdString, final int dcs) throws SerialException, TimeoutException, ResponseException {
     final UnstructuredSupplementaryServiceDataCommand command = new UnstructuredSupplementaryServiceDataCommand(atCommander, type, ussdString, dcs);
     command.set();
+  }
+
+  // Generic functions modem specific
+
+  public String getIntegratedCircuitCardIdentification() throws SerialException, TimeoutException, ResponseException {
+    throw new IllegalArgumentException("Please implement getIntegratedCircuitCardIdentification on modem class");
+  }
+
+  public void reboot() throws SerialException, TimeoutException, ResponseException {
+    final FunctionalityCommand command = new FunctionalityCommand(atCommander, 1, true);
+    command.set();
+
   }
 
 }

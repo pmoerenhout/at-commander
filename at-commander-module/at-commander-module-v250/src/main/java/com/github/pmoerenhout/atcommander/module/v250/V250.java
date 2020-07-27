@@ -15,6 +15,7 @@ import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.basic.Basic;
+import com.github.pmoerenhout.atcommander.basic.commands.SimpleCommand;
 import com.github.pmoerenhout.atcommander.basic.commands.SimpleResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
@@ -268,5 +269,16 @@ public class V250 extends Basic {
       throw e;
     }
   }
+
+  public void execCommand(final String s, final int timeout) throws SerialException, TimeoutException {
+    try {
+      final SimpleCommand command = new SimpleCommand(atCommander, s);
+      command.setTimeout(timeout);
+      command.set();
+    } catch (final ResponseException e) {
+      LOG.warn("Could not execute the command {} with timeout {}: {}", s, timeout, e.getMessage());
+    }
+  }
+
 
 }

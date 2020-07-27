@@ -16,7 +16,6 @@ import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
-import com.github.pmoerenhout.atcommander.basic.commands.SimpleCommand;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ParseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
@@ -67,7 +66,6 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkDnsComman
 import com.github.pmoerenhout.atcommander.module.telit.commands.NetworkDnsResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.NitzCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PacketServiceNetworkTypeCommand;
-import com.github.pmoerenhout.atcommander.module.telit.unsolicited.PacketServiceNetworkTypeUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PingCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.PingResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.QuerySimStatusCommand;
@@ -83,7 +81,6 @@ import com.github.pmoerenhout.atcommander.module.telit.commands.ServInfoResponse
 import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderNameCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.ServiceProviderNameResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SimPresenceStatusCommand;
-import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusResponse;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunConfigurationCommand;
 import com.github.pmoerenhout.atcommander.module.telit.commands.SmsAtRunConfigurationResponse;
@@ -135,8 +132,10 @@ import com.github.pmoerenhout.atcommander.module.telit.unsolicited.IndicatorEven
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.JammedStatusUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.NitzUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.NoCarrierUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.PacketServiceNetworkTypeUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.QuerySimStatusUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.RingingUnsolicited;
+import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusResponse;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimPresenceStatusUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SimToolkitNotificationUnsolicited;
 import com.github.pmoerenhout.atcommander.module.telit.unsolicited.SmsAtRunUnsolicited;
@@ -226,6 +225,7 @@ public class TelitModem extends EtsiModem {
     return new PacketServiceNetworkTypeCommand(atCommander, mode);
   }
 
+  @Override
   public String getIntegratedCircuitCardIdentification() throws SerialException, TimeoutException, ResponseException {
     final IccidCommand command = new IccidCommand(atCommander);
     final IccidResponse response = command.set();
@@ -455,16 +455,6 @@ public class TelitModem extends EtsiModem {
       throws SerialException, TimeoutException, ResponseException {
     final GeneralPurposeInputOutputCommand command = new GeneralPurposeInputOutputCommand(atCommander, pin, simSlot, direction, save);
     command.set();
-  }
-
-  public void execCommand(final String s, final int timeout) throws SerialException, TimeoutException {
-    try {
-      final SimpleCommand command = new SimpleCommand(atCommander, s);
-      command.setTimeout(timeout);
-      command.set();
-    } catch (final ResponseException e) {
-      LOG.warn("Could not execute the command {} with timeout {}: {}", s, timeout, e.getMessage());
-    }
   }
 
   public void setGpsPower(final boolean enable) throws SerialException, TimeoutException, ResponseException {

@@ -26,6 +26,8 @@ public class ExampleTelit {
       modem.init();
       LOG.info("Telit modem via jSSC is initialized");
 
+      LOG.info("Phone activity status: {}", modem.getPhoneActivityStatus());
+
       modem.setCellularResultCodes(true);
       modem.setNitz(1,1);
 

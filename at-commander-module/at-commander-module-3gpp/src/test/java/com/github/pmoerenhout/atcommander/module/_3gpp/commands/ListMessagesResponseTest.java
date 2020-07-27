@@ -1,6 +1,7 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -56,7 +57,7 @@ public class ListMessagesResponseTest extends BaseCommandTest {
     assertEquals(1, message.getIndex());
     assertEquals(MessageStatus.RECEIVED_READ, message.getStatus());
     assertEquals("+31612345678", message.getOada());
-    assertEquals("", message.getAlpha());
+    assertNull( message.getAlpha());
     assertEquals(ZonedDateTime.of(2017, 12, 13, 2, 34, 52, 0, ZoneId.of("+04")),
         message.getScts());
   }
@@ -79,7 +80,7 @@ public class ListMessagesResponseTest extends BaseCommandTest {
     final IndexPduMessage message = (IndexPduMessage) messageList.get(0);
     assertEquals(1, message.getIndex());
     assertEquals(MessageStatus.RECEIVED_UNREAD, message.getStatus());
-    assertEquals("", message.getAlpha());
+    assertNull( message.getAlpha());
     assertEquals("07911346101919F9040B911316240486F900007160621123918009C8309BFD0641D36D", message.getPdu());
   }
 
@@ -105,19 +106,19 @@ public class ListMessagesResponseTest extends BaseCommandTest {
     final IndexPduMessage message0 = (IndexPduMessage) messageList.get(0);
     assertEquals(1, message0.getIndex());
     assertEquals(MessageStatus.RECEIVED_UNREAD, message0.getStatus());
-    assertEquals("", message0.getAlpha());
+    assertNull( message0.getAlpha());
     assertEquals("07911346101919F9040B911316240486F900007160621123918009C8309BFD0641D36D", message0.getPdu());
 
     final IndexPduMessage message1 = (IndexPduMessage) messageList.get(1);
     assertEquals(2, message1.getIndex());
     assertEquals(MessageStatus.RECEIVED_UNREAD, message1.getStatus());
-    assertEquals("", message1.getAlpha());
+    assertNull( message1.getAlpha());
     assertEquals("07911346101919F9040B911316240486F900007160621123848006C733DAED1603", message1.getPdu());
 
     final IndexPduMessage message2 = (IndexPduMessage) messageList.get(2);
     assertEquals(3, message2.getIndex());
     assertEquals(MessageStatus.RECEIVED_UNREAD, message2.getStatus());
-    assertEquals("", message2.getAlpha());
+    assertNull( message2.getAlpha());
     assertEquals("07911346101919F9040B911316240486F900007160621123058005C7F3598C06", message2.getPdu());
   }
 
@@ -136,14 +137,14 @@ public class ListMessagesResponseTest extends BaseCommandTest {
 
     assertEquals(1, messageList.size());
 
-    final IndexTextMessage message0 = (IndexTextMessage) messageList.get(0);
-    assertEquals(4, message0.getIndex());
-    assertEquals(MessageStatus.RECEIVED_READ, message0.getStatus());
-    assertEquals("+31614240689", message0.getOada());
-    assertEquals("", message0.getAlpha());
-    assertEquals(Integer.valueOf(145), message0.getToOada());
-    assertEquals(Integer.valueOf(13), message0.getLength());
-    assertEquals("Test message", message0.getText());
+    final IndexTextMessage message = (IndexTextMessage) messageList.get(0);
+    assertEquals(4, message.getIndex());
+    assertEquals(MessageStatus.RECEIVED_READ, message.getStatus());
+    assertEquals("+31614240689", message.getOada());
+    assertNull(message.getAlpha());
+    assertEquals(Integer.valueOf(145), message.getToOada());
+    assertEquals(Integer.valueOf(13), message.getLength());
+    assertEquals("Test message", message.getText());
   }
 
   @Test
@@ -165,6 +166,6 @@ public class ListMessagesResponseTest extends BaseCommandTest {
     assertEquals(2, message.getIndex());
     assertEquals(MessageStatus.RECEIVED_READ, message.getStatus());
     assertEquals("099193338548000011F7040D91137910248665F60004025080604593001508411181BC3048320035A001AD800D1454EDFD95C0", message.getPdu());
-    assertEquals("", message.getAlpha());
+    assertNull( message.getAlpha());
   }
 }

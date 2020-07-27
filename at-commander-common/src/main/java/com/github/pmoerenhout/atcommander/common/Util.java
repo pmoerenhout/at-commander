@@ -74,7 +74,7 @@ public class Util {
 
   public static String[] tokenize(final String str, final char delimiterChar, final char quoteChar) {
     final StringTokenizer tokenizer = new StringTokenizer(str).setDelimiterChar(delimiterChar).setQuoteChar(quoteChar)
-        .setIgnoreEmptyTokens(false).setEmptyTokenAsNull(false);
+        .setIgnoreEmptyTokens(false).setEmptyTokenAsNull(true);
     return tokenizer.getTokenArray();
   }
 
