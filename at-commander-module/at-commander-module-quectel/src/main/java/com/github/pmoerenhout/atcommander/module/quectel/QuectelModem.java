@@ -18,8 +18,11 @@ import com.github.pmoerenhout.atcommander.module._3gpp.EtsiModem;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ActivatePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ConfigureParametersTcpipContextCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.DeactivatePdpContextCommand;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.ExtendedConfigurationSettingsCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.IccidCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.IccidResponse;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.InitializationStatusCommand;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.InitializationStatusResponse;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.PingCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.SynchronizeNetworkTimeProtocolCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelIndicationUnsolicited;
@@ -86,6 +89,19 @@ public class QuectelModem extends EtsiModem {
     return response.getIccid();
   }
 
+  public int getInitializationState() throws SerialException, TimeoutException, ResponseException {
+    final InitializationStatusCommand command = new InitializationStatusCommand(atCommander);
+    final InitializationStatusResponse response = command.set();
+    LOG.info("response {}", response);
+    return response.getStatus();
+  }
+
+  public void setExtendedConfiguration(final String parameter, final Object... values)
+      throws SerialException, TimeoutException, ResponseException {
+    final ExtendedConfigurationSettingsCommand command = new ExtendedConfigurationSettingsCommand(atCommander, parameter, values);
+    command.set();
+  }
+
   public void configureParametersTcpipContext(final int contextId, final int contextType,
                                               final String apn) throws SerialException, TimeoutException, ResponseException {
     final ConfigureParametersTcpipContextCommand command = new ConfigureParametersTcpipContextCommand(atCommander, contextId, contextType, apn);
@@ -117,7 +133,8 @@ public class QuectelModem extends EtsiModem {
     command.set();
   }
 
-  public void synchronizeNtp(final int contextId, final String address, final int port, final boolean autoSetTime) throws SerialException, TimeoutException, ResponseException {
+  public void synchronizeNtp(final int contextId, final String address, final int port,
+                             final boolean autoSetTime) throws SerialException, TimeoutException, ResponseException {
     final SynchronizeNetworkTimeProtocolCommand command = new SynchronizeNetworkTimeProtocolCommand(atCommander, contextId, address, port, autoSetTime);
     command.set();
   }
