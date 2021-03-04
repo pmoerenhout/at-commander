@@ -4,21 +4,18 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.module.telit.types.GprsDataVolume;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GprsDataVolumeResponse extends BaseResponse implements Response {
 
   // GDATAVOL: <cidn>,<totn>,<sentn>,<receivedn>
 
   private static final Pattern PATTERN = Pattern.compile("^#GDATAVOL: (\\d*),(\\d*),(\\d*),(\\d*)");
-
-  private static final Logger LOG = LoggerFactory.getLogger(GprsDataVolumeResponse.class);
 
   private GprsDataVolume[] gprsDataVolumes;
 
@@ -36,7 +33,7 @@ public class GprsDataVolumeResponse extends BaseResponse implements Response {
         final int sent = Integer.parseInt(m.group(3));
         final int received = Integer.parseInt(m.group(4));
         if (total != (sent + received)) {
-          LOG.warn("Total {} does not equal sent {} and received {}", total, sent, received);
+          log.warn("Total {} does not equal sent {} and received {}", total, sent, received);
         }
         arrayList.add(new GprsDataVolume(cid, total, sent, received));
       } else {

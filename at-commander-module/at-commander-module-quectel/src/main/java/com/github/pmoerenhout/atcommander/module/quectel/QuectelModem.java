@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.api.InitException;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
@@ -30,10 +27,10 @@ import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelPing
 import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelPsmTimerUnsolicited;
 import com.github.pmoerenhout.atcommander.module.quectel.unsolicited.QuectelUsimUnsolicited;
 import com.github.pmoerenhout.atcommander.module.v250.enums.AccessTechnology;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class QuectelModem extends EtsiModem {
-
-  private static final Logger LOG = LoggerFactory.getLogger(QuectelModem.class);
 
   private static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
 //      // new UnsolicitedPatternClass(NetworkRegistrationUnsolicited.UNSOLICITED_PATTERN, NetworkRegistrationUnsolicited.class),
@@ -80,7 +77,7 @@ public class QuectelModem extends EtsiModem {
     final String revisionIdentification = this.getRevisionIdentification();
 //    firmware = parseRevision(revisionIdentification);
 //    LOG.info("Revision {} => Firmware {}.{}.{}", revisionIdentification, firmware.getMajor(), firmware.getMinor(), firmware.getFeature());
-    LOG.info("Revision {}", revisionIdentification);
+    log.info("Revision {}", revisionIdentification);
   }
 
   public String getIntegratedCircuitCardIdentification() throws SerialException, TimeoutException, ResponseException {
@@ -92,7 +89,7 @@ public class QuectelModem extends EtsiModem {
   public int getInitializationState() throws SerialException, TimeoutException, ResponseException {
     final InitializationStatusCommand command = new InitializationStatusCommand(atCommander);
     final InitializationStatusResponse response = command.set();
-    LOG.info("response {}", response);
+    log.info("response {}", response);
     return response.getStatus();
   }
 

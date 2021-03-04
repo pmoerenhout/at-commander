@@ -3,15 +3,14 @@ package com.github.pmoerenhout.atcommander.module.telit.commands;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.api.UnsolicitedResponse;
 import com.github.pmoerenhout.atcommander.api.annotation.Unsolicited;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.marineapi.nmea.parser.SentenceFactory;
 import net.sf.marineapi.nmea.sentence.Sentence;
 
+@Slf4j
 @Unsolicited
 public class GpsNmunUnsolicited extends BaseResponse implements UnsolicitedResponse {
 
@@ -22,7 +21,6 @@ public class GpsNmunUnsolicited extends BaseResponse implements UnsolicitedRespo
 
   public static final Pattern UNSOLICITED_PATTERN = Pattern.compile("^\\$GPSNMUN: (.*)$");
 
-  private static final Logger LOG = LoggerFactory.getLogger(GpsNmunUnsolicited.class);
   private static final SentenceFactory sentenceFactory = SentenceFactory.getInstance();
 
   private Sentence sentence;
@@ -40,14 +38,14 @@ public class GpsNmunUnsolicited extends BaseResponse implements UnsolicitedRespo
       final String nmea = line.substring(10);
       sentence = sentenceFactory.createParser(nmea);
       if (!sentence.isValid()) {
-        LOG.warn("The NMEA string '{}' is invalid", nmea);
+        log.warn("The NMEA string '{}' is invalid", nmea);
         throw createParseException(line);
       }
       if (sentence.isProprietary()) {
-        LOG.warn("The NMEA string '{}' is proprietary", nmea);
+        log.warn("The NMEA string '{}' is proprietary", nmea);
         throw createParseException(line);
       }
-      LOG.debug("NMEA: '{}'", nmea);
+      log.debug("NMEA: '{}'", nmea);
       return;
     }
     throw createParseException(lines);

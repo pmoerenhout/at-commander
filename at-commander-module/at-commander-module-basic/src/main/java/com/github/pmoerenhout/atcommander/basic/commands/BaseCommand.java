@@ -3,8 +3,6 @@ package com.github.pmoerenhout.atcommander.basic.commands;
 import java.util.concurrent.Semaphore;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.github.pmoerenhout.atcommander.AbstractFinalResponse;
 import com.github.pmoerenhout.atcommander.AtCommander;
@@ -13,7 +11,9 @@ import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public abstract class BaseCommand {
 
   protected static final String AT = "AT";
@@ -24,7 +24,6 @@ public abstract class BaseCommand {
   protected static final byte CTRLZ = (byte) 0x1a;
   protected static final Semaphore available = new Semaphore(1, true);
 
-  private static final Logger LOG = LoggerFactory.getLogger(BaseCommand.class);
   private static final long DEFAULT_TIMEOUT = 60000;
   private static final byte[] NEWLINE = "\r".getBytes();
 
@@ -94,7 +93,7 @@ public abstract class BaseCommand {
   public AtResponse execute(final byte[] bytes, final long timeout) throws SerialException, TimeoutException, ResponseException {
     final AtResponse response = atCommander.send(bytes, timeout);
     if (response == null) {
-      LOG.warn("Timeout on execute command: {} [{}] {}ms", Util.onlyPrintable(bytes), Util.bytesToHexString(bytes), timeout);
+      log.warn("Timeout on execute command: {} [{}] {}ms", Util.onlyPrintable(bytes), Util.bytesToHexString(bytes), timeout);
       throw new TimeoutException(
           "Timeout on command " + Util.onlyPrintable(bytes) + " (" + Util.bytesToHexString(bytes) + ") after " + timeout + "ms");
     }
@@ -159,7 +158,7 @@ public abstract class BaseCommand {
   }
 
   public void writeBytes(final byte[] bytes) throws SerialException {
-    LOG.debug("Send {}", Util.bytesToHexString(bytes));
+    log.debug("Send {}", Util.bytesToHexString(bytes));
     atCommander.write(bytes);
   }
 

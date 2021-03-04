@@ -1,14 +1,10 @@
 package com.github.pmoerenhout.atcommander.module.telit;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.InitException;
@@ -148,10 +144,10 @@ import com.github.pmoerenhout.atcommander.module.v250.enums.DataMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.UmtsBand;
 import com.github.pmoerenhout.atcommander.module.v250.unsolicited.ConnectionFromUnsolicited;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TelitModem extends EtsiModem {
-
-  private static final Logger LOG = LoggerFactory.getLogger(TelitModem.class);
 
   private static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
       // new UnsolicitedPatternClass(NetworkRegistrationUnsolicited.UNSOLICITED_PATTERN, NetworkRegistrationUnsolicited.class),
@@ -193,7 +189,7 @@ public class TelitModem extends EtsiModem {
     super.init();
     final String revisionIdentification = this.getRevisionIdentification();
     firmware = parseRevision(revisionIdentification);
-    LOG.info("Revision {} => Firmware {}.{}.{}", revisionIdentification, firmware.getMajor(), firmware.getMinor(), firmware.getFeature());
+    log.info("Revision {} => Firmware {}.{}.{}", revisionIdentification, firmware.getMajor(), firmware.getMinor(), firmware.getFeature());
   }
 
   public Firmware parseRevision(final String revision) {
@@ -211,7 +207,7 @@ public class TelitModem extends EtsiModem {
       command.setTimeout(timeout);
       command.set();
     } catch (final ResponseException e) {
-      LOG.warn("Could not hangup: {}", e.getMessage());
+      log.warn("Could not hangup: {}", e.getMessage());
     }
   }
 
@@ -371,15 +367,15 @@ public class TelitModem extends EtsiModem {
     final GsmBand gsmBand = response.getBand();
     final UmtsBand umtsBand = response.getUmtsBand();
     if (umtsBand != null) {
-      LOG.info("GSM band:{} UMTS band:{}", gsmBand, umtsBand);
+      log.info("GSM band:{} UMTS band:{}", gsmBand, umtsBand);
     } else {
-      LOG.info("GSM band:{}", gsmBand);
+      log.info("GSM band:{}", gsmBand);
     }
     return new Band(gsmBand, umtsBand);
   }
 
   public ServInfoResponse getServingCellInformation() throws SerialException, TimeoutException, ResponseException {
-    LOG.debug("accessTechnology: {}", accessTechnology);
+    log.debug("accessTechnology: {}", accessTechnology);
     final ServInfoCommand command = new ServInfoCommand(atCommander, accessTechnology);
     return command.set();
   }
@@ -387,12 +383,12 @@ public class TelitModem extends EtsiModem {
   public ReadNetworkStatusResponse getNetworkStatus() throws SerialException, TimeoutException, ResponseException {
     final ReadNetworkStatusCommand command = new ReadNetworkStatusCommand(atCommander);
     final ReadNetworkStatusResponse response = command.set();
-    LOG.info("Network status: {}", response);
+    log.info("Network status: {}", response);
     final Integer rssi = response.getRssi();
     final Integer txPower = response.getTxPower();
     final Integer mobilityManagementState = response.getMobilityManagementState();
     final Integer radioResourceState = response.getRadioResourceState();
-    LOG.info("RSSI:{} TX:{} MM:{} RR:{}", rssi, txPower, mobilityManagementState, radioResourceState);
+    log.info("RSSI:{} TX:{} MM:{} RR:{}", rssi, txPower, mobilityManagementState, radioResourceState);
     return response;
   }
 
@@ -502,7 +498,7 @@ public class TelitModem extends EtsiModem {
     final EasyGprsActivationResponse resp = command.set();
     final String ipAddress = resp.getIpAddress();
     if (ipAddress != null) {
-      LOG.info("SGACT returned the address '{}'", ipAddress);
+      log.info("SGACT returned the address '{}'", ipAddress);
     }
     return resp;
   }
@@ -512,7 +508,7 @@ public class TelitModem extends EtsiModem {
     final EasyGprsActivationReadResponse resp = command.read();
     final List<ContextStatus> contextStatuses = resp.getContextStatuses();
     for (final ContextStatus contextStatus : contextStatuses) {
-      LOG.info("SGACT cid {} with state {}", contextStatus.getCid(), contextStatus.getStatus());
+      log.info("SGACT cid {} with state {}", contextStatus.getCid(), contextStatus.getStatus());
     }
     return resp;
   }
@@ -524,7 +520,7 @@ public class TelitModem extends EtsiModem {
     final EasyGprsActivationResponse response = command.set();
     final String ipAddress = response.getIpAddress();
     if (ipAddress != null) {
-      LOG.info("SGACT returned the IP address '{}'", ipAddress);
+      log.info("SGACT returned the IP address '{}'", ipAddress);
     }
     return response;
   }
@@ -543,7 +539,7 @@ public class TelitModem extends EtsiModem {
     final GprsResponse response = command.set();
     final String ipAddress = response.getIpAddress();
     if (ipAddress != null) {
-      LOG.info("GPRS context has IP address {}", ipAddress);
+      log.info("GPRS context has IP address {}", ipAddress);
     }
     return response;
   }
@@ -551,7 +547,7 @@ public class TelitModem extends EtsiModem {
   public GprsStatusResponse getActivateGprsContext() throws SerialException, TimeoutException, ResponseException {
     final GprsCommand command = new GprsCommand(atCommander);
     final GprsStatusResponse response = command.read();
-    LOG.info("Current GPRS context is {}", (response.getActive() ? "active" : "not active"));
+    log.info("Current GPRS context is {}", (response.getActive() ? "active" : "not active"));
     return response;
   }
 
@@ -790,10 +786,10 @@ public class TelitModem extends EtsiModem {
     if (!MessageMode.PDU.equals(this.messageMode)) {
       throw new IllegalStateException("The modem must be put in PDU message mode first");
     }
-    LOG.info("SELINT:{} SMSMODE:{}", interfaceStyle, smsMode);
+    log.info("SELINT:{} SMSMODE:{}", interfaceStyle, smsMode);
     if (interfaceStyle == 0 || interfaceStyle == 1) {
       if (smsMode == 0) {
-        LOG.info("Fallback to ETSI mode");
+        log.info("Fallback to ETSI mode");
         super.sendSmsAsPdu(destination, text);
       }
     }
@@ -809,7 +805,7 @@ public class TelitModem extends EtsiModem {
     command.setPdu(pdu.create());
     command.setLength(pdu.getMessageLength());
     final SendMessageResponse response = command.set();
-    LOG.info("The SMS was send to {}: reference {}", destination, response.getReference());
+    log.info("The SMS was send to {}: reference {}", destination, response.getReference());
     return response;
   }
 
@@ -817,10 +813,10 @@ public class TelitModem extends EtsiModem {
     if (!MessageMode.TEXT.equals(this.messageMode)) {
       throw new IllegalStateException("The modem must be put in TEXT message mode first");
     }
-    LOG.info("SELINT:{} SMSMODE:{}", interfaceStyle, smsMode);
+    log.info("SELINT:{} SMSMODE:{}", interfaceStyle, smsMode);
     if (interfaceStyle == 0 || interfaceStyle == 1) {
       if (smsMode == 0) {
-        LOG.info("Fallback to ETSI mode");
+        log.info("Fallback to ETSI mode");
         super.sendSmsAsText(destination, text);
       }
     }
@@ -830,16 +826,16 @@ public class TelitModem extends EtsiModem {
     command.setText(text);
     command.setAddress(destination);
     final SendMessageResponse response = command.set();
-    LOG.info("The SMS was send to {}: reference {}", destination, response.getReference());
+    log.info("The SMS was send to {}: reference {}", destination, response.getReference());
     return response;
   }
 
   public int sendSms(final String destination, final String text) throws SerialException, TimeoutException, ResponseException {
-    LOG.info("SELINT:{} SMSMODE:{} MESSAGE_MODE:{}", interfaceStyle, smsMode, messageMode);
+    log.info("SELINT:{} SMSMODE:{} MESSAGE_MODE:{}", interfaceStyle, smsMode, messageMode);
 
     if (interfaceStyle == 0 || interfaceStyle == 1) {
       if (smsMode == 0) {
-        LOG.info("Fallback to ETSI mode");
+        log.info("Fallback to ETSI mode");
         super.sendSmsAsText(destination, text);
       }
     }
@@ -858,7 +854,7 @@ public class TelitModem extends EtsiModem {
         commandPdu.setPdu(pdu.create());
         commandPdu.setLength(pdu.getMessageLength());
         final SendMessageResponse responsePdu = commandPdu.set();
-        LOG.info("The SMS was send to {}: reference {}", destination, responsePdu.getReference());
+        log.info("The SMS was send to {}: reference {}", destination, responsePdu.getReference());
         return responsePdu.getReference();
 
       case TEXT:
@@ -866,7 +862,7 @@ public class TelitModem extends EtsiModem {
         commandText.setText(text);
         commandText.setAddress(destination);
         final SendMessageResponse responseText = commandText.set();
-        LOG.info("The SMS was send to {}: reference {}", destination, responseText.getReference());
+        log.info("The SMS was send to {}: reference {}", destination, responseText.getReference());
         return responseText.getReference();
       default:
         throw new IllegalStateException("Unknown message mode");

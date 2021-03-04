@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.UnsolicitedPatternClass;
@@ -44,7 +41,9 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.ModelIdentificat
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.MoreMessagesToSendCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.NewMessageAcknowledgementCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.NewMessageIndicationsCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.NewMessageIndicationsResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.OperatorSelectionCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.OperatorSelectionResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.OperatorSelectionTestResponse;
@@ -54,6 +53,8 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.PhoneActivitySta
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.PhoneActivityStatusResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.PinCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.PinResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.PreferredMessageStorageCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.PreferredMessageStorageResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ProductSerialNumberIdentificationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ProductSerialNumberIdentificationResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ReadMessageCommand;
@@ -63,6 +64,8 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.RestrictedSimAcc
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.RevisionIdentificationCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.RevisionIdentificationResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectBearerServiceTypeCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectMessageServiceCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectMessageServiceResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectServiceForMoSmsMessagesCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectServiceForMoSmsMessagesResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SelectTECharacterSetCommand;
@@ -110,7 +113,9 @@ import com.github.pmoerenhout.atcommander.module.v250.enums.OperatorSelectionMod
 import com.github.pmoerenhout.atcommander.module.v250.enums.PdpType;
 import com.github.pmoerenhout.atcommander.module.v250.enums.PinStatus;
 import com.github.pmoerenhout.atcommander.module.v250.enums.WirelessNetwork;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class EtsiModem extends V250 {
 
   // 3GPP TS 27.005
@@ -133,7 +138,6 @@ public class EtsiModem extends V250 {
       new UnsolicitedPatternClass(UnstructuredSupplementaryServiceDataUnsolicited.UNSOLICITED_PATTERN,
           UnstructuredSupplementaryServiceDataUnsolicited.class)
   ));
-  private static final Logger LOG = LoggerFactory.getLogger(EtsiModem.class);
 
   public AccessTechnology accessTechnology = null;
   protected MessageMode messageMode;
@@ -142,7 +146,7 @@ public class EtsiModem extends V250 {
   public EtsiModem(final SerialInterface serial) {
     super(serial);
     atCommander.addFinalResponseFactory(new FinalFactory3gpp());
-    UNSOLICITED_PATTERN_CLASS_LIST.forEach(u -> serial.addUnsolicited(u));
+    UNSOLICITED_PATTERN_CLASS_LIST.forEach(serial::addUnsolicited);
   }
 
   public String getManufacturerIdentification() throws SerialException, TimeoutException, ResponseException {
@@ -382,13 +386,33 @@ public class EtsiModem extends V250 {
   public ServiceCentreAddressResponse getServiceCentreAddress() throws SerialException, TimeoutException, ResponseException {
     final ServiceCentreAddressCommand command = new ServiceCentreAddressCommand(atCommander);
     final ServiceCentreAddressResponse response = command.read();
-    LOG.info("SMSC address: {} type {}", response.getNumber(), response.getType());
+    log.info("SMSC address: {} type {}", response.getNumber(), response.getType());
     return response;
   }
 
   public void setServiceCentreAddress(final String number) throws SerialException, TimeoutException, ResponseException {
     final ServiceCentreAddressCommand command = new ServiceCentreAddressCommand(atCommander, number);
     command.set();
+  }
+
+  public void setPreferredMessageStorage(final String mem1) throws SerialException, TimeoutException, ResponseException {
+    final PreferredMessageStorageCommand command = new PreferredMessageStorageCommand(atCommander, mem1);
+    command.set();
+  }
+
+  public void setPreferredMessageStorage(final String mem1, final String mem2) throws SerialException, TimeoutException, ResponseException {
+    final PreferredMessageStorageCommand command = new PreferredMessageStorageCommand(atCommander, mem1, mem2);
+    command.set();
+  }
+
+  public void setPreferredMessageStorage(final String mem1, final String mem2, final String mem3) throws SerialException, TimeoutException, ResponseException {
+    final PreferredMessageStorageCommand command = new PreferredMessageStorageCommand(atCommander, mem1, mem2, mem3);
+    command.set();
+  }
+
+  public PreferredMessageStorageResponse getPreferredMessageStorage() throws SerialException, TimeoutException, ResponseException {
+    final PreferredMessageStorageCommand command = new PreferredMessageStorageCommand(atCommander);
+    return command.read();
   }
 
   public List<IndexMessage> getMessagesList(final MessageStatus status) throws SerialException, TimeoutException, ResponseException {
@@ -428,6 +452,11 @@ public class EtsiModem extends V250 {
     newMessageIndicationsCommand.set();
   }
 
+  public NewMessageIndicationsResponse getNewMessageIndications() throws SerialException, TimeoutException, ResponseException {
+    final NewMessageIndicationsCommand newMessageIndicationsCommand = new NewMessageIndicationsCommand(atCommander);
+    return newMessageIndicationsCommand.read();
+  }
+
   public SendMessageResponse sendPdu(final int lengthTpLayer, final String pdu)
       throws SerialException, TimeoutException, ResponseException {
     if (!MessageMode.PDU.equals(this.messageMode)) {
@@ -436,9 +465,9 @@ public class EtsiModem extends V250 {
     final SendMessageCommand command = new SendMessageCommand(atCommander, messageMode);
     command.setLength(lengthTpLayer);
     command.setPdu(pdu);
-    LOG.info("LENGTH:{}, PDU[{}]:{}", lengthTpLayer, pdu.length(), pdu);
+    log.info("LENGTH:{}, PDU[{}]:{}", lengthTpLayer, pdu.length(), pdu);
     final SendMessageResponse response = command.set();
-    LOG.info("The SMS was send: reference {}", response.getReference());
+    log.info("The SMS was send: reference {}", response.getReference());
     return response;
   }
 
@@ -456,9 +485,9 @@ public class EtsiModem extends V250 {
     final SendMessageCommand command = new SendMessageCommand(atCommander, messageMode);
     command.setPdu(pdu.create());
     command.setLength(pdu.getMessageLength());
-    LOG.info("PDU[{}]:{} LENGTH:{}", command.getPdu().length(), command.getPdu(), command.getLength());
+    log.info("PDU[{}]:{} LENGTH:{}", command.getPdu().length(), command.getPdu(), command.getLength());
     final SendMessageResponse response = command.set();
-    LOG.info("The SMS was send to {}: reference {}", destination, response.getReference());
+    log.info("The SMS was send to {}: reference {}", destination, response.getReference());
     return response;
   }
 
@@ -472,7 +501,7 @@ public class EtsiModem extends V250 {
     command.setTypeOfAddress(145);
     command.setText(text);
     final SendMessageResponse response = command.set();
-    LOG.debug("The text SMS was send to {}: reference {}", destination, response.getReference());
+    log.debug("The text SMS was send to {}: reference {}", destination, response.getReference());
     return response;
   }
 
@@ -490,7 +519,7 @@ public class EtsiModem extends V250 {
     }
     final ReadMessageCommand command = new ReadMessageCommand(atCommander, messageMode, index);
     final ReadMessageResponse response = command.set();
-    LOG.debug("The PDU SMS read {}: {}", index, response.getMessage());
+    log.debug("The PDU SMS read {}: {}", index, response.getMessage());
     return response;
   }
 
@@ -507,7 +536,7 @@ public class EtsiModem extends V250 {
     final int sw1 = response.getSw1();
     final int sw2 = response.getSw2();
     final byte[] data = response.getData();
-    LOG.info("SW:{} DATA:{}", String.format("%04X", (sw1 << 8) + sw2), Util.bytesToHexString(data));
+    log.info("SW:{} DATA:{}", String.format("%04X", (sw1 << 8) + sw2), Util.bytesToHexString(data));
     return data;
   }
 
@@ -517,7 +546,7 @@ public class EtsiModem extends V250 {
     final RestrictedSimAccessResponse response = rsmCommand.set();
     final int sw1 = response.getSw1();
     final int sw2 = response.getSw2();
-    LOG.info("SW:{} DATA:{}", String.format("%04X", (sw1 << 8) + sw2), Util.bytesToHexString(data));
+    log.info("SW:{} DATA:{}", String.format("%04X", (sw1 << 8) + sw2), Util.bytesToHexString(data));
     return data;
   }
 
@@ -544,9 +573,9 @@ public class EtsiModem extends V250 {
     final FacilityStatus[] facilityStatuses = response.getFacilityStatus();
     for (final FacilityStatus fs : facilityStatuses) {
       if (fs.getClazz() != null) {
-        LOG.info("FacilityStatus: {} {}", fs.getStatus(), fs.getClazz());
+        log.info("FacilityStatus: {} {}", fs.getStatus(), fs.getClazz());
       } else {
-        LOG.info("FacilityStatus: {}", fs.getStatus());
+        log.info("FacilityStatus: {}", fs.getStatus());
       }
     }
     if (facilityStatuses.length == 1) {
@@ -596,7 +625,7 @@ public class EtsiModem extends V250 {
     final PdPAddressCommand command = new PdPAddressCommand(atCommander, cids);
     final PdpAddressResponse response = command.set();
     for (final PdpAddress pdpAddress : response.getPdpAddresses()) {
-      LOG.info("CID:{} ADDRESS:{}", pdpAddress.getCid(), pdpAddress.getAddress());
+      log.info("CID:{} ADDRESS:{}", pdpAddress.getCid(), pdpAddress.getAddress());
     }
     return response;
   }
@@ -661,6 +690,26 @@ public class EtsiModem extends V250 {
 
   public void setUssd(final int type) throws SerialException, TimeoutException, ResponseException {
     final UnstructuredSupplementaryServiceDataCommand command = new UnstructuredSupplementaryServiceDataCommand(atCommander, type);
+    command.set();
+  }
+
+  public void setSelectMessageService(final int service) throws SerialException, TimeoutException, ResponseException {
+    final SelectMessageServiceCommand command = new SelectMessageServiceCommand(atCommander, service);
+    command.set();
+  }
+
+  public SelectMessageServiceResponse getSelectMessageService() throws SerialException, TimeoutException, ResponseException {
+    final SelectMessageServiceCommand command = new SelectMessageServiceCommand(atCommander);
+    return command.read();
+  }
+
+  public void setNewMessageAcknowledgement() throws SerialException, TimeoutException, ResponseException {
+    final NewMessageAcknowledgementCommand command = new NewMessageAcknowledgementCommand(atCommander);
+    command.set();
+  }
+
+  public void setNewMessageAcknowledgement(final int ack) throws SerialException, TimeoutException, ResponseException {
+    final NewMessageAcknowledgementCommand command = new NewMessageAcknowledgementCommand(atCommander, ack);
     command.set();
   }
 

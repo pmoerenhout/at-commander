@@ -3,44 +3,41 @@ package com.github.pmoerenhout.atcommander;
 import static jssc.SerialPort.FLOWCONTROL_RTSCTS_IN;
 import static jssc.SerialPort.FLOWCONTROL_RTSCTS_OUT;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.jssc.JsscSerial;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.NetworkRegistrationResponse;
 import com.github.pmoerenhout.atcommander.module.telit.TelitModem;
 import com.github.pmoerenhout.atcommander.module.telit.commands.types.Band;
 import com.github.pmoerenhout.atcommander.module.v250.enums.WirelessNetwork;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ExampleTelit {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ExampleTelit.class);
-
   public static void main(String[] arg) {
-    LOG.info("Test Telit modem");
+    log.info("Test Telit modem");
 
     final TelitModem modem = new TelitModem(
         new JsscSerial("/dev/tty.usbserial-00101414B", 115200, FLOWCONTROL_RTSCTS_IN | FLOWCONTROL_RTSCTS_OUT,
             new UnsolicitedCallback()));
     try {
       modem.init();
-      LOG.info("Telit modem via jSSC is initialized");
+      log.info("Telit modem via jSSC is initialized");
 
-      LOG.info("Phone activity status: {}", modem.getPhoneActivityStatus());
+      log.info("Phone activity status: {}", modem.getPhoneActivityStatus());
 
       modem.setCellularResultCodes(true);
-      modem.setNitz(1,1);
+      modem.setNitz(1, 1);
 
       modem.setWirelessNetwork(WirelessNetwork.GSM);
       final Band band = modem.getBand();
-      LOG.info("Band GSM:{} UMTS:{}", band.getGsmBand(), band.getUmtsBand());
-      LOG.info("ICCID: {}", modem.getIntegratedCircuitCardIdentification());
-      LOG.info("IMSI: {}", modem.getInternationalMobileSubscriberIdentity());
-      LOG.info("SPN (Service Provider Name): {}", modem.getServiceProviderName());
+      log.info("Band GSM:{} UMTS:{}", band.getGsmBand(), band.getUmtsBand());
+      log.info("ICCID: {}", modem.getIntegratedCircuitCardIdentification());
+      log.info("IMSI: {}", modem.getInternationalMobileSubscriberIdentity());
+      log.info("SPN (Service Provider Name): {}", modem.getServiceProviderName());
       modem.setNetworkRegistration(2);
       modem.setGprsNetworkRegistration(2);
       final NetworkRegistrationResponse networkRegistrationResponse = modem.getNetworkRegistration();
-      LOG.info("Network Registration: mode:{} state:{} LAC:{} CID:{}",
+      log.info("Network Registration: mode:{} state:{} LAC:{} CID:{}",
           networkRegistrationResponse.getMode(),
           networkRegistrationResponse.getRegistrationState(),
           networkRegistrationResponse.getLac(),
@@ -50,9 +47,9 @@ public class ExampleTelit {
       modem.getGprsNetworkRegistration();
       Thread.sleep(10000);
       modem.close();
-      LOG.info("Telit modem via jSSC is closed");
+      log.info("Telit modem via jSSC is closed");
     } catch (final Exception e) {
-      LOG.error("The modem had an error", e);
+      log.error("The modem had an error", e);
     }
   }
 

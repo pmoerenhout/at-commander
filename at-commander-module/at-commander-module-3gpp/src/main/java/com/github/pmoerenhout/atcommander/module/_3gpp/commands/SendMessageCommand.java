@@ -3,9 +3,6 @@ package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import java.nio.charset.Charset;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.Command;
@@ -17,11 +14,13 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module._3gpp.EtsiUtil;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageMode;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SendMessageCommand extends BaseCommand implements Command<BaseResponse> {
 
   private static final String COMMAND_MESSAGE_SEND = "+CMGS";
-  private static final Logger LOG = LoggerFactory.getLogger(SendMessageCommand.class);
+
   private MessageMode messageMode;
   private String characterSet;
   private String pdu;
@@ -50,37 +49,37 @@ public class SendMessageCommand extends BaseCommand implements Command<BaseRespo
       sb.append(EQUAL);
       switch (messageMode) {
         case PDU:
-          LOG.debug("PDU length {} CMGS length {}", pdu.length(), length);
+          log.debug("PDU length {} CMGS length {}", pdu.length(), length);
           sb.append(length);
 
           final AtResponse s = super.execute(sb.toString());
-          s.getInformationalText().forEach(line -> LOG.debug("Received line {}", line));
+          s.getInformationalText().forEach(line -> log.debug("Received line {}", line));
           super.writeBytes(pdu.getBytes());
           break;
 
         case TEXT:
-          LOG.debug("TEXT ({}) '{}'", text.length(), Util.onlyPrintable(text.getBytes()));
+          log.debug("TEXT ({}) '{}'", text.length(), Util.onlyPrintable(text.getBytes()));
           sb.append(address);
           if (typeOfAddress != null) {
             sb.append(COMMA);
             sb.append(typeOfAddress);
           }
           final AtResponse s2 = super.execute(sb.toString());
-          s2.getInformationalText().forEach(line -> LOG.debug("Received line {}", line));
+          s2.getInformationalText().forEach(line -> log.debug("Received line {}", line));
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {
-            LOG.info("Interrupted");
+            log.info("Interrupted");
           }
           final Charset charset = EtsiUtil.toJavaCharset(characterSet);
-          LOG.info("Using charset {} to {} ({})", characterSet, charset.name(), charset.displayName());
+          log.info("Using charset {} to {} ({})", characterSet, charset.name(), charset.displayName());
           super.writeBytes(text.getBytes(charset));
           break;
       }
 
       //LOG.debug("Now sending Ctrl-Z");
       final SendMessageResponse resp = new SendMessageResponse(super.execute(CTRLZ, 60000));
-      LOG.debug("Reference is {}", resp.getReference());
+      log.debug("Reference is {}", resp.getReference());
       return resp;
     } finally {
       available.release();

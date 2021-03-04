@@ -1,9 +1,5 @@
 package com.github.pmoerenhout.atcommander.basic;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.InitException;
@@ -16,10 +12,10 @@ import com.github.pmoerenhout.atcommander.basic.commands.SimpleCommand;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.common.Util;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Basic {
-
-  private static final Logger LOG = LoggerFactory.getLogger(Basic.class);
 
   public SerialInterface serial;
   protected AtCommander atCommander;
@@ -34,7 +30,7 @@ public class Basic {
     try {
       atCommander.init();
     } catch (final Exception e) {
-      LOG.error("Could not initialize basic modem", e);
+      log.error("Could not initialize basic modem", e);
       throw new InitException(e);
     }
   }
@@ -75,9 +71,9 @@ public class Basic {
       command.set();
       return true;
     } catch (final TimeoutException e) {
-      LOG.warn("The AT interface is not responsive: {}", e.getMessage());
+      log.warn("The AT interface is not responsive: {}", e.getMessage());
     } catch (final ResponseException e) {
-      LOG.error("Other error on AT interface: {}", e);
+      log.error("Other error on AT interface: {}", e);
     }
     return false;
   }
@@ -85,11 +81,11 @@ public class Basic {
   public void escape(final byte escapeCharacter, final long delay) throws SerialException {
     // time of S12 in 1/50 of a second;
     // final int delay = 50 * 20;
-    LOG.debug("Escape sequence with delay {}ms", delay);
+    log.debug("Escape sequence with delay {}ms", delay);
     final byte[] esc = new byte[]{ escapeCharacter };
     sleep(delay);
     for (int i = 0; i < 3; i++) {
-      LOG.debug("Send escape [{}] {}", (i + 1), Util.onlyPrintable(esc));
+      log.debug("Send escape [{}] {}", (i + 1), Util.onlyPrintable(esc));
       atCommander.write(esc);
     }
     sleep(delay);
@@ -99,7 +95,7 @@ public class Basic {
     try {
       Thread.sleep(millis);
     } catch (final InterruptedException e) {
-      LOG.debug("Sleep was interrupted: {}", e.getMessage());
+      log.debug("Sleep was interrupted: {}", e.getMessage());
       throw new RuntimeException("Sleep was interrupted");
     }
   }

@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
 import com.github.pmoerenhout.atcommander.common.Util;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TestResponse extends BaseResponse implements Response {
-
-  private static final Logger LOG = LoggerFactory.getLogger(TestResponse.class);
 
   private final List<String> values = new ArrayList<>();
 
@@ -27,7 +25,7 @@ public class TestResponse extends BaseResponse implements Response {
     if (informationalText.size() == 1) {
       final String r = StringUtils.substringBetween(informationalText.get(0), "(", ")");
       final String[] splitted = StringUtils.split(r, ',');
-      for (final  String t : splitted) {
+      for (final String t : splitted) {
         if (t.contains("-")) {
           final String min = StringUtils.substringBefore(t, "-");
           final String max = StringUtils.substringAfter(t, "-");
@@ -38,7 +36,7 @@ public class TestResponse extends BaseResponse implements Response {
         }
       }
     } else {
-      LOG.warn("Received not 1 line, but {}", informationalText.size());
+      log.warn("Received not 1 line, but {}", informationalText.size());
     }
   }
 

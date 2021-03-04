@@ -5,19 +5,16 @@ import static jssc.SerialPort.FLOWCONTROL_XONXOFF_OUT;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.jssc.JsscSerial;
 import com.github.pmoerenhout.atcommander.module.neul.Neul;
 import com.github.pmoerenhout.atcommander.module.neul.commands.SignalQualityResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ExampleNeul {
-
-  private static final Logger LOG = LoggerFactory.getLogger(ExampleNeul.class);
 
   public static void main(String[] arg) {
 
@@ -28,7 +25,7 @@ public class ExampleNeul {
 
     try {
       modem.init();
-      LOG.info("Is the modem responsive? {}", modem.isResponsive());
+      log.info("Is the modem responsive? {}", modem.isResponsive());
       // Send a simple AT
       // modem.getSimpleCommand("AT").set();
       modem.getAttention();
@@ -40,8 +37,8 @@ public class ExampleNeul {
       modem.getAttention();
       modem.getAttention();
 
-      LOG.info("Identification: {}", getIdentificationInformation(modem, 0));
-      LOG.info("Identification IMEI: {}", getIdentificationInformation(modem, 5));
+      log.info("Identification: {}", getIdentificationInformation(modem, 0));
+      log.info("Identification IMEI: {}", getIdentificationInformation(modem, 5));
 //      IntStream.range(0,10).forEachOrdered(information -> {
 //        try {
 //          LOG.info("Identification {}: {}", information, getIdentificationInformation(modem, information));
@@ -49,23 +46,23 @@ public class ExampleNeul {
 //          LOG.error("Identification", e);
 //        }
 //      });
-      LOG.info("Manufacturer: {}", getManufacturer(modem));
-      LOG.info("Module revision: {}", getRevisionIdentification(modem));
+      log.info("Manufacturer: {}", getManufacturer(modem));
+      log.info("Module revision: {}", getRevisionIdentification(modem));
       Thread.sleep(1000);
 
-      modem.getConfig().getItems().forEach(l -> LOG.info("Configuration: {} is {}", l.getLeft(), l.getRight()));
+      modem.getConfig().getItems().forEach(l -> log.info("Configuration: {} is {}", l.getLeft(), l.getRight()));
       final SignalQualityResponse signalQualityResponse = modem.getSignalQuality();
-      LOG.info("Received signal strength indicator is {} and bit error rate is {}", signalQualityResponse.getRssi(), signalQualityResponse.getBer());
+      log.info("Received signal strength indicator is {} and bit error rate is {}", signalQualityResponse.getRssi(), signalQualityResponse.getBer());
       modem.config("AUTOCONNECT", "FALSE");
       modem.config("CR_0354_0338_SCRAMBLING", "FALSE");
       //modem.config("CR_0859_SI_AVOID", "FALSE");
       // T-Mobile forum
       modem.config("CR_0354_0338_SCRAMBLING", "TRUE");
       modem.config("CR_0859_SI_AVOID", "TRUE");
-      modem.getConfig().getItems().forEach(l -> LOG.info("Configuration: {} is {}", l.getLeft(), l.getRight()));
+      modem.getConfig().getItems().forEach(l -> log.info("Configuration: {} is {}", l.getLeft(), l.getRight()));
       modem.close();
     } catch (final Exception e) {
-      LOG.error("The modem had an error", e);
+      log.error("The modem had an error", e);
     }
 
   }
@@ -74,7 +71,8 @@ public class ExampleNeul {
     return modem.getIdentificationInformation();
   }
 
-  private static List<String> getIdentificationInformation(final Neul modem, final int information) throws TimeoutException, ResponseException, SerialException, InterruptedException {
+  private static List<String> getIdentificationInformation(final Neul modem,
+                                                           final int information) throws TimeoutException, ResponseException, SerialException, InterruptedException {
     return modem.getIdentificationInformation(information);
   }
 

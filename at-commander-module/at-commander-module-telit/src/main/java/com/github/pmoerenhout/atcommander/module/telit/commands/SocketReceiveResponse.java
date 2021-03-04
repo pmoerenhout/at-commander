@@ -4,20 +4,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.Response;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SocketReceiveResponse extends BaseResponse implements Response {
 
   // HEXADECIMAL only
 
   final static Pattern pattern1 = Pattern.compile("^#SRECV: ([1-6]),(\\d*)$");
   final static Pattern pattern2 = Pattern.compile("^([0-9A-F]*)$");
-  private static final Logger LOG = LoggerFactory.getLogger(SocketReceiveResponse.class);
 
   private int socketId;
   private int receivedData;
@@ -35,8 +33,7 @@ public class SocketReceiveResponse extends BaseResponse implements Response {
       if (m1.find()) {
         socketId = Integer.valueOf(m1.group(1));
         receivedData = Integer.valueOf(m1.group(2));
-      }
-      else {
+      } else {
         throw createParseException(line1);
       }
 
@@ -45,7 +42,7 @@ public class SocketReceiveResponse extends BaseResponse implements Response {
       if (m2.find()) {
         data = m2.group(1);
         if (data.length() != receivedData * 2) {
-          LOG.warn("Data length difference: data:{} received:{}", data.length(), receivedData);
+          log.warn("Data length difference: data:{} received:{}", data.length(), receivedData);
         }
         return;
       }

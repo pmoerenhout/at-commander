@@ -19,14 +19,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.github.pmoerenhout.atcommander.common.Util;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ReadThread {
-
-  private static final Logger LOG = LoggerFactory.getLogger(ReadThread.class);
 
   private List<UnsolicitedPatternClass> unsolicitedPatterns;
   private UnsolicitedResponseCallback unsolicitedResponseCallback;
@@ -64,7 +62,7 @@ public class ReadThread {
       if (thread.getState() == Thread.State.TERMINATED) {
         break;
       }
-      LOG.info("Thread {} state is {}", thread.getId(), thread.getState());
+      log.info("Thread {} state is {}", thread.getId(), thread.getState());
     }
   }
 
@@ -86,7 +84,7 @@ public class ReadThread {
         }
       }
     } catch (final NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-      LOG.error("Could not generate unsolicited response", e);
+      log.error("Could not generate unsolicited response", e);
     }
   }
 
@@ -111,10 +109,10 @@ public class ReadThread {
         if (selector != null) {
           selector.close();
         } else {
-          LOG.info("Selector is null");
+          log.info("Selector is null");
         }
       } catch (IOException e) {
-        LOG.error("I/O exception during close", e);
+        log.error("I/O exception during close", e);
       }
       return;
     }
@@ -131,7 +129,7 @@ public class ReadThread {
           int n = selector.select(5000);
           //LOG.debug("Select => {} Pipe is open? {}", n, sourceChannel.isOpen());
           if (!sourceChannel.isOpen()) {
-            LOG.debug("Sourcechannel is not open, exiting...");
+            log.debug("Sourcechannel is not open, exiting...");
             break;
           }
           if (n > 0) {
@@ -143,7 +141,7 @@ public class ReadThread {
 
                 if (mode == Mode.DATA) {
                   final int bytesRead = sourceChannel.read(dst);
-                  LOG.trace("read {} bytes from sourceChannel", bytesRead);
+                  log.trace("read {} bytes from sourceChannel", bytesRead);
                   dst.flip();
                   Pipe.SinkChannel s = null;
                   dataOutputStream = Channels.newOutputStream(s);
@@ -152,10 +150,10 @@ public class ReadThread {
                 }
 
                 final int bytesRead = sourceChannel.read(dst);
-                LOG.trace("read {} bytes from sourceChannel", bytesRead);
+                log.trace("read {} bytes from sourceChannel", bytesRead);
                 dst.flip();
                 // LOG.debug("position {} limit {}", dst.position(), dst.limit());
-                LOG.trace("dst: {}", Util.onlyPrintable(ArrayUtils.subarray(dst.array(), dst.position(), dst.limit())));
+                log.trace("dst: {}", Util.onlyPrintable(ArrayUtils.subarray(dst.array(), dst.position(), dst.limit())));
                 for (int i = dst.position(); i < dst.limit(); i++) {
 
                   final byte b = dst.get();
@@ -186,16 +184,16 @@ public class ReadThread {
           }
         }
       } catch (final ClosedChannelException e) {
-        LOG.debug("ClosedChannel exception");
+        log.debug("ClosedChannel exception");
       } catch (final IOException e) {
-        LOG.error("I/O exception", e);
+        log.error("I/O exception", e);
       } catch (final Exception e) {
-        LOG.error("Exception", e);
+        log.error("Exception", e);
       } finally {
         try {
           selector.close();
         } catch (final IOException e) {
-          LOG.error("I/O exception on selector close: {} {}", e.getMessage());
+          log.error("I/O exception on selector close: {} {}", e.getMessage());
         }
       }
     }
@@ -223,12 +221,12 @@ public class ReadThread {
         // TODO: Read ASCII, or Latin1?
         final String line = new String(lineArray);
         if (fetchAdditionalLines > 0) {
-          LOG.trace("Received line: '{}' (additional:{})", Util.onlyPrintable(line.getBytes()), fetchAdditionalLines);
+          log.trace("Received line: '{}' (additional:{})", Util.onlyPrintable(line.getBytes()), fetchAdditionalLines);
         } else {
-          LOG.trace("Received line: '{}'", Util.onlyPrintable(line.getBytes()));
+          log.trace("Received line: '{}'", Util.onlyPrintable(line.getBytes()));
         }
         if ("CONNECT".equals(line)) {
-          LOG.debug("CONNECT received, go to DATA mode");
+          log.debug("CONNECT received, go to DATA mode");
           mode = Mode.DATA;
         }
         if (fetchAdditionalLines > 0) {
@@ -236,14 +234,14 @@ public class ReadThread {
           additionalLines.add(line);
           if (fetchAdditionalLines == 0) {
             // Multi line unsolicited
-            LOG.trace("Publish {} unsolicited lines: '{}'", additionalLines.size(), additionalLines);
+            log.trace("Publish {} unsolicited lines: '{}'", additionalLines.size(), additionalLines);
             publishUnsolicitedEvent(additionalLines);
             additionalLines.clear();
           }
         } else if (isUnsolicited(line)) {
           final int numberOfAdditionalLines = getNumberOfAdditionalLines(line);
-          if (LOG.isTraceEnabled()) {
-            LOG.trace("Received unsolicited line: '{}' with {} additional lines", Util.onlyPrintable(line.getBytes()), numberOfAdditionalLines);
+          if (log.isTraceEnabled()) {
+            log.trace("Received unsolicited line: '{}' with {} additional lines", Util.onlyPrintable(line.getBytes()), numberOfAdditionalLines);
           }
           if (numberOfAdditionalLines > 0) {
             fetchAdditionalLines = numberOfAdditionalLines;
@@ -253,8 +251,8 @@ public class ReadThread {
             publishUnsolicitedEvent(Collections.singletonList(line));
           }
         } else {
-          if (LOG.isTraceEnabled()) {
-            LOG.trace("Received informational line: '{}'", Util.onlyPrintable(line.getBytes()));
+          if (log.isTraceEnabled()) {
+            log.trace("Received informational line: '{}'", Util.onlyPrintable(line.getBytes()));
           }
           publishSolicitedEvent(line);
         }
@@ -292,20 +290,20 @@ public class ReadThread {
           break;
         }
       }
-      LOG.debug("Skipped {} characters, position {}, limit {}", skippedCharacters, dst.position(), dst.limit());
+      log.debug("Skipped {} characters, position {}, limit {}", skippedCharacters, dst.position(), dst.limit());
       for (int i = dst.position(); i < dst.limit(); i++) {
-        LOG.debug("i {}", i);
+        log.debug("i {}", i);
         if (array[i] == '\r' || array[i] == '\n') {
           byte[] y = new byte[i];
-          LOG.trace("eat {} bytes", y.length);
+          log.trace("eat {} bytes", y.length);
           dst.get(y);
-          LOG.debug("i {}, position {}, limit {}", i, dst.position(), dst.limit());
+          log.debug("i {}, position {}, limit {}", i, dst.position(), dst.limit());
           for (int j = i; j < dst.limit(); j++) {
-            LOG.debug("i {}  j {}", i, j);
+            log.debug("i {}  j {}", i, j);
             if (array[j] == '\r' || array[j] == '\n') {
-              LOG.trace("eat");
+              log.trace("eat");
               byte bb = dst.get();
-              LOG.trace("eat got {}", String.format("%02X", bb));
+              log.trace("eat got {}", String.format("%02X", bb));
             } else {
               break;
             }

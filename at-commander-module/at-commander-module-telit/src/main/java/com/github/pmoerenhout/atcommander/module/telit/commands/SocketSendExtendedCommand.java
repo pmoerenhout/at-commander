@@ -8,12 +8,8 @@ import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SocketSendExtendedCommand extends BaseCommand implements Command<BaseResponse> {
-
-  private static final Logger LOG = LoggerFactory.getLogger(SocketSendExtendedCommand.class);
 
   private static final String COMMAND_SSENDEXT = "#SSENDEXT";
 

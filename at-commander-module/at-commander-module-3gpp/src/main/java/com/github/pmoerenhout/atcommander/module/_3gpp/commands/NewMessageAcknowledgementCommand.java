@@ -11,14 +11,12 @@ import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class NewMessageAcknowledgementCommand extends BaseCommand implements Command<BaseResponse> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SendMessageCommand.class);
-
-  private static final String COMMAND_NEW_MESSAGE_ACKNOWLEDGEMENT= "+CNMA";
+  private static final String COMMAND_NEW_MESSAGE_ACKNOWLEDGEMENT = "+CNMA";
 
   private Integer type;
   private Integer length;
@@ -46,21 +44,21 @@ public class NewMessageAcknowledgementCommand extends BaseCommand implements Com
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_NEW_MESSAGE_ACKNOWLEDGEMENT);
       if (type != null) {
-      sb.append(EQUAL);
-      sb.append(Integer.toString(type));
-      if (length != null) {
-        sb.append(COMMA);
-        sb.append(Integer.toString(length));
+        sb.append(EQUAL);
+        sb.append(type);
+        if (length != null) {
+          sb.append(COMMA);
+          sb.append(length);
         }
       }
       final AtResponse s = super.execute(sb.toString());
       for (final String t : s.getInformationalText()) {
-        LOG.debug("Received line {}", t);
+        log.debug("Received line {}", t);
       }
       try {
         Thread.sleep(500);
       } catch (InterruptedException e) {
-        LOG.info("Interrupted");
+        log.info("Interrupted");
       }
       super.writeBytes(pdu.getBytes(StandardCharsets.US_ASCII));
 

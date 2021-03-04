@@ -3,15 +3,12 @@ package com.github.pmoerenhout.atcommander.module._3gpp.sms;
 import java.nio.charset.Charset;
 import java.util.Formatter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import net.freeutils.charset.gsm.CCGSMCharset;
 import net.freeutils.charset.gsm.CCPackedGSMCharset;
 
+@Slf4j
 public class SmsPdu {
-
-  private static final Logger LOG = LoggerFactory.getLogger(SmsPdu.class);
 
   private static final Charset CHARSET_GSM_PACKED = new CCPackedGSMCharset();
   private static final Charset CHARSET_GSM = new CCGSMCharset();
@@ -35,14 +32,14 @@ public class SmsPdu {
     final String smscPart = getSmscPart();
     final String pduPart = getPduPart();
     final String complete = smscPart + pduPart;
-    LOG.debug("SMS-PDU: {}", complete);
-    LOG.debug("SMS-PDU: {} octets", length);
+    log.debug("SMS-PDU: {}", complete);
+    log.debug("SMS-PDU: {} octets", length);
     return complete;
   }
 
   public String getSmscPart() {
     String pdu = smscAddress(smsc);
-    LOG.debug("SMSC part bytes: {}", pdu);
+    log.debug("SMSC part bytes: {}", pdu);
     return pdu;
   }
 
@@ -92,10 +89,10 @@ public class SmsPdu {
         final int septets = text.getBytes(CHARSET_GSM).length;
         pdu += String.format("%02X", unpacked.length); // TP-UDL
         l++;
-        LOG.debug("packed   {}", bytesToHexString(text.getBytes(CHARSET_GSM_PACKED)));
-        LOG.debug("unpacked {}", bytesToHexString(text.getBytes(CHARSET_GSM)));
-        LOG.debug("packed.length  {}", packed.length);
-        LOG.debug("septets        {}", septets);
+        log.debug("packed   {}", bytesToHexString(text.getBytes(CHARSET_GSM_PACKED)));
+        log.debug("unpacked {}", bytesToHexString(text.getBytes(CHARSET_GSM)));
+        log.debug("packed.length  {}", packed.length);
+        log.debug("septets        {}", septets);
         //LOG("unpacked {}", bytesToHexString(charsetGsmPacked));
 
         ud += bytesToHexString(packed);
@@ -114,7 +111,7 @@ public class SmsPdu {
     }
     length = l;
 
-    LOG.debug("PDU part bytes: {} length: {}", pdu, length);
+    log.debug("PDU part bytes: {} length: {}", pdu, length);
     return pdu;
   }
 

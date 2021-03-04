@@ -6,18 +6,17 @@ import com.github.pmoerenhout.atcommander.AtCommander;
 import com.github.pmoerenhout.atcommander.AtResponse;
 import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.SerialException;
-import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommand;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.pmoerenhout.atcommander.common.Util;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SocketSendCommand extends BaseCommand implements Command<BaseResponse> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SocketSendCommand.class);
   private static final String COMMAND_SSEND = "#SSEND";
 
   private int socketId;
@@ -37,9 +36,9 @@ public class SocketSendCommand extends BaseCommand implements Command<BaseRespon
       sb.append(EQUAL);
       sb.append(String.valueOf(socketId));
       final AtResponse s = super.execute(sb.toString());
-      LOG.debug("Sending hexadecimal data");
+      log.debug("Sending hexadecimal data");
       super.writeBytes(Util.bytesToHexString(data).getBytes(StandardCharsets.US_ASCII));
-      LOG.debug("Now sending Ctrl-Z");
+      log.debug("Now sending Ctrl-Z");
       return new EmptyResponse(super.execute(CTRLZ));
     } finally {
       available.release();

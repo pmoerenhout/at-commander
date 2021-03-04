@@ -19,6 +19,10 @@ public class NewMessageIndicationsCommand extends BaseCommand implements Command
   private Integer ds;
   private Integer bfr;
 
+  public NewMessageIndicationsCommand(final AtCommander atCommander) {
+    super(COMMAND_CNMI, atCommander);
+  }
+
   public NewMessageIndicationsCommand(final AtCommander atCommander, final int mode) {
     super(COMMAND_CNMI, atCommander);
     this.mode = mode;
@@ -60,19 +64,19 @@ public class NewMessageIndicationsCommand extends BaseCommand implements Command
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_CNMI);
       sb.append(EQUAL);
-      sb.append(Integer.toString(mode));
+      sb.append(mode);
       if (mt != null) {
         sb.append(COMMA);
-        sb.append(Integer.toString(mt));
+        sb.append(mt);
         if (bm != null) {
           sb.append(COMMA);
-          sb.append(Integer.toString(bm));
+          sb.append(bm);
           if (ds != null) {
             sb.append(COMMA);
-            sb.append(Integer.toString(ds));
+            sb.append(ds);
             if (bfr != null) {
               sb.append(COMMA);
-              sb.append(Integer.toString(bfr));
+              sb.append(bfr);
             }
           }
         }
@@ -83,13 +87,13 @@ public class NewMessageIndicationsCommand extends BaseCommand implements Command
     }
   }
 
-  public MoreMessagesToSendResponse read() throws SerialException, TimeoutException, ResponseException {
+  public NewMessageIndicationsResponse read() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_CNMI);
       sb.append(QUERY);
-      return new MoreMessagesToSendResponse(super.execute(sb.toString()));
+      return new NewMessageIndicationsResponse(super.execute(sb.toString()));
     } finally {
       available.release();
     }

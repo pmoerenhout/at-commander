@@ -17,6 +17,11 @@ public class PreferredMessageStorageCommand extends BaseCommand implements Comma
   private String mem2;
   private String mem3;
 
+  public PreferredMessageStorageCommand(final AtCommander atCommander) {
+    super(COMMAND_PMS, atCommander);
+  }
+
+
   public PreferredMessageStorageCommand(final AtCommander atCommander, final String mem1) {
     super(COMMAND_PMS, atCommander);
     this.mem1 = mem1;

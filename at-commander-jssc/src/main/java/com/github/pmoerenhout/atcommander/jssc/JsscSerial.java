@@ -20,9 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.api.Mode;
 import com.github.pmoerenhout.atcommander.api.ReadThread;
 import com.github.pmoerenhout.atcommander.api.SerialException;
@@ -33,10 +30,10 @@ import com.github.pmoerenhout.atcommander.api.UnsolicitedResponseCallback;
 import com.github.pmoerenhout.atcommander.common.Util;
 import jssc.SerialPort;
 import jssc.SerialPortException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JsscSerial implements SerialInterface {
-
-  private static final Logger LOG = LoggerFactory.getLogger(JsscSerial.class);
 
   private final List<UnsolicitedPatternClass> unsolicitedPatterns;
   private final UnsolicitedResponseCallback unsolicitedResponseCallback;
@@ -61,7 +58,7 @@ public class JsscSerial implements SerialInterface {
     this.flowControlMode = flowControlMode;
     this.unsolicitedResponseCallback = unsolicitedResponseCallback;
     this.unsolicitedPatterns = new ArrayList<>();
-    LOG.debug("JsscSerial id {} on port {} {} (flowcontrol:{})", this.id, this.port, this.speed, this.flowControlMode);
+    log.debug("JsscSerial id {} on port {} {} (flowcontrol:{})", this.id, this.port, this.speed, this.flowControlMode);
   }
 
   private byte[] readBytes(final ByteBuffer byteBuffer) {
@@ -89,7 +86,7 @@ public class JsscSerial implements SerialInterface {
 
   public void addUnsolicited(final UnsolicitedPatternClass unsolicitedPatternClass) {
     this.unsolicitedPatterns.add(unsolicitedPatternClass);
-    LOG.trace("Added Unsolicited {} - {}", unsolicitedPatternClass.getClazz().getName(), unsolicitedPatternClass.getPattern().toString());
+    log.trace("Added Unsolicited {} - {}", unsolicitedPatternClass.getClazz().getName(), unsolicitedPatternClass.getPattern().toString());
   }
 
   public void setSolicitedResponseCallback(final SolicitedResponseCallback solicitedResponseCallback) {
@@ -97,7 +94,7 @@ public class JsscSerial implements SerialInterface {
   }
 
   public void init() throws SerialException {
-    LOG.info("Modem init (port:{} speed:{})", port, speed);
+    log.info("Modem init (port:{} speed:{})", port, speed);
 
     if (port == null) {
       throw new IllegalArgumentException("Port cannot be null");
@@ -110,18 +107,18 @@ public class JsscSerial implements SerialInterface {
       lines = new ArrayList<>();
 
       // Start the reading in a thread
-      LOG.debug("Starting the read thread for port {} {}", port, speed);
+      log.debug("Starting the read thread for port {} {}", port, speed);
       readThread = new ReadThread(unsolicitedPatterns, unsolicitedResponseCallback, solicitedResponseCallback);
       readThread.execute(id, pipe.source());
 
       serialPort = new SerialPort(port);
       final boolean opened = serialPort.openPort();
-      LOG.debug("Is port {} opened? {}", port, opened);
+      log.debug("Is port {} opened? {}", port, opened);
       // serialPort.setParams(speed, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, true, true);
-      final boolean setRts = flowControlMode == (FLOWCONTROL_RTSCTS_IN|FLOWCONTROL_RTSCTS_OUT);
-      final boolean setDtr = flowControlMode == (FLOWCONTROL_RTSCTS_IN|FLOWCONTROL_RTSCTS_OUT);
+      final boolean setRts = flowControlMode == (FLOWCONTROL_RTSCTS_IN | FLOWCONTROL_RTSCTS_OUT);
+      final boolean setDtr = flowControlMode == (FLOWCONTROL_RTSCTS_IN | FLOWCONTROL_RTSCTS_OUT);
       serialPort.setParams(speed, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE, setRts, setDtr);
-      LOG.debug("Flow control mode: {}", flowControlMode);
+      log.debug("Flow control mode: {}", flowControlMode);
       serialPort.setFlowControlMode(flowControlMode);
       serialPort.purgePort(PURGE_TXCLEAR | PURGE_RXCLEAR);
       final int mask = SerialPort.MASK_TXEMPTY + SerialPort.MASK_RXCHAR + SerialPort.MASK_RXFLAG + SerialPort.MASK_CTS + SerialPort.MASK_DSR + SerialPort.MASK_BREAK + SerialPort.MASK_RLSD + SerialPort.MASK_ERR + SerialPort.MASK_RING;
@@ -138,11 +135,11 @@ public class JsscSerial implements SerialInterface {
       writeTaskThread.start();
 
     } catch (final SerialPortException e) {
-      LOG.error("SerialPortException {} on {} in method {}", e.getExceptionType(), e.getPortName(), e.getMethodName());
+      log.error("SerialPortException {} on {} in method {}", e.getExceptionType(), e.getPortName(), e.getMethodName());
       close();
       throw new SerialException(e);
     } catch (final IOException e) {
-      LOG.error("I/O exception: {}", e.getMessage());
+      log.error("I/O exception: {}", e.getMessage());
       close();
       throw new SerialException(e);
     }
@@ -150,21 +147,21 @@ public class JsscSerial implements SerialInterface {
 
   public void panic() {
     try {
-      LOG.info("Modem: CTS:{} DSR:{} RLSD:{} RING:{}", serialPort.isCTS(), serialPort.isDSR(), serialPort.isRLSD(), serialPort.isRING());
-      LOG.info("Modem: BufferBytes count IN:{} OUT:{}", serialPort.getInputBufferBytesCount(), serialPort.getOutputBufferBytesCount());
+      log.info("Modem: CTS:{} DSR:{} RLSD:{} RING:{}", serialPort.isCTS(), serialPort.isDSR(), serialPort.isRLSD(), serialPort.isRING());
+      log.info("Modem: BufferBytes count IN:{} OUT:{}", serialPort.getInputBufferBytesCount(), serialPort.getOutputBufferBytesCount());
       final byte[] bytes = serialPort.readBytes();
-      LOG.info("Read bytes: {} ", bytes != null ? Util.onlyPrintable(bytes) : null);
+      log.info("Read bytes: {} ", bytes != null ? Util.onlyPrintable(bytes) : null);
     } catch (SerialPortException e) {
-      LOG.error("Serial error", e);
+      log.error("Serial error", e);
     }
   }
 
   private void closePipe() throws InterruptedException {
-    LOG.trace("Closing pipe");
+    log.trace("Closing pipe");
     try {
       pipe.source().close();
     } catch (final IOException e) {
-      LOG.info("Could not close pipe: {}", e.getMessage());
+      log.info("Could not close pipe: {}", e.getMessage());
     }
     Thread.sleep(250);
     readThread.close();
@@ -195,23 +192,23 @@ public class JsscSerial implements SerialInterface {
     try {
       final Pipe.SourceChannel sourceChannel = pipe.source();
       if (!sourceChannel.isOpen()) {
-        LOG.info("sourceChannel is not open");
+        log.info("sourceChannel is not open");
       }
       final ByteBuffer dst = ByteBuffer.allocate(1024);
       final int bytesRead = sourceChannel.read(dst);
       final byte[] data = new byte[bytesRead];
       System.arraycopy(dst.array(), 0, data, 0, bytesRead);
-      LOG.debug("read {} bytes [{}]", data.length, Util.onlyPrintable(data));
+      log.debug("read {} bytes [{}]", data.length, Util.onlyPrintable(data));
       return data;
     } catch (final IOException e) {
-      LOG.error("Could not read serial bytes", e);
+      log.error("Could not read serial bytes", e);
     }
     return new byte[0];
   }
 
   public void close() {
     if (serialPort != null) {
-      LOG.info("Closing serial port {} which is {}", serialPort.getPortName(),
+      log.info("Closing serial port {} which is {}", serialPort.getPortName(),
           (serialPort.isOpened() ? "open" : "closed"));
       try {
         if (serialPort.isOpened()) {
@@ -219,16 +216,16 @@ public class JsscSerial implements SerialInterface {
           serialPort.closePort();
         }
       } catch (final SerialPortException e) {
-        LOG.warn("Error closing port", e);
+        log.warn("Error closing port", e);
       }
     } else {
-      LOG.debug("Not closing, because SerialPort is null");
+      log.debug("Not closing, because SerialPort is null");
     }
-    LOG.debug("Close source pipe");
+    log.debug("Close source pipe");
     try {
       closePipe();
     } catch (InterruptedException e) {
-      LOG.info("Could not close pipe", e);
+      log.info("Could not close pipe", e);
     }
   }
 
@@ -244,7 +241,7 @@ public class JsscSerial implements SerialInterface {
     try {
       return serialPort.isDSR();
     } catch (SerialPortException e) {
-      LOG.warn("Unable to get DSR", e);
+      log.warn("Unable to get DSR", e);
       throw new RuntimeException(e);
     }
   }
@@ -253,7 +250,7 @@ public class JsscSerial implements SerialInterface {
     try {
       return serialPort.isCTS();
     } catch (SerialPortException e) {
-      LOG.warn("Unable to get CTS", e);
+      log.warn("Unable to get CTS", e);
       throw new RuntimeException(e);
     }
   }
@@ -262,7 +259,7 @@ public class JsscSerial implements SerialInterface {
     try {
       return serialPort.isRLSD();
     } catch (SerialPortException e) {
-      LOG.warn("Unable to get RLSD", e);
+      log.warn("Unable to get RLSD", e);
       throw new RuntimeException(e);
     }
   }
@@ -271,7 +268,7 @@ public class JsscSerial implements SerialInterface {
     try {
       return serialPort.isRING();
     } catch (SerialPortException e) {
-      LOG.warn("Unable to get RING", e);
+      log.warn("Unable to get RING", e);
       throw new RuntimeException(e);
     }
   }
@@ -279,10 +276,10 @@ public class JsscSerial implements SerialInterface {
   public void setDtr(final boolean enabled) {
     try {
       if (!serialPort.setDTR(enabled)) {
-        LOG.warn("Set DTR was not successfull");
+        log.warn("Set DTR was not successfull");
       }
     } catch (SerialPortException e) {
-      LOG.warn("Unable to set DTR", e);
+      log.warn("Unable to set DTR", e);
       throw new RuntimeException(e);
     }
   }
@@ -291,7 +288,7 @@ public class JsscSerial implements SerialInterface {
     try {
       return serialPort.setRTS(enabled);
     } catch (SerialPortException e) {
-      LOG.warn("Unable to set RTS", e);
+      log.warn("Unable to set RTS", e);
       throw new RuntimeException(e);
     }
   }
@@ -299,10 +296,10 @@ public class JsscSerial implements SerialInterface {
   public void sendBreak(final int duration) {
     try {
       if (!serialPort.sendBreak(duration)) {
-        LOG.warn("send break was not successfull");
+        log.warn("send break was not successfull");
       }
     } catch (SerialPortException e) {
-      LOG.warn("Unable to send break", e);
+      log.warn("Unable to send break", e);
       throw new RuntimeException(e);
     }
   }
@@ -332,7 +329,7 @@ public class JsscSerial implements SerialInterface {
         while (true) {
           final int n = selector.select(1000);
           if (!sourceChannel.isOpen()) {
-            LOG.debug("SourceChannel is not open, exiting...");
+            log.debug("SourceChannel is not open, exiting...");
             break;
           }
           if (n > 0) {
@@ -346,8 +343,8 @@ public class JsscSerial implements SerialInterface {
                 final int bytesRead = sourceChannel.read(dst);
                 dst.flip();
                 final byte[] data = readBytes(dst);
-                if (LOG.isTraceEnabled()) {
-                  LOG.trace("{} bytes read: {} ({})", bytesRead, Util.bytesToHexString(data), data.length);
+                if (log.isTraceEnabled()) {
+                  log.trace("{} bytes read: {} ({})", bytesRead, Util.bytesToHexString(data), data.length);
                 }
                 serialPort.writeBytes(data);
               }
@@ -355,16 +352,16 @@ public class JsscSerial implements SerialInterface {
           }
         }
       } catch (final ClosedChannelException e) {
-        LOG.debug("Channel closed");
+        log.debug("Channel closed");
       } catch (final IOException e) {
-        LOG.error("I/O exception", e);
+        log.error("I/O exception", e);
       } catch (final Exception e) {
-        LOG.error("Exception", e);
+        log.error("Exception", e);
       } finally {
         try {
           selector.close();
         } catch (final IOException e) {
-          LOG.error("I/O exception on selector close: {}", e.getMessage());
+          log.error("I/O exception on selector close: {}", e.getMessage());
         }
       }
     }

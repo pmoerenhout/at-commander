@@ -4,18 +4,15 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.Pipe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.common.Util;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JsscSerialPortReader implements SerialPortEventListener {
-
-  private static final Logger LOG = LoggerFactory.getLogger(JsscSerialPortReader.class);
 
   private SerialPort serialPort;
   private Pipe.SinkChannel sinkChannel;
@@ -33,42 +30,42 @@ public class JsscSerialPortReader implements SerialPortEventListener {
       if (eventValue > 0) {
         try {
           final byte[] b = serialPort.readBytes(eventValue);
-          if (LOG.isTraceEnabled()) {
-            LOG.trace("Serial received {} bytes: '{}'", b.length, Util.onlyPrintable(b));
+          if (log.isTraceEnabled()) {
+            log.trace("Serial received {} bytes: '{}'", b.length, Util.onlyPrintable(b));
           }
           final ByteBuffer buf = ByteBuffer.wrap(b);
           while (buf.hasRemaining()) {
             final int bytesWritten = sinkChannel.write(buf);
             if (b.length != bytesWritten) {
-              LOG.warn("Not all ({} of {}) bytes written to pipe", bytesWritten, b.length);
+              log.warn("Not all ({} of {}) bytes written to pipe", bytesWritten, b.length);
             }
           }
         } catch (final SerialPortException e) {
-          LOG.error("SerialPort exception {} {} {} {}", e.getPortName(), e.getMethodName(), e.getExceptionType(), e.getMessage());
+          log.error("SerialPort exception {} {} {} {}", e.getPortName(), e.getMethodName(), e.getExceptionType(), e.getMessage());
         } catch (final IOException e) {
-          LOG.error("I/O exception", e);
+          log.error("I/O exception", e);
         }
       } else {
-        LOG.info("No serial data available to read");
+        log.info("No serial data available to read");
       }
     } else if (event.isCTS()) {//If CTS line has changed state
-      LOG.debug("CTS - {}", onOff(eventValue));
+      log.debug("CTS - {}", onOff(eventValue));
     } else if (event.isDSR()) {///If DSR line has changed state
-      LOG.debug("DSR - {}", onOff(eventValue));
+      log.debug("DSR - {}", onOff(eventValue));
     } else if (event.isBREAK()) {
-      LOG.debug("BREAK - {}", onOff(eventValue));
+      log.debug("BREAK - {}", onOff(eventValue));
     } else if (event.isTXEMPTY()) {
-      LOG.debug("TXEMPTY - {}", onOff(eventValue));
+      log.debug("TXEMPTY - {}", onOff(eventValue));
     } else if (event.isRLSD()) {
-      LOG.debug("RLSD - {}", onOff(eventValue));
+      log.debug("RLSD - {}", onOff(eventValue));
     } else if (event.isERR()) {
-      LOG.debug("ERR - {}", onOff(eventValue));
+      log.debug("ERR - {}", onOff(eventValue));
     } else if (event.isRXFLAG()) {
-      LOG.debug("RXFLAG - {}", onOff(eventValue));
+      log.debug("RXFLAG - {}", onOff(eventValue));
     } else if (event.isRING()) {
-      LOG.debug("RING - {}", onOff(eventValue));
+      log.debug("RING - {}", onOff(eventValue));
     } else {
-      LOG.error("Unknown serial event: {} {} {}", portName, eventType, eventValue);
+      log.error("Unknown serial event: {} {} {}", portName, eventType, eventValue);
     }
   }
 

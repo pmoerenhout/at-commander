@@ -15,13 +15,13 @@ import com.github.pmoerenhout.atcommander.common.Util;
 import com.github.pmoerenhout.atcommander.module._3gpp.EtsiUtil;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageMode;
 import com.github.pmoerenhout.atcommander.module.v250.enums.MessageStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+
+@Slf4j
 public class WriteMessageToMemoryCommand extends BaseCommand implements Command<BaseResponse> {
 
   private static final String COMMAND_WRITE_MESSAGE_TO_MEMORY = "+CMGW";
-  private static final Logger LOG = LoggerFactory.getLogger(WriteMessageToMemoryCommand.class);
   private MessageMode messageMode;
   private String characterSet;
   private String pdu;
@@ -51,19 +51,19 @@ public class WriteMessageToMemoryCommand extends BaseCommand implements Command<
       sb.append(EQUAL);
       switch (messageMode) {
         case PDU:
-          LOG.debug("PDU length {} CMGW length {}", pdu.length(), length);
+          log.debug("PDU length {} CMGW length {}", pdu.length(), length);
           sb.append(Integer.toString(length));
           if (messageStatus != null) {
             sb.append(COMMA);
             sb.append(Integer.toString(messageStatus.pduValue()));
           }
           final AtResponse s = super.execute(sb.toString());
-          s.getInformationalText().forEach(line -> LOG.debug("Received line {}", line));
+          s.getInformationalText().forEach(line -> log.debug("Received line {}", line));
           super.writeBytes(pdu.getBytes());
           break;
 
         case TEXT:
-          LOG.debug("TEXT ({}) '{}'", text.length(), Util.onlyPrintable(text.getBytes()));
+          log.debug("TEXT ({}) '{}'", text.length(), Util.onlyPrintable(text.getBytes()));
           sb.append(address);
           if (typeOfAddress != null) {
             sb.append(COMMA);
@@ -74,14 +74,14 @@ public class WriteMessageToMemoryCommand extends BaseCommand implements Command<
             }
           }
           final AtResponse s2 = super.execute(sb.toString());
-          s2.getInformationalText().forEach(line -> LOG.debug("Received line {}", line));
+          s2.getInformationalText().forEach(line -> log.debug("Received line {}", line));
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {
-            LOG.info("Interrupted");
+            log.info("Interrupted");
           }
           final Charset charset = EtsiUtil.toJavaCharset(characterSet);
-          LOG.info("Using charset {} to {} ({})", characterSet, charset.name(), charset.displayName());
+          log.info("Using charset {} to {} ({})", characterSet, charset.name(), charset.displayName());
           super.writeBytes(text.getBytes(charset));
           break;
       }

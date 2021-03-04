@@ -21,7 +21,6 @@ public final class FinalResponse {
     return parameter;
   }
 
-
   @Override
   public boolean equals(final Object obj) {
     if (obj == null) {

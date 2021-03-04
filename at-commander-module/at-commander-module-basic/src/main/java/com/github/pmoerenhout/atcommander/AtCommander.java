@@ -8,18 +8,15 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
 import com.github.pmoerenhout.atcommander.api.SolicitedResponseCallback;
 import com.github.pmoerenhout.atcommander.basic.BasicFinalFactory;
 import com.github.pmoerenhout.atcommander.common.Util;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AtCommander implements SolicitedResponseCallback {
-
-  private static final Logger LOG = LoggerFactory.getLogger(AtCommander.class);
 
   final List<String> lines = Collections.synchronizedList(new ArrayList<>());
   final List<FinalResponseFactory> finalResponseFactories = new ArrayList<>();
@@ -45,7 +42,7 @@ public class AtCommander implements SolicitedResponseCallback {
   }
 
   public void close() {
-    LOG.debug("close");
+    log.debug("close");
     serial.close();
   }
 
@@ -55,14 +52,14 @@ public class AtCommander implements SolicitedResponseCallback {
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
-        LOG.error("Interrupted", e);
+        log.error("Interrupted", e);
       }
     }
-    if (tries == 0){
-      LOG.info("Serial: CTS:{} DSR:{} CD:{}", serial.isCts(), serial.isDsr(), serial.isCd());
-      LOG.debug("Waiting 500ms for CTS signal, but didn't get it");
+    if (tries == 0) {
+      log.info("Serial: CTS:{} DSR:{} CD:{}", serial.isCts(), serial.isDsr(), serial.isCd());
+      log.debug("Waiting 500ms for CTS signal, but didn't get it");
     }
-    LOG.debug("write {} ({})", Util.onlyPrintable(bytes), bytes.length);
+    log.debug("write {} ({})", Util.onlyPrintable(bytes), bytes.length);
     try {
       serialOutputStream.write(bytes);
     } catch (final IOException e) {
@@ -83,17 +80,17 @@ public class AtCommander implements SolicitedResponseCallback {
       try {
         final boolean isFinalReceived = finalReceived.tryAcquire(timeout, TimeUnit.MILLISECONDS);
         if (!isFinalReceived) {
-          LOG.info("The final response was not received within the timeout of {} milliseconds", timeout);
+          log.info("The final response was not received within the timeout of {} milliseconds", timeout);
         }
       } catch (final InterruptedException e) {
-        LOG.info("The final response was not received within the timeout of {} milliseconds", timeout);
-        LOG.warn("Timeout after {} milliseconds: {}", timeout, e.getMessage());
+        log.info("The final response was not received within the timeout of {} milliseconds", timeout);
+        log.warn("Timeout after {} milliseconds: {}", timeout, e.getMessage());
       }
       if (lines.size() == 0) {
         panic();
-        LOG.warn("No lines received!");
+        log.warn("No lines received!");
         final byte[] bytesRead = serial.read();
-        LOG.trace("Read after writing {}: {} ({})", Util.onlyPrintable(bytes), Util.onlyPrintable(bytesRead), bytesRead.length);
+        log.trace("Read after writing {}: {} ({})", Util.onlyPrintable(bytes), Util.onlyPrintable(bytesRead), bytesRead.length);
         return null;
       }
       return new AtResponse(finalResponseFactories, lines);
@@ -111,11 +108,11 @@ public class AtCommander implements SolicitedResponseCallback {
     if (atResponseFinal != null) {
       if (atResponseFinal.getCode() != FinalResponseCode.OK && atResponseFinal.getCode() != FinalResponseCode.CONNECT && atResponseFinal
           .getCode() != FinalResponseCode.MORE_DATA) {
-        if (LOG.isTraceEnabled()) {
+        if (log.isTraceEnabled()) {
           if (atResponseFinal.getParameter() == null) {
-            LOG.trace("Final response {} ({})", atResponseFinal.getCode(), response);
+            log.trace("Final response {} ({})", atResponseFinal.getCode(), response);
           } else {
-            LOG.trace("Final response {} parameter '{}' ({})", atResponseFinal.getCode(), atResponseFinal.getParameter(), response);
+            log.trace("Final response {} parameter '{}' ({})", atResponseFinal.getCode(), atResponseFinal.getParameter(), response);
           }
         }
       }

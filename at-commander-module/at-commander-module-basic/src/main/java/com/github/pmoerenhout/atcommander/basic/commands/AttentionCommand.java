@@ -16,7 +16,8 @@ public class AttentionCommand extends BaseCommand implements Command<BaseRespons
     available.acquireUninterruptibly();
     try {
       return new EmptyResponse(super.execute(AT));
-    } finally { available.release();
+    } finally {
+      available.release();
     }
   }
 

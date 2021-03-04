@@ -14,6 +14,10 @@ public class SelectMessageServiceCommand extends BaseCommand implements Command<
 
   private int service;
 
+  public SelectMessageServiceCommand(final AtCommander atCommander) {
+    super(COMMAND_SELECT_MESSAGE_SERVICE, atCommander);
+  }
+
   public SelectMessageServiceCommand(final AtCommander atCommander, final int service) {
     super(COMMAND_SELECT_MESSAGE_SERVICE, atCommander);
     this.service = service;

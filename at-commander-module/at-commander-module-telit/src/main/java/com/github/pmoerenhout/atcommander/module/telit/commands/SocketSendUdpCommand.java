@@ -9,12 +9,11 @@ import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
 import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SocketSendUdpCommand extends BaseCommand implements Command<BaseResponse> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SocketSendUdpCommand.class);
   private static final String COMMAND_SSENDUDP = "#SSENDUDP";
 
   private int socketId;
@@ -46,7 +45,7 @@ public class SocketSendUdpCommand extends BaseCommand implements Command<BaseRes
       sb.append(String.valueOf(remotePort));
       final AtResponse s = super.execute(sb.toString());
       super.writeBytes(data);
-      LOG.debug("Now sending Ctrl-Z");
+      log.debug("Now sending Ctrl-Z");
       return new EmptyResponse(super.execute(CTRLZ, 60000));
     } finally {
       available.release();

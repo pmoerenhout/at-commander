@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.pmoerenhout.atcommander.api.InitException;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.api.SerialInterface;
@@ -45,12 +42,13 @@ import com.github.pmoerenhout.atcommander.module.v250.unsolicited.RingUnsolicite
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class V250 extends Basic {
 
   // A.K.A. ITU-T V.250
   // http://www.itu.int/rec/T-REC-V.25ter-199508-S
-  private static final Logger LOG = LoggerFactory.getLogger(V250.class);
 
   private static final ArrayList<UnsolicitedPatternClass> UNSOLICITED_PATTERN_CLASS_LIST = new ArrayList<>(Arrays.asList(
       // new UnsolicitedPatternClass(NoCarrierResponse.PATTERN, NoCarrierResponse.class),
@@ -83,8 +81,8 @@ public class V250 extends Basic {
           final Class<?> myClass = loader.loadClass(routeClassInfo.getName());
           final Constructor<?> constructor = myClass.getConstructor();
           final UnsolicitedResponse unsolicitedResponse = (UnsolicitedResponse) constructor.newInstance(new Object[]{});
-          LOG.info("Object {}", myClass);
-          LOG.info("Object {}", unsolicitedResponse);
+          log.info("Object {}", myClass);
+          log.info("Object {}", unsolicitedResponse);
 
           unsolicitedResponse.getPattern();
           UnsolicitedPatternClass u = new UnsolicitedPatternClass(unsolicitedResponse.getPattern(), myClass);
@@ -93,7 +91,7 @@ public class V250 extends Basic {
           // UNSOLICITED_PATTERN_CLASS_LIST.forEach(u -> serial.addUnsolicited(unsolicitedResponse));
 
         } catch (Exception e) {
-          LOG.error("Could not load class", e);
+          log.error("Could not load class", e);
         }
 
       }
@@ -105,7 +103,7 @@ public class V250 extends Basic {
   public void init() throws InitException, SerialException, TimeoutException, ResponseException {
     super.init();
     atCommander.addFinalResponseFactory(new V250FinalFactory());
-    LOG.info("Disable local echo");
+    log.info("Disable local echo");
     setEcho(false);
   }
 
@@ -143,14 +141,14 @@ public class V250 extends Basic {
   public void softReset() throws SerialException, TimeoutException, ResponseException {
     final SoftResetCommand command = new SoftResetCommand(atCommander);
     command.set();
-    LOG.trace("Soft reset done, wait 5000ms for modem to come alive");
+    log.trace("Soft reset done, wait 5000ms for modem to come alive");
     sleep(5000);
   }
 
   public void softReset(final int profile) throws SerialException, TimeoutException, ResponseException {
     final SoftResetCommand command = new SoftResetCommand(atCommander, profile);
     command.set();
-    LOG.trace("Soft reset with profile {} done, wait 5000ms for modem to come alive", profile);
+    log.trace("Soft reset with profile {} done, wait 5000ms for modem to come alive", profile);
     sleep(5000);
   }
 
@@ -212,7 +210,7 @@ public class V250 extends Basic {
       escape(escapeCharacter, delay);
       hangup(10000);
     } catch (final TimeoutException e) {
-      LOG.debug("Could not hangup: {}", e.getMessage());
+      log.debug("Could not hangup: {}", e.getMessage());
     }
   }
 
@@ -222,18 +220,18 @@ public class V250 extends Basic {
       command.setTimeout(timeout);
       command.set();
     } catch (final ResponseException e) {
-      LOG.warn("Could not hangup: {}", e.getMessage());
+      log.warn("Could not hangup: {}", e.getMessage());
     }
   }
 
   public void escape(final byte escapeCharacter, final long delay) throws SerialException {
     // time of S12 in 1/50 of a second;
     // final int delay = 50 * 20;
-    LOG.debug("Escape sequence with delay {}ms", delay);
+    log.debug("Escape sequence with delay {}ms", delay);
     final byte[] esc = new byte[]{ escapeCharacter };
     sleep(delay);
     for (int i = 0; i < 3; i++) {
-      LOG.debug("Send escape [{}] {}", (i + 1), Util.onlyPrintable(esc));
+      log.debug("Send escape [{}] {}", (i + 1), Util.onlyPrintable(esc));
       atCommander.write(esc);
     }
     sleep(delay);
@@ -243,7 +241,7 @@ public class V250 extends Basic {
     try {
       Thread.sleep(millis);
     } catch (final InterruptedException e) {
-      LOG.debug("Sleep was interrupted: {}", e.getMessage());
+      log.debug("Sleep was interrupted: {}", e.getMessage());
       throw new RuntimeException("Sleep was interrupted");
     }
   }
@@ -259,13 +257,13 @@ public class V250 extends Basic {
       final SParameterCommand command = new SParameterCommand(atCommander, parameter);
       final SimpleResponse response = command.set();
       final byte value = Byte.parseByte(response.getValue());
-      LOG.debug("S parameter value: {} -> {}", response.getValue(), value);
+      log.debug("S parameter value: {} -> {}", response.getValue(), value);
       return value;
     } catch (final NumberFormatException e) {
-      LOG.warn("Invalid format of S parameter: {}", parameter, e.getMessage());
+      log.warn("Invalid format of S parameter: {}", parameter, e.getMessage());
       throw new UnknownResponseException(e);
     } catch (final ResponseException e) {
-      LOG.warn("Could not read the S{} parameter: {}", parameter, e.getMessage());
+      log.warn("Could not read the S{} parameter: {}", parameter, e.getMessage());
       throw e;
     }
   }
@@ -276,7 +274,7 @@ public class V250 extends Basic {
       command.setTimeout(timeout);
       command.set();
     } catch (final ResponseException e) {
-      LOG.warn("Could not execute the command {} with timeout {}: {}", s, timeout, e.getMessage());
+      log.warn("Could not execute the command {} with timeout {}: {}", s, timeout, e.getMessage());
     }
   }
 
