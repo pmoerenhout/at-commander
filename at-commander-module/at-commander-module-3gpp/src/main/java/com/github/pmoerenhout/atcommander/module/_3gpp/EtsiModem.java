@@ -80,6 +80,8 @@ import com.github.pmoerenhout.atcommander.module._3gpp.commands.SettingsDateForm
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.ShowTextModeParametersCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SignalQualityCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.SignalQualityResponse;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.SubscriberNumberCommand;
+import com.github.pmoerenhout.atcommander.module._3gpp.commands.SubscriberNumberResponse;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.UnstructuredSupplementaryServiceDataCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.WirelessNetworkCommand;
 import com.github.pmoerenhout.atcommander.module._3gpp.commands.WirelessNetworkStatusResponse;
@@ -320,6 +322,11 @@ public class EtsiModem extends V250 {
     command.set();
   }
 
+  public SubscriberNumberResponse getSubscriberNumber() throws SerialException, TimeoutException, ResponseException {
+    final SubscriberNumberCommand command = new SubscriberNumberCommand(atCommander);
+    return command.set();
+  }
+
   public SignalQuality getSignalQuality() throws SerialException, TimeoutException, ResponseException {
     final SignalQualityCommand command = new SignalQualityCommand(atCommander);
     final SignalQualityResponse response = command.set();
@@ -371,7 +378,6 @@ public class EtsiModem extends V250 {
     final SelectServiceForMoSmsMessagesResponse response = command.test();
     return response.getServices();
   }
-
 
   public void setMoreMessageToSend(final int mode) throws SerialException, TimeoutException, ResponseException {
     final MoreMessagesToSendCommand command = new MoreMessagesToSendCommand(atCommander, mode);
