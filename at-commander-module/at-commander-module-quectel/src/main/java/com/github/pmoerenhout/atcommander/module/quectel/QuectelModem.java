@@ -14,6 +14,7 @@ import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 import com.github.pmoerenhout.atcommander.module._3gpp.EtsiModem;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ActivatePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ConfigureParametersTcpipContextCommand;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.ConfigureUrcIndicationOptionCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.DeactivatePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ExtendedConfigurationSettingsCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.IccidCommand;
@@ -102,6 +103,11 @@ public class QuectelModem extends EtsiModem {
   public void configureParametersTcpipContext(final int contextId, final int contextType,
                                               final String apn) throws SerialException, TimeoutException, ResponseException {
     final ConfigureParametersTcpipContextCommand command = new ConfigureParametersTcpipContextCommand(atCommander, contextId, contextType, apn);
+    command.set();
+  }
+
+  public void configureUrcIndicationOption(final String urcPort) throws SerialException, TimeoutException, ResponseException {
+    final ConfigureUrcIndicationOptionCommand command = new ConfigureUrcIndicationOptionCommand(atCommander, urcPort);
     command.set();
   }
 
