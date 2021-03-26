@@ -15,6 +15,7 @@ import com.github.pmoerenhout.atcommander.module._3gpp.EtsiModem;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ActivatePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ConfigureParametersTcpipContextCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ConfigureUrcIndicationOptionCommand;
+import com.github.pmoerenhout.atcommander.module.quectel.commands.ConfigureUrcIndicationOptionResponse;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.DeactivatePdpContextCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.ExtendedConfigurationSettingsCommand;
 import com.github.pmoerenhout.atcommander.module.quectel.commands.IccidCommand;
@@ -106,9 +107,15 @@ public class QuectelModem extends EtsiModem {
     command.set();
   }
 
-  public void configureUrcIndicationOption(final String urcPort) throws SerialException, TimeoutException, ResponseException {
+  public void setUrcIndicationOption(final String urcPort) throws SerialException, TimeoutException, ResponseException {
     final ConfigureUrcIndicationOptionCommand command = new ConfigureUrcIndicationOptionCommand(atCommander, urcPort);
     command.set();
+  }
+
+  public String getUrcIndicationOption(final String urcPort) throws SerialException, TimeoutException, ResponseException {
+    final ConfigureUrcIndicationOptionCommand command = new ConfigureUrcIndicationOptionCommand(atCommander, urcPort);
+    final ConfigureUrcIndicationOptionResponse response = command.read();
+    return response.getUrcport();
   }
 
   public void activatePdpContext(final int contextId) throws SerialException, TimeoutException, ResponseException {

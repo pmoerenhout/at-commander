@@ -5,6 +5,7 @@ import com.github.pmoerenhout.atcommander.Command;
 import com.github.pmoerenhout.atcommander.api.SerialException;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseCommand;
 import com.github.pmoerenhout.atcommander.basic.commands.BaseResponse;
+import com.github.pmoerenhout.atcommander.basic.commands.EmptyResponse;
 import com.github.pmoerenhout.atcommander.basic.exceptions.ResponseException;
 import com.github.pmoerenhout.atcommander.basic.exceptions.TimeoutException;
 
@@ -15,6 +16,8 @@ public class ConfigureUrcIndicationOptionCommand extends BaseCommand implements 
   public static final String URC_PORT_UART1 = "uart1";
 
   private static final String COMMAND_QUECTEL_CONFIGURE_URC_INDICATION_OPTION = "+QURCCFG";
+
+  private static final String URC_PORT = "urcport";
 
   private String urcPort;
 
@@ -27,15 +30,30 @@ public class ConfigureUrcIndicationOptionCommand extends BaseCommand implements 
     this.urcPort = urcPort;
   }
 
-  public ConfigureUrcIndicationOptionResponse set() throws SerialException, TimeoutException, ResponseException {
+  @Override
+  public EmptyResponse set() throws SerialException, TimeoutException, ResponseException {
     available.acquireUninterruptibly();
     try {
       final StringBuilder sb = new StringBuilder(AT);
       sb.append(COMMAND_QUECTEL_CONFIGURE_URC_INDICATION_OPTION);
       sb.append(EQUAL);
-      sb.append(doubleQuoted("urcport"));
+      sb.append(doubleQuoted(URC_PORT));
       sb.append(COMMA);
       sb.append(doubleQuoted(urcPort));
+      return new EmptyResponse(super.execute(sb.toString()));
+    } finally {
+      available.release();
+    }
+  }
+
+  @Override
+  public ConfigureUrcIndicationOptionResponse read() throws SerialException, TimeoutException, ResponseException {
+    available.acquireUninterruptibly();
+    try {
+      final StringBuilder sb = new StringBuilder(AT);
+      sb.append(COMMAND_QUECTEL_CONFIGURE_URC_INDICATION_OPTION);
+      sb.append(EQUAL);
+      sb.append(doubleQuoted(URC_PORT));
       return new ConfigureUrcIndicationOptionResponse(super.execute(sb.toString()));
     } finally {
       available.release();
