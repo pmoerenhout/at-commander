@@ -3,6 +3,7 @@ package com.github.pmoerenhout.atcommander.module._3gpp.unsolicited;
 import static com.github.pmoerenhout.atcommander.module._3gpp.commands.GprsNetworkRegistrationResponse.CGREG;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,11 +77,11 @@ public class GprsNetworkRegistrationUnsolicited extends BaseResponse implements 
             routingAreaCode = Byte.valueOf(tokens[4], 16);
             if (tokens.length > 5) {
               causeType = getInteger(tokens[5]);
-                rejectCause = getInteger(tokens[6]);
-                if (tokens.length > 7) {
-                  activeTime = m.group(tokens[7]);
-                  periodicRau = m.group(tokens[8]);
-                  gprsReadyTimer = m.group(tokens[9]);
+              rejectCause = getInteger(tokens[6]);
+              if (tokens.length > 7) {
+                activeTime = m.group(tokens[7]);
+                periodicRau = m.group(tokens[8]);
+                gprsReadyTimer = m.group(tokens[9]);
               }
             }
           }
@@ -179,39 +180,39 @@ public class GprsNetworkRegistrationUnsolicited extends BaseResponse implements 
     return registrationState;
   }
 
-  public Integer getLac() {
-    return lac;
+  public Optional<Integer> getLac() {
+    return Optional.ofNullable(lac);
   }
 
-  public Integer getCellId() {
-    return cellId;
+  public Optional<Integer> getCellId() {
+    return Optional.ofNullable(cellId);
   }
 
-  public AccessTechnology getAccessTechnology() {
-    return accessTechnology;
+  public Optional<AccessTechnology> getAccessTechnology() {
+    return Optional.ofNullable(accessTechnology);
   }
 
-  public Byte getRoutingAreaCode() {
-    return routingAreaCode;
+  public Optional<Byte> getRoutingAreaCode() {
+    return Optional.ofNullable(routingAreaCode);
   }
 
-  public Integer getCauseType() {
-    return causeType;
+  public Optional<Integer> getCauseType() {
+    return Optional.ofNullable(causeType);
   }
 
-  public Integer getRejectCause() {
-    return rejectCause;
+  public Optional<Integer> getRejectCause() {
+    return Optional.ofNullable(rejectCause);
   }
 
-  public String getActiveTime() {
-    return activeTime;
+  public Optional<String> getActiveTime() {
+    return Optional.ofNullable(activeTime);
   }
 
-  public String getPeriodicRau() {
-    return periodicRau;
+  public Optional<String> getPeriodicRau() {
+    return Optional.ofNullable(periodicRau);
   }
 
-  public String getGprsReadyTimer() {
-    return gprsReadyTimer;
+  public Optional<String> getGprsReadyTimer() {
+    return Optional.ofNullable(gprsReadyTimer);
   }
 }
