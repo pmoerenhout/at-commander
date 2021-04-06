@@ -1,7 +1,7 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -20,9 +20,9 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
 
     assertEquals(2, networkRegistrationResponse.getMode());
     assertEquals(RegistrationState.SEARCHING, networkRegistrationResponse.getRegistrationState());
-    assertNull(networkRegistrationResponse.getLac());
-    assertNull(networkRegistrationResponse.getCellId());
-    assertNull(networkRegistrationResponse.getAccessTechnology());
+    assertFalse(networkRegistrationResponse.getLac().isPresent());
+    assertFalse(networkRegistrationResponse.getCellId().isPresent());
+    assertFalse(networkRegistrationResponse.getAccessTechnology().isPresent());
   }
 
   @Test
@@ -33,9 +33,9 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
 
     assertEquals(2, networkRegistrationResponse.getMode());
     assertEquals(RegistrationState.DENIED, networkRegistrationResponse.getRegistrationState());
-    assertNull(networkRegistrationResponse.getLac());
-    assertNull(networkRegistrationResponse.getCellId());
-    assertNull(networkRegistrationResponse.getAccessTechnology());
+    assertFalse(networkRegistrationResponse.getLac().isPresent());
+    assertFalse(networkRegistrationResponse.getCellId().isPresent());
+    assertFalse(networkRegistrationResponse.getAccessTechnology().isPresent());
   }
 
   @Test
@@ -46,9 +46,9 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
 
     assertEquals(2, networkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_ROAMING, networkRegistrationResponse.getRegistrationState());
-    assertEquals(Integer.valueOf(0x9bcd), networkRegistrationResponse.getLac());
-    assertEquals(Integer.valueOf(0x09ab), networkRegistrationResponse.getCellId());
-    assertNull(networkRegistrationResponse.getAccessTechnology());
+    assertEquals(Integer.valueOf(0x9bcd), networkRegistrationResponse.getLac().get());
+    assertEquals(Integer.valueOf(0x09ab), networkRegistrationResponse.getCellId().get());
+    assertFalse(networkRegistrationResponse.getAccessTechnology().isPresent());
   }
 
   @Test
@@ -59,9 +59,9 @@ public class NetworkRegistrationResponseTest extends BaseCommandTest {
 
     assertEquals(2, networkRegistrationResponse.getMode());
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, networkRegistrationResponse.getRegistrationState());
-    assertEquals(Integer.valueOf(0x9bcd), networkRegistrationResponse.getLac());
-    assertEquals(Integer.valueOf(0x09ab), networkRegistrationResponse.getCellId());
-    assertEquals(AccessTechnology.UTRAN, networkRegistrationResponse.getAccessTechnology());
+    assertEquals(Integer.valueOf(0x9bcd), networkRegistrationResponse.getLac().get());
+    assertEquals(Integer.valueOf(0x09ab), networkRegistrationResponse.getCellId().get());
+    assertEquals(AccessTechnology.UTRAN, networkRegistrationResponse.getAccessTechnology().get());
   }
 
 }

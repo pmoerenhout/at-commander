@@ -2,6 +2,7 @@ package com.github.pmoerenhout.atcommander.module._3gpp.unsolicited;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,12 +51,12 @@ public class UnstructuredSupplementaryServiceDataUnsolicited extends BaseRespons
     return response;
   }
 
-  public String getUssdString() {
-    return ussdString;
+  public Optional<String> getUssdString() {
+    return Optional.ofNullable(ussdString);
   }
 
-  public Integer getDcs() {
-    return dcs;
+  public Optional<Integer> getDcs() {
+    return Optional.ofNullable(dcs);
   }
 
   @Override

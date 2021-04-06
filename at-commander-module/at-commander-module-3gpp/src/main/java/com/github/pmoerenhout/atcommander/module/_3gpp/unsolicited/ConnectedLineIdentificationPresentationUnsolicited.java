@@ -1,6 +1,7 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.unsolicited;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,15 +56,15 @@ public class ConnectedLineIdentificationPresentationUnsolicited extends BaseResp
     return type;
   }
 
-  public String getSubAddress() {
-    return subAddress;
+  public Optional<String> getSubAddress() {
+    return Optional.ofNullable(subAddress);
   }
 
-  public Integer getSubAddressType() {
-    return subAddressType;
+  public Optional<Integer> getSubAddressType() {
+    return Optional.ofNullable(subAddressType);
   }
 
-  public String getAlpha() {
-    return alpha;
+  public Optional<String> getAlpha() {
+    return Optional.ofNullable(alpha);
   }
 }

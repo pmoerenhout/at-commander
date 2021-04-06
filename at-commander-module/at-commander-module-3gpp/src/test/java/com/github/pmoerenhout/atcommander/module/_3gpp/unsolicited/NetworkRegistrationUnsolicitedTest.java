@@ -1,7 +1,7 @@
 package com.github.pmoerenhout.atcommander.module._3gpp.unsolicited;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Collections;
 
@@ -48,11 +48,11 @@ public class NetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
     networkRegistration.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, networkRegistration.getRegistrationState());
-    assertEquals(Integer.valueOf(0x00de), networkRegistration.getLac());
-    assertEquals(Integer.valueOf(0x2e2ee99), networkRegistration.getCellId());
-    assertNull(networkRegistration.getAccessTechnology());
-    assertNull(networkRegistration.getCauseType());
-    assertNull(networkRegistration.getRejectCause());
+    assertEquals(Integer.valueOf(0x00de), networkRegistration.getLac().get());
+    assertEquals(Integer.valueOf(0x2e2ee99), networkRegistration.getCellId().get());
+    assertFalse(networkRegistration.getAccessTechnology().isPresent());
+    assertFalse(networkRegistration.getCauseType().isPresent());
+    assertFalse(networkRegistration.getRejectCause().isPresent());
   }
 
   @Test
@@ -65,11 +65,11 @@ public class NetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
     networkRegistration.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.SEARCHING, networkRegistration.getRegistrationState());
-    assertEquals(Integer.valueOf(0xffff), networkRegistration.getLac());
-    assertEquals(Integer.valueOf(0xf2d33f2c), networkRegistration.getCellId());
-    assertEquals(AccessTechnology.UTRAN, networkRegistration.getAccessTechnology());
-    assertNull(networkRegistration.getCauseType());
-    assertNull(networkRegistration.getRejectCause());
+    assertEquals(Integer.valueOf(0xffff), networkRegistration.getLac().get());
+    assertEquals(Integer.valueOf(0xf2d33f2c), networkRegistration.getCellId().get());
+    assertEquals(AccessTechnology.UTRAN, networkRegistration.getAccessTechnology().get());
+    assertFalse(networkRegistration.getCauseType().isPresent());
+    assertFalse(networkRegistration.getRejectCause().isPresent());
   }
 
   @Test
@@ -82,11 +82,11 @@ public class NetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
     networkRegistration.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.SEARCHING, networkRegistration.getRegistrationState());
-    assertEquals(Integer.valueOf(0xfffa), networkRegistration.getLac());
-    assertEquals(Integer.valueOf(0xf2d33f2d), networkRegistration.getCellId());
-    assertEquals(AccessTechnology.UTRAN, networkRegistration.getAccessTechnology());
-    assertEquals(Integer.valueOf(0), networkRegistration.getCauseType());
-    assertNull(networkRegistration.getRejectCause());
+    assertEquals(Integer.valueOf(0xfffa), networkRegistration.getLac().get());
+    assertEquals(Integer.valueOf(0xf2d33f2d), networkRegistration.getCellId().get());
+    assertEquals(AccessTechnology.UTRAN, networkRegistration.getAccessTechnology().get());
+    assertEquals(Integer.valueOf(0), networkRegistration.getCauseType().get());
+    assertFalse(networkRegistration.getRejectCause().isPresent());
   }
 
   @Test
@@ -99,11 +99,11 @@ public class NetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
     networkRegistration.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.SEARCHING, networkRegistration.getRegistrationState());
-    assertEquals(Integer.valueOf(0xffff), networkRegistration.getLac());
-    assertEquals(Integer.valueOf(0xf2d33f2c), networkRegistration.getCellId());
-    assertEquals(AccessTechnology.UTRAN, networkRegistration.getAccessTechnology());
-    assertEquals(Integer.valueOf(1), networkRegistration.getCauseType());
-    assertEquals(Integer.valueOf(44), networkRegistration.getRejectCause());
+    assertEquals(Integer.valueOf(0xffff), networkRegistration.getLac().get());
+    assertEquals(Integer.valueOf(0xf2d33f2c), networkRegistration.getCellId().get());
+    assertEquals(AccessTechnology.UTRAN, networkRegistration.getAccessTechnology().get());
+    assertEquals(Integer.valueOf(1), networkRegistration.getCauseType().get());
+    assertEquals(Integer.valueOf(44), networkRegistration.getRejectCause().get());
   }
 
   @Test
@@ -116,8 +116,8 @@ public class NetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
     networkRegistration.parseUnsolicited(Collections.singletonList(line));
 
     assertEquals(RegistrationState.REGISTERED_ROAMING, networkRegistration.getRegistrationState());
-    assertEquals(Integer.valueOf(0x9bcd), networkRegistration.getLac());
-    assertEquals(Integer.valueOf(0x09ab), networkRegistration.getCellId());
+    assertEquals(Integer.valueOf(0x9bcd), networkRegistration.getLac().get());
+    assertEquals(Integer.valueOf(0x09ab), networkRegistration.getCellId().get());
   }
 
   @Test(expected = AssertionError.class)

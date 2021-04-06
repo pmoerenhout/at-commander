@@ -2,6 +2,7 @@ package com.github.pmoerenhout.atcommander.module._3gpp.commands;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,16 +69,16 @@ public class NetworkRegistrationResponse extends BaseResponse implements Respons
     return registrationState;
   }
 
-  public Integer getLac() {
-    return lac;
+  public Optional<Integer> getLac() {
+    return Optional.ofNullable(lac);
   }
 
-  public Integer getCellId() {
-    return cellId;
+  public Optional<Integer> getCellId() {
+    return Optional.ofNullable(cellId);
   }
 
-  public AccessTechnology getAccessTechnology() {
-    return accessTechnology;
+  public Optional<AccessTechnology> getAccessTechnology() {
+    return Optional.ofNullable(accessTechnology);
   }
 
   @Override

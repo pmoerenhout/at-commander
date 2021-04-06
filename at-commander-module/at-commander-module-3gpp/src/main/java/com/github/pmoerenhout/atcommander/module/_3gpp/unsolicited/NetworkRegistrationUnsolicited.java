@@ -2,6 +2,7 @@ package com.github.pmoerenhout.atcommander.module._3gpp.unsolicited;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,24 +66,24 @@ public class NetworkRegistrationUnsolicited extends BaseResponse implements Unso
     return registrationState;
   }
 
-  public Integer getLac() {
-    return lac;
+  public Optional<Integer> getLac() {
+    return Optional.ofNullable(lac);
   }
 
-  public Integer getCellId() {
-    return cellId;
+  public Optional<Integer> getCellId() {
+    return Optional.ofNullable(cellId);
   }
 
-  public AccessTechnology getAccessTechnology() {
-    return accessTechnology;
+  public Optional<AccessTechnology> getAccessTechnology() {
+    return Optional.ofNullable(accessTechnology);
   }
 
-  public Integer getCauseType() {
-    return causeType;
+  public Optional<Integer> getCauseType() {
+    return Optional.ofNullable(causeType);
   }
 
-  public Integer getRejectCause() {
-    return rejectCause;
+  public Optional<Integer> getRejectCause() {
+    return Optional.ofNullable(rejectCause);
   }
 
   @Override
