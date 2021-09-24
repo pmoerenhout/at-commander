@@ -182,7 +182,7 @@ public class TelitModem extends EtsiModem {
   public TelitModem(final SerialInterface serial) {
     super(serial);
     atCommander.addFinalResponseFactory(new TelitFinalFactory());
-    UNSOLICITED_PATTERN_CLASS_LIST.forEach(u -> serial.addUnsolicited(u));
+    UNSOLICITED_PATTERN_CLASS_LIST.forEach(serial::addUnsolicited);
   }
 
   public void init() throws InitException, SerialException, TimeoutException, ResponseException {
@@ -263,10 +263,8 @@ public class TelitModem extends EtsiModem {
   @Override
   public NetworkRegistrationResponse getNetworkRegistration(final long timeout) throws SerialException, TimeoutException, ResponseException {
     final NetworkRegistrationResponse response = super.getNetworkRegistration(timeout);
-    if (response.getAccessTechnology() != null) {
-      // access technology is optional in response
-      response.getAccessTechnology().ifPresent(accessTechnology -> this.accessTechnology = accessTechnology);
-    }
+    // access technology is optional in response
+    response.getAccessTechnology().ifPresent(accessTechnology -> this.accessTechnology = accessTechnology);
     return response;
   }
 
@@ -397,9 +395,7 @@ public class TelitModem extends EtsiModem {
 
   public SimPresenceStatusResponse readSimPresenceStatus() throws SerialException, TimeoutException, ResponseException {
     final SimPresenceStatusCommand command = new SimPresenceStatusCommand(atCommander);
-    final SimPresenceStatusResponse response = command.read();
-    //LOG.info("SIMPR: ", response.getValue());
-    return response;
+    return command.read();
   }
 
   public String getServiceProviderName() throws SerialException, TimeoutException, ResponseException {
@@ -775,8 +771,7 @@ public class TelitModem extends EtsiModem {
       throws SerialException, TimeoutException, ResponseException {
     final HttpReceiveCommand httpReceiveCommand = new HttpReceiveCommand(atCommander, profileId, maximumBytes);
     final AnyResponse response = httpReceiveCommand.set();
-    final List<String> httpLines = response.getLines();
-    return httpLines;
+    return response.getLines();
   }
 
   public SendMessageResponse sendTelitSmsAsPdu(final String destination, final String text)
