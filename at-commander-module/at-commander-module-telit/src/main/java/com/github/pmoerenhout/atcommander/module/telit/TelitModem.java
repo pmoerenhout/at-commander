@@ -255,10 +255,8 @@ public class TelitModem extends EtsiModem {
   @Override
   public NetworkRegistrationResponse getNetworkRegistration() throws SerialException, TimeoutException, ResponseException {
     final NetworkRegistrationResponse response = super.getNetworkRegistration();
-    if (response.getAccessTechnology() != null) {
-      // access technology is optional in response
-      accessTechnology = response.getAccessTechnology();
-    }
+    // access technology is optional in response
+    response.getAccessTechnology().ifPresent(accessTechnology -> this.accessTechnology = accessTechnology);
     return response;
   }
 
@@ -267,7 +265,7 @@ public class TelitModem extends EtsiModem {
     final NetworkRegistrationResponse response = super.getNetworkRegistration(timeout);
     if (response.getAccessTechnology() != null) {
       // access technology is optional in response
-      accessTechnology = response.getAccessTechnology();
+      response.getAccessTechnology().ifPresent(accessTechnology -> this.accessTechnology = accessTechnology);
     }
     return response;
   }
