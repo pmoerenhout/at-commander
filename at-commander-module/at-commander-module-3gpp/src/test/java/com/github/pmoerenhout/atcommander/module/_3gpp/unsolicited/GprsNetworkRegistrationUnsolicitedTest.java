@@ -83,7 +83,6 @@ public class GprsNetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
     assertEquals(Integer.valueOf(0x09cd), gprsNetworkRegistrationUnsolicited.getCellId().get());
   }
 
-  @Ignore
   @Test
   public void test_gprs_network_registration_stat_home_with_lac_and_cellid_and_act() {
     final String line = "+CGREG: 1,\"00DE\",\"2D3C1C6\",2";
@@ -96,7 +95,13 @@ public class GprsNetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
     assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, gprsNetworkRegistrationUnsolicited.getRegistrationState());
     assertEquals(Integer.valueOf(0x00de), gprsNetworkRegistrationUnsolicited.getLac().get());
     assertEquals(Integer.valueOf(0x2d3c1c6), gprsNetworkRegistrationUnsolicited.getCellId().get());
-    assertEquals(AccessTechnology.UTRAN, gprsNetworkRegistrationUnsolicited.getAccessTechnology());
+    assertEquals(AccessTechnology.UTRAN, gprsNetworkRegistrationUnsolicited.getAccessTechnology().get());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getRoutingAreaCode().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getCauseType().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getRejectCause().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getActiveTime().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getPeriodicRau().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getGprsReadyTimer().isPresent());
   }
 
   @Ignore
@@ -234,6 +239,27 @@ public class GprsNetworkRegistrationUnsolicitedTest extends UnsolicitedTest {
     assertEquals(Integer.valueOf(0x0a5b), gprsNetworkRegistrationUnsolicited.getCellId().get());
     assertEquals(AccessTechnology.GSM, gprsNetworkRegistrationUnsolicited.getAccessTechnology().get());
     assertEquals(Byte.valueOf((byte) 0x01), gprsNetworkRegistrationUnsolicited.getRoutingAreaCode().get());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getCauseType().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getRejectCause().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getActiveTime().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getPeriodicRau().isPresent());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getGprsReadyTimer().isPresent());
+  }
+
+  @Test
+  public void test_gprs_network_registration_stat_home_with_lac_and_cellid_and_act2() {
+    final String line = "+CGREG: 1,\"18EC\",\"116850C\",2";
+
+    assertPatternMatch(GprsNetworkRegistrationUnsolicited.UNSOLICITED_PATTERN, line);
+
+    final GprsNetworkRegistrationUnsolicited gprsNetworkRegistrationUnsolicited = new GprsNetworkRegistrationUnsolicited();
+    gprsNetworkRegistrationUnsolicited.parseUnsolicited(Collections.singletonList(line));
+
+    assertEquals(RegistrationState.REGISTERED_HOME_NETWORK, gprsNetworkRegistrationUnsolicited.getRegistrationState());
+    assertEquals(Integer.valueOf(0x18ec), gprsNetworkRegistrationUnsolicited.getLac().get());
+    assertEquals(Integer.valueOf(0x116850c), gprsNetworkRegistrationUnsolicited.getCellId().get());
+    assertEquals(AccessTechnology.UTRAN, gprsNetworkRegistrationUnsolicited.getAccessTechnology().get());
+    assertFalse(gprsNetworkRegistrationUnsolicited.getRoutingAreaCode().isPresent());
     assertFalse(gprsNetworkRegistrationUnsolicited.getCauseType().isPresent());
     assertFalse(gprsNetworkRegistrationUnsolicited.getRejectCause().isPresent());
     assertFalse(gprsNetworkRegistrationUnsolicited.getActiveTime().isPresent());

@@ -74,14 +74,16 @@ public class GprsNetworkRegistrationUnsolicited extends BaseResponse implements 
           cellId = Integer.valueOf(Integer.parseUnsignedInt(tokens[2], 16));
           if (tokens.length > 3) {
             accessTechnology = AccessTechnology.fromInt(Integer.parseInt(tokens[3]));
-            routingAreaCode = Byte.valueOf(tokens[4], 16);
-            if (tokens.length > 5) {
-              causeType = getInteger(tokens[5]);
-              rejectCause = getInteger(tokens[6]);
-              if (tokens.length > 7) {
-                activeTime = m.group(tokens[7]);
-                periodicRau = m.group(tokens[8]);
-                gprsReadyTimer = m.group(tokens[9]);
+            if (tokens.length > 4) {
+              routingAreaCode = Byte.valueOf(tokens[4], 16);
+              if (tokens.length > 5) {
+                causeType = getInteger(tokens[5]);
+                rejectCause = getInteger(tokens[6]);
+                if (tokens.length > 7) {
+                  activeTime = m.group(tokens[7]);
+                  periodicRau = m.group(tokens[8]);
+                  gprsReadyTimer = m.group(tokens[9]);
+                }
               }
             }
           }

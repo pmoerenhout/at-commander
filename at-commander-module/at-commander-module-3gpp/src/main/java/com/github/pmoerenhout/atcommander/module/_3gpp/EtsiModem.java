@@ -137,8 +137,7 @@ public class EtsiModem extends V250 {
       new UnsolicitedPatternClass(CallingLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN, CallingLineIdentificationPresentationUnsolicited.class),
       new UnsolicitedPatternClass(ConnectedLineIdentificationPresentationUnsolicited.UNSOLICITED_PATTERN,
           ConnectedLineIdentificationPresentationUnsolicited.class),
-      new UnsolicitedPatternClass(UnstructuredSupplementaryServiceDataUnsolicited.UNSOLICITED_PATTERN,
-          UnstructuredSupplementaryServiceDataUnsolicited.class)
+      new UnsolicitedPatternClass(UnstructuredSupplementaryServiceDataUnsolicited.UNSOLICITED_PATTERN, UnstructuredSupplementaryServiceDataUnsolicited.class)
   ));
 
   public AccessTechnology accessTechnology = null;
@@ -401,11 +400,6 @@ public class EtsiModem extends V250 {
     command.set();
   }
 
-  public void setPreferredMessageStorage(final String mem1) throws SerialException, TimeoutException, ResponseException {
-    final PreferredMessageStorageCommand command = new PreferredMessageStorageCommand(atCommander, mem1);
-    command.set();
-  }
-
   public void setPreferredMessageStorage(final String mem1, final String mem2) throws SerialException, TimeoutException, ResponseException {
     final PreferredMessageStorageCommand command = new PreferredMessageStorageCommand(atCommander, mem1, mem2);
     command.set();
@@ -419,6 +413,11 @@ public class EtsiModem extends V250 {
   public PreferredMessageStorageResponse getPreferredMessageStorage() throws SerialException, TimeoutException, ResponseException {
     final PreferredMessageStorageCommand command = new PreferredMessageStorageCommand(atCommander);
     return command.read();
+  }
+
+  public void setPreferredMessageStorage(final String mem1) throws SerialException, TimeoutException, ResponseException {
+    final PreferredMessageStorageCommand command = new PreferredMessageStorageCommand(atCommander, mem1);
+    command.set();
   }
 
   public List<IndexMessage> getMessagesList(final MessageStatus status) throws SerialException, TimeoutException, ResponseException {
@@ -435,11 +434,6 @@ public class EtsiModem extends V250 {
 
   public void deleteAllMessages() throws SerialException, TimeoutException, ResponseException {
     deleteMessage(1, 4);
-  }
-
-  public void setNewMessageIndications(final int mode) throws SerialException, TimeoutException, ResponseException {
-    final NewMessageIndicationsCommand newMessageIndicationsCommand = new NewMessageIndicationsCommand(atCommander, mode);
-    newMessageIndicationsCommand.set();
   }
 
   public void setNewMessageIndications(final int mode, final int mt) throws SerialException, TimeoutException, ResponseException {
@@ -461,6 +455,11 @@ public class EtsiModem extends V250 {
   public NewMessageIndicationsResponse getNewMessageIndications() throws SerialException, TimeoutException, ResponseException {
     final NewMessageIndicationsCommand newMessageIndicationsCommand = new NewMessageIndicationsCommand(atCommander);
     return newMessageIndicationsCommand.read();
+  }
+
+  public void setNewMessageIndications(final int mode) throws SerialException, TimeoutException, ResponseException {
+    final NewMessageIndicationsCommand newMessageIndicationsCommand = new NewMessageIndicationsCommand(atCommander, mode);
+    newMessageIndicationsCommand.set();
   }
 
   public SendMessageResponse sendPdu(final int lengthTpLayer, final String pdu)
@@ -679,15 +678,15 @@ public class EtsiModem extends V250 {
     return command.read();
   }
 
+  public void setGprsNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
+    final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander, mode);
+    command.set();
+  }
+
   public GprsNetworkRegistrationResponse getGprsNetworkRegistration(final long timeout) throws SerialException, TimeoutException, ResponseException {
     final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander);
     command.setTimeout(timeout);
     return command.read();
-  }
-
-  public void setGprsNetworkRegistration(final int mode) throws SerialException, TimeoutException, ResponseException {
-    final GprsNetworkRegistrationCommand command = new GprsNetworkRegistrationCommand(atCommander, mode);
-    command.set();
   }
 
   public void setAccessTechnology(final AccessTechnology accessTechnology) {
@@ -699,14 +698,14 @@ public class EtsiModem extends V250 {
     command.set();
   }
 
-  public void setSelectMessageService(final int service) throws SerialException, TimeoutException, ResponseException {
-    final SelectMessageServiceCommand command = new SelectMessageServiceCommand(atCommander, service);
-    command.set();
-  }
-
   public SelectMessageServiceResponse getSelectMessageService() throws SerialException, TimeoutException, ResponseException {
     final SelectMessageServiceCommand command = new SelectMessageServiceCommand(atCommander);
     return command.read();
+  }
+
+  public void setSelectMessageService(final int service) throws SerialException, TimeoutException, ResponseException {
+    final SelectMessageServiceCommand command = new SelectMessageServiceCommand(atCommander, service);
+    command.set();
   }
 
   public void setNewMessageAcknowledgement() throws SerialException, TimeoutException, ResponseException {
