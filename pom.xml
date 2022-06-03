@@ -49,7 +49,7 @@
     <junit.version>4.13.2</junit.version>
     <lombok.version>1.18.22</lombok.version>
     <marineapi.version>0.11.0</marineapi.version>
-    <mockito.version>3.12.4</mockito.version>
+    <mockito.version>4.6.1</mockito.version>
     <slf4j.version>1.7.36</slf4j.version>
 
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
