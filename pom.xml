@@ -53,7 +53,7 @@
     <lombok.version>1.18.24</lombok.version>
     <marineapi.version>0.11.0</marineapi.version>
     <mockito.version>4.9.0</mockito.version>
-    <slf4j.version>1.7.36</slf4j.version>
+    <slf4j.version>2.0.6</slf4j.version>
 
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
